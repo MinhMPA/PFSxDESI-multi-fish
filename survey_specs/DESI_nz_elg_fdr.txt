@@ -1,0 +1,6 @@
+# DESI ELG main bins from Table III of arXiv:2503.14738
+# n(z) is volume-averaged from official desimodel full-survey forecast target file
+# Vz uses Planck 2018 fiducial with Mnu=0.06 eV and area=14000 deg^2
+# z_min z_max z_mid nz[(h^-1 Mpc)^-3] Vz[(h^-1 Mpc)^3]
+0.8 1.1 9.500000000000000666e-01 6.993411116793402799e-04 1.080222760229094124e+10
+1.1 1.6 1.350000000000000089e+00 2.381673632803179490e-04 2.339779623243746567e+10
