@@ -146,6 +146,85 @@ def desi_elg_fiducials(b1: float, sigma8_z: float) -> EFTFiducials:
 
 
 # ---------------------------------------------------------------------------
+# DESI-LRG and DESI-QSO fiducials
+# ---------------------------------------------------------------------------
+
+
+def desi_lrg_fiducials(b1: float, sigma8_z: float) -> EFTFiducials:
+    """DESI-LRG EFT fiducials.
+
+    LRGs live in massive halos → larger virial velocities → larger c̃.
+    c̃_LRG ≈ 800 (2× ELG fiducial, reflecting higher σ_v).
+    Counterterms scale with bias.
+    """
+    b2 = lazeyras_b2(b1)
+    bG2 = lazeyras_bG2(b1)
+    bGamma3 = 23.0 / 42.0 * (b1 - 1.0)
+
+    return EFTFiducials(
+        b1_sigma8=b1 * sigma8_z,
+        b2_sigma8sq=b2 * sigma8_z**2,
+        bG2_sigma8sq=bG2 * sigma8_z**2,
+        bGamma3=bGamma3,
+        c0=0.0,
+        c2=30.0 * b1 / 1.3,       # scale from ELG fiducial by bias ratio
+        c4=0.0,
+        c_tilde=800.0,              # larger FoG for LRGs
+        c1=0.0,
+        Pshot=0.0,
+        a0=0.0,
+        a2=0.0,
+    )
+
+
+def desi_qso_fiducials(b1: float, sigma8_z: float) -> EFTFiducials:
+    """DESI-QSO EFT fiducials.
+
+    QSOs have the highest FoG (massive host halos, broad-line kinematics).
+    c̃_QSO ≈ 1200 (3× ELG fiducial).
+    """
+    b2 = lazeyras_b2(b1)
+    bG2 = lazeyras_bG2(b1)
+    bGamma3 = 23.0 / 42.0 * (b1 - 1.0)
+
+    return EFTFiducials(
+        b1_sigma8=b1 * sigma8_z,
+        b2_sigma8sq=b2 * sigma8_z**2,
+        bG2_sigma8sq=bG2 * sigma8_z**2,
+        bGamma3=bGamma3,
+        c0=0.0,
+        c2=30.0 * b1 / 1.3,
+        c4=0.0,
+        c_tilde=1200.0,             # largest FoG
+        c1=0.0,
+        Pshot=0.0,
+        a0=0.0,
+        a2=0.0,
+    )
+
+
+# ---------------------------------------------------------------------------
+# Generic fiducial builder for any tracer
+# ---------------------------------------------------------------------------
+
+
+def tracer_fiducials(
+    tracer_name: str, b1: float, sigma8_z: float,
+    b1_ref: float = 1.3, r_sigma_v: float = 0.75,
+) -> EFTFiducials:
+    """Build EFT fiducials for any named tracer."""
+    if tracer_name == "DESI-ELG":
+        return desi_elg_fiducials(b1, sigma8_z)
+    if tracer_name == "DESI-LRG":
+        return desi_lrg_fiducials(b1, sigma8_z)
+    if tracer_name == "DESI-QSO":
+        return desi_qso_fiducials(b1, sigma8_z)
+    if tracer_name == "PFS-ELG":
+        return pfs_elg_fiducials(b1, b1_ref, sigma8_z, r_sigma_v)
+    raise ValueError(f"Unknown tracer: {tracer_name}")
+
+
+# ---------------------------------------------------------------------------
 # PFS-ELG fiducials (§3.3 — scaled from DESI)
 # ---------------------------------------------------------------------------
 

@@ -121,28 +121,50 @@ def pfs_elg() -> Survey:
     )
 
 
-def desi_elg() -> Survey:
-    """DESI-ELG survey (14,000 deg²)."""
-    z_min, z_max, nz, Vz = load_nz_table(_SPEC_DIR / "DESI_nz_elg_fine.txt")
-
-    def _b1_desi(z: float, cosmo: FiducialCosmology | None = None) -> float:
+def _make_desi_bias(b0: float):
+    """Create a DESI-style bias function b(z) = b0 / D(z)."""
+    def _b1(z: float, cosmo: FiducialCosmology | None = None) -> float:
         if cosmo is None:
             cosmo = FiducialCosmology()
-        return 0.84 / float(cosmo.D(z))
+        return b0 / float(cosmo.D(z))
+    return _b1
 
+
+def desi_elg() -> Survey:
+    """DESI-ELG survey (14,000 deg²). b(z) = 0.84/D(z)."""
+    z_min, z_max, nz, Vz = load_nz_table(_SPEC_DIR / "DESI_nz_elg_fine.txt")
     return Survey(
         name="DESI-ELG",
         area_deg2=14000.0,
-        z_min_all=z_min,
-        z_max_all=z_max,
-        nz_all=nz,
-        Vz_all=Vz,
-        b1_of_z=_b1_desi,
+        z_min_all=z_min, z_max_all=z_max, nz_all=nz, Vz_all=Vz,
+        b1_of_z=_make_desi_bias(0.84),
+    )
+
+
+def desi_lrg() -> Survey:
+    """DESI-LRG survey (14,000 deg²). b(z) = 1.7/D(z)."""
+    z_min, z_max, nz, Vz = load_nz_table(_SPEC_DIR / "DESI_nz_lrg_fine.txt")
+    return Survey(
+        name="DESI-LRG",
+        area_deg2=14000.0,
+        z_min_all=z_min, z_max_all=z_max, nz_all=nz, Vz_all=Vz,
+        b1_of_z=_make_desi_bias(1.7),
+    )
+
+
+def desi_qso() -> Survey:
+    """DESI-QSO survey (14,000 deg²). b(z) = 1.2/D(z)."""
+    z_min, z_max, nz, Vz = load_nz_table(_SPEC_DIR / "DESI_nz_qso_fine.txt")
+    return Survey(
+        name="DESI-QSO",
+        area_deg2=14000.0,
+        z_min_all=z_min, z_max_all=z_max, nz_all=nz, Vz_all=Vz,
+        b1_of_z=_make_desi_bias(1.2),
     )
 
 
 # ---------------------------------------------------------------------------
-# SurveyPair
+# SurveyPair (original, kept for backward compatibility)
 # ---------------------------------------------------------------------------
 
 # Matched z-bins for the overlap (§2.3)
@@ -164,21 +186,85 @@ class SurveyPair:
 
     def V_overlap(self, zlo: float, zhi: float) -> float:
         """Comoving volume in the overlap region, (Mpc/h)³."""
-        # Use survey B volumes rescaled to the overlap area
         return self.B.volume_rescaled(zlo, zhi, self.overlap_area_deg2)
 
     def V_full_B(self, zlo: float, zhi: float) -> float:
-        """Comoving volume of the full B (DESI) footprint, (Mpc/h)³."""
+        """Comoving volume of full DESI footprint, (Mpc/h)³."""
         return self.B.volume(zlo, zhi)
 
     def lever_arm(self, zlo: float, zhi: float) -> float:
-        """V_full_B / V_overlap ≈ 14000/1200 ≈ 11.7."""
         v_ov = self.V_overlap(zlo, zhi)
         if v_ov == 0:
             return float("inf")
         return self.V_full_B(zlo, zhi) / v_ov
 
 
+# ---------------------------------------------------------------------------
+# Multi-tracer survey group
+# ---------------------------------------------------------------------------
+
+
+@dataclass
+class SurveyGroup:
+    """PFS + multiple DESI tracers in the overlap.
+
+    Tracers are identified by name. At each z-bin, only tracers
+    with non-zero nbar are included.
+    """
+
+    pfs: Survey
+    desi_tracers: dict[str, Survey]    # {"DESI-ELG": ..., "DESI-LRG": ..., ...}
+    overlap_area_deg2: float = 1200.0
+
+    @property
+    def all_surveys(self) -> dict[str, Survey]:
+        return {"PFS-ELG": self.pfs, **self.desi_tracers}
+
+    def active_tracers(self, zlo: float, zhi: float,
+                       nbar_min: float = 1e-6) -> dict[str, Survey]:
+        """Return tracers with non-negligible nbar in [zlo, zhi]."""
+        active = {}
+        for name, s in self.all_surveys.items():
+            if s.nbar_eff(zlo, zhi) > nbar_min:
+                active[name] = s
+        return active
+
+    def tracer_pairs(self, zlo: float, zhi: float,
+                     nbar_min: float = 1e-6) -> list[tuple[str, str]]:
+        """All unique tracer pairs (including auto) active in [zlo, zhi].
+
+        Returns list of (name_A, name_B) with A <= B lexicographically.
+        """
+        names = sorted(self.active_tracers(zlo, zhi, nbar_min).keys())
+        pairs = []
+        for i, a in enumerate(names):
+            for b in names[i:]:
+                pairs.append((a, b))
+        return pairs
+
+    def V_overlap(self, zlo: float, zhi: float) -> float:
+        """Overlap volume using any DESI tracer's volume rescaled."""
+        # All DESI tracers share the same sky; pick any for the volume
+        for s in self.desi_tracers.values():
+            v = s.volume_rescaled(zlo, zhi, self.overlap_area_deg2)
+            if v > 0:
+                return v
+        return 0.0
+
+
 def default_survey_pair() -> SurveyPair:
-    """PFS × DESI with 1,200 deg² overlap."""
+    """PFS × DESI-ELG with 1,200 deg² overlap (backward compat)."""
     return SurveyPair(A=pfs_elg(), B=desi_elg(), overlap_area_deg2=1200.0)
+
+
+def default_survey_group() -> SurveyGroup:
+    """PFS × {DESI-ELG, DESI-LRG, DESI-QSO} with 1,200 deg² overlap."""
+    return SurveyGroup(
+        pfs=pfs_elg(),
+        desi_tracers={
+            "DESI-ELG": desi_elg(),
+            "DESI-LRG": desi_lrg(),
+            "DESI-QSO": desi_qso(),
+        },
+        overlap_area_deg2=1200.0,
+    )

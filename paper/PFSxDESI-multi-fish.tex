@@ -280,20 +280,21 @@ without HOD modelling?}
 %
 We show that they can.
 %
-The \(\sim\!1{,}200\;\text{deg}^2\) overlap of PFS-ELG and DESI-ELG at
-\(0.8<z<1.6\) provides a natural calibration laboratory: the cross-power
-spectrum \(P^{\PFS\times\DESI}_\ell\) carries zero stochastic
-contribution, so jointly analysing it with the two auto-spectra cleanly
-separates shot noise from signal.
+The \(\sim\!1{,}200\;\text{deg}^2\) overlap of PFS-ELG with three DESI
+tracers---ELG, LRG, and QSO---at \(0.8<z<1.6\) provides a natural
+calibration laboratory with up to 4 tracers and 10 cross-spectra per
+redshift bin. Cross-power spectra between independent surveys carry zero
+stochastic contribution; jointly analysing them with the auto-spectra
+cleanly separates shot noise from signal.
 %
 This constrains the stochastic parameters \(\Pshot\) and \(a_0\) to
-15--45\% of their conservative prior widths---a 2--7\(\times\)
+10--30\% of their conservative prior widths---a 3--10\(\times\)
 tightening that requires no simulations, no HOD model, and no
 assumptions beyond the EFT framework itself.
 %
 Exporting these calibrated priors to DESI's full
 \(14{,}000\;\text{deg}^2\) footprint improves \(\sigma(f\se)\) by
-19--35\% and \(\sigma(\Mnu)\) by 48--53\%, recovering 38--63\% of the
+23--37\% and \(\sigma(\Mnu)\) by 52--56\%, recovering 40--65\% of the
 gap to perfect nuisance knowledge.
 %
 The improvement is robust to the assumed FoG velocity ratio
@@ -423,20 +424,25 @@ Roman\(\,\times\,\)Spec-S5, and DESI-II\(\,\times\,\)MegaMapper.
 
 \begin{table}[t]
 \centering
-\begin{tabular}{lcccccc}
+\small
+\begin{tabular}{lcccccccccc}
 \hline
-\multirow{2}{*}{$z$-bin} & \multicolumn{2}{c}{$\nbar$ $[h^3\,\text{Mpc}^{-3}]$} & \multicolumn{2}{c}{$b_1$} & $\Vov$ & $\Vfull^{\DESI}$ \\
- & PFS & DESI & PFS & DESI & \multicolumn{2}{c}{$[h^{-3}\,\text{Gpc}^3]$} \\
+ & \multicolumn{2}{c}{PFS-ELG} & \multicolumn{2}{c}{DESI-ELG} & \multicolumn{2}{c}{DESI-LRG} & \multicolumn{2}{c}{DESI-QSO} & & \\
+$z$-bin & $\nbar$ & $b_1$ & $\nbar$ & $b_1$ & $\nbar$ & $b_1$ & $\nbar$ & $b_1$ & $N_t$ & $N_{\rm spec}$ \\
 \hline
-$[0.8,\,1.0]$  & $8.6\times 10^{-4}$ & $8.1\times 10^{-4}$ & 1.26 & 1.24 & 0.59 & 6.9 \\
-$[1.0,\,1.2]$  & $9.3\times 10^{-4}$ & $4.6\times 10^{-4}$ & 1.34 & 1.36 & 0.70 & 8.2 \\
-$[1.2,\,1.4]$  & $6.4\times 10^{-4}$ & $2.8\times 10^{-4}$ & 1.42 & 1.50 & 0.79 & 9.2 \\
-$[1.4,\,1.6]$  & $3.1\times 10^{-4}$ & $1.2\times 10^{-4}$ & 1.50 & 1.65 & 0.85 & 10.0 \\
+$[0.8,\,1.0]$ & $8.6$ & 1.26 & $8.1$ & 1.32 & $2.3$ & 2.68 & $0.29$ & 1.89 & 4 & 10 \\
+$[1.0,\,1.2]$ & $9.3$ & 1.34 & $4.6$ & 1.45 & $0.39$ & 2.93 & $0.30$ & 2.07 & 4 & 10 \\
+$[1.2,\,1.4]$ & $6.4$ & 1.42 & $2.8$ & 1.57 & --- & --- & $0.32$ & 2.24 & 3 & 6 \\
+$[1.4,\,1.6]$ & $3.1$ & 1.50 & $1.2$ & 1.69 & --- & --- & $0.31$ & 2.42 & 3 & 6 \\
 \hline
 \end{tabular}
-\caption{Survey properties per matched redshift bin. Number densities are
-volume-weighted averages from fine-binned $n(z)$ files.
-$\Vov$ uses $1{,}200\;\text{deg}^2$; $\Vfull^{\DESI}$ uses $14{,}000\;\text{deg}^2$.}
+\caption{Survey properties per matched redshift bin. Number densities
+$\nbar$ in units of $10^{-4}\,h^3\,\text{Mpc}^{-3}$ are volume-weighted
+averages from fine-binned $n(z)$ files. $N_t$ is the number of active
+tracers; $N_{\rm spec} = N_t(N_t{+}1)/2$ is the number of auto- and
+cross-spectra. The LRG sample drops out at $z>1.1$. All DESI tracers
+share the same $14{,}000\;\text{deg}^2$ footprint; the overlap with
+PFS covers $\sim\!1{,}200\;\text{deg}^2$.}
 \label{tab:surveys}
 \end{table}
 
@@ -600,17 +606,16 @@ carry little information on these $k^2$ and $k^4$ contributions.}
 \includegraphics[width=\textwidth]{\figurespath/fig3_full_area_constraints.pdf}
 \caption{Full-area DESI-ELG constraints. Marginalized $1\sigma$ uncertainties
 on $f\se$, $\Mnu$, and $\Om$ from $14{,}000\;\text{deg}^2$, combining
-four $z$-bins, under four analysis scenarios.
-The cross-calibration at $\kmax=0.20\iMpch$ (orange) already matches the
+four $z$-bins, under four analysis scenarios. Nuisance priors for the
+cross-cal scenarios are derived from the multi-tracer overlap with
+PFS-ELG, DESI-LRG, and DESI-QSO (up to 10 cross-spectra per $z$-bin).
+The cross-calibration at $\kmax=0.20\iMpch$ (orange) matches the
 HOD-prior benchmark of Zhang et al.\ (2025; dashed, 23\% on $\se$);
-extending to $\kmax=0.25\iMpch$ (green) surpasses it.
+extending to $\kmax=0.25\iMpch$ (green) surpasses it at 37\%.
 The gap to the oracle (red) is dominated by counterterm parameters that
-the $1{,}200\;\text{deg}^2$ overlap cannot constrain at these $k$-scales---the
-stochastic parameters, which the cross-calibration \emph{does} constrain,
-are no longer the bottleneck.
+the overlap cannot constrain at these $k$-scales.
 Dotted line: field-level SBP ceiling (Chudaykin, Ivanov \& Philcox 2026;
-50\% on $\se$), which breaks parameter degeneracies inaccessible to
-two-point statistics.}
+50\% on $\se$).}
 \label{fig:full_area}
 \end{figure}
 
@@ -621,13 +626,15 @@ two-point statistics.}
 Scenario & $\kmax$ & $\sigma(f\se)$ & $\Delta\%$ & $\sigma(\Mnu)$ [eV] & $\Delta\%$ & $\sigma(\Om)$ & $\Delta\%$ \\
 \hline
 Broad          & 0.20 & 0.076 & ---   & 1.08 & ---   & 0.050 & ---   \\
-Cross-cal      & 0.20 & 0.061 & $-19$ & 0.56 & $-48$ & 0.040 & $-19$ \\
-Cross-cal-ext  & 0.25 & 0.049 & $-35$ & 0.51 & $-53$ & 0.039 & $-22$ \\
+Cross-cal      & 0.20 & 0.059 & $-23$ & 0.52 & $-52$ & 0.038 & $-24$ \\
+Cross-cal-ext  & 0.25 & 0.048 & $-37$ & 0.47 & $-56$ & 0.037 & $-26$ \\
 Oracle         & 0.25 & 0.010 & $-87$ & 0.12 & $-89$ & 0.019 & $-61$ \\
 \hline
 \end{tabular}
 \caption{Headline constraints from the full-area DESI-ELG Fisher forecast,
-combined across four $z$-bins. Improvement percentages are relative to the
+combined across four $z$-bins. Cross-calibrated priors are derived from the
+multi-tracer overlap with PFS-ELG, DESI-LRG, and DESI-QSO (up to 4 tracers,
+10 spectra per $z$-bin). Improvement percentages are relative to the
 broad-prior baseline.}
 \label{tab:headline}
 \end{table}

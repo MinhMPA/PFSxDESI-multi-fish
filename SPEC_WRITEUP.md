@@ -27,14 +27,15 @@ Attach all of the following when invoking this spec:
 > Where simulation-based priors on EFT nuisance parameters rely on
 > HOD model assumptions (Zhang+ 2025; Chudaykin+ 2026), we propose
 > a complementary data-driven calibration: the multi-tracer analysis
-> of PFS × DESI ELGs in their ~1,200 deg² overlap volume constrains
-> stochastic parameters (Pshot) 2–7× more tightly than conservative
-> priors, and exporting these to DESI's full 14,000 deg² improves
-> σ(fσ8) by 19–35% and σ(Mν) by 48–53%, recovering 38–63% of the
-> gap to perfect nuisance knowledge.
+> of PFS-ELG with DESI-ELG, DESI-LRG, and DESI-QSO in their
+> ~1,200 deg² overlap volume (up to 4 tracers, 10 cross-spectra per
+> z-bin) constrains stochastic parameters (Pshot) 3–10× more tightly
+> than conservative priors, and exporting these to DESI's full
+> 14,000 deg² improves σ(fσ8) by 23–37% and σ(Mν) by 52–56%,
+> recovering 40–65% of the gap to perfect nuisance knowledge.
 
-Numbers from `results/summary.csv` (combined z-bins, cross-cal
-and cross-cal-ext scenarios). Calibration efficiency from Fig 4.
+Numbers from multi-tracer pipeline `results/mt_*/summary.csv`
+(combined z-bins, cross-cal and cross-cal-ext scenarios).
 
 ---
 
@@ -231,12 +232,14 @@ would become active with the bispectrum).
 | Scenario | kmax | σ(fσ8) | Δ% | σ(Mν) [eV] | Δ% | σ(Ωm) | Δ% |
 |----------|------|--------|------|------------|------|-------|------|
 | broad | 0.20 | 0.0757 | — | 1.075 | — | 0.0499 | — |
-| cross-cal | 0.20 | 0.0610 | −19% | 0.559 | −48% | 0.0401 | −19% |
-| cross-cal-ext | 0.25 | 0.0493 | −35% | 0.505 | −53% | 0.0388 | −22% |
+| cross-cal | 0.20 | 0.0587 | −23% | 0.519 | −52% | 0.0380 | −24% |
+| cross-cal-ext | 0.25 | 0.0476 | −37% | 0.475 | −56% | 0.0370 | −26% |
 | oracle | 0.25 | 0.0100 | −87% | 0.123 | −89% | 0.0194 | −61% |
 
-Cross-cal is competitive with the Zhang+ 2025 HOD-prior benchmark
-(23% on σ8). Cross-cal-ext exceeds it. Mν benefits most because
+Priors calibrated from the full multi-tracer overlap (PFS-ELG ×
+DESI-{ELG, LRG, QSO}, up to 4 tracers, 10 spectra per z-bin).
+Cross-cal matches the Zhang+ 2025 HOD-prior benchmark (23% on σ8).
+Cross-cal-ext exceeds it at 37%. Mν benefits most (52–56%) because
 it is sensitive to the amplitude parameters that stochastic priors
 constrain. Compare to Chudaykin+ 2026 field-level ceiling (50%).
 
@@ -294,8 +297,10 @@ Five takeaways:
 2. Cross-survey overlap provides data-driven, model-independent
    calibration — primarily through the zero-stochastic cross-power
    spectrum, which cleanly separates shot noise from signal.
-3. For PFS × DESI: σ(fσ8) improves by 19–35%, σ(Mν) by 48–53%,
-   recovering 38–63% of the gap to perfect nuisance knowledge.
+3. For PFS × DESI (ELG+LRG+QSO): σ(fσ8) improves by 23–37%,
+   σ(Mν) by 52–56%, recovering 40–65% of the gap to perfect
+   nuisance knowledge. The multi-tracer combination (up to 10
+   cross-spectra) provides 3–5 percentage points beyond ELG-only.
 4. The improvement is robust to FoG modeling assumptions (r_σv
    sensitivity: 34–39%), because the stochastic calibration does
    not depend on FoG. The asymmetric kmax from PFS's lower FoG
