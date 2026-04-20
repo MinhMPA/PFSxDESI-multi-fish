@@ -1,7 +1,0 @@
-# DESI LRG main bins from Table III of arXiv:2503.14738
-# n(z) is volume-averaged from official desimodel full-survey forecast target file
-# Vz uses Planck 2018 fiducial with Mnu=0.06 eV and area=14000 deg^2
-# z_min z_max z_mid nz[(h^-1 Mpc)^-3] Vz[(h^-1 Mpc)^3]
-0.4 0.6 5.000000000000000000e-01 5.513799136510049576e-04 3.363651729202521801e+09
-0.6 0.8 6.999999999999999556e-01 5.142973397520261402e-04 5.220397521780405998e+09
-0.8 1.1 9.500000000000000666e-01 1.580183331480598699e-04 1.080222760229094124e+10

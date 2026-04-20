@@ -1,0 +1,762 @@
+\documentclass[a4paper,11pt]{article}
+\pdfoutput=1 % if your are submitting a pdflatex (i.e. if you have
+    % images in pdf, png or jpg format)
+\usepackage{jcappub} % for details on the use of the package, please
+                     % see the JCAP-author-manual
+\usepackage{aas_macros}
+\usepackage[T5]{fontenc} 
+\usepackage[utf8]{inputenc}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{mwe,bm,verbatim,cprotect,xcolor,xspace}
+\usepackage{orcidlink}
+\usepackage{subfig,csquotes,float, ulem}
+\usepackage{bbold}
+\usepackage[export]{adjustbox}
+\graphicspath{{figs/}}
+%\usepackage[allfiguresdraft]{draftfigure}
+
+
+%%%%%%%%%%%%%%%
+%% Reference %%
+%%%%%%%%%%%%%%%
+
+\usepackage[nameinlink,noabbrev]{cleveref}
+\crefname{equation}{Eq.}{Eqs.}
+\crefname{section}{Sec.}{Secs.}
+\crefname{figure}{Fig.}{Figs.}
+\crefname{table}{Tab.}{Tabs.}
+\crefname{appendix}{App.}{Apps.}
+\Crefname{figure}{Figure}{Figures}
+\Crefname{equation}{Equation}{Equations}
+\Crefname{section}{Section}{Sections}
+\Crefname{table}{Table}{Tables}
+\Crefname{appendix}{Appendix}{Appendices}
+
+%%%%%%%%%%%%%%%%%%%%%%
+%%	  Environment   %%
+%%%%%%%%%%%%%%%%%%%%%%
+
+\def\be{\begin{equation}}
+\def\ee{\end{equation}}
+\newcommand{\vs}{\nonumber\\}
+\def\ba#1\ea{\begin{align*}#1\end{align*}}
+\def\bg#1\eg{\begin{gather}#1\end{gather}}
+\newcommand\numberthis{\addtocounter{equation}{1}\tag{\theequation}}
+
+\newcommand{\twofig}[4]{%
+ \begin{figure}%
+    \centering
+    \subfloat{{\includegraphics[width=.4\textwidth]{#1} }}%
+    \qquad
+    \subfloat{{\includegraphics[width=.4\textwidth]{#2} }}%
+    \caption{#4}%
+    \label{#3}%
+\end{figure}}
+
+\def\switch#1#2{#2}  %1: old 2: revtex4
+\newlength{\diagramwidth}
+\switch{
+\setlength{\diagramwidth}{3.0em}
+}{
+\setlength{\diagramwidth}{1cm}
+}
+
+
+%%%%%%%%%%%%%%%
+%% Reference %%
+%%%%%%%%%%%%%%%
+
+\newcommand{\refeq}[1]{Eq.~(\ref{eqn:#1})}          
+\newcommand{\refeqs}[2]{Eqs.~(\ref{eqn:#1})--(\ref{eqn:#2})}          
+\newcommand{\refEq}[1]{Equation~(\ref{eqn:#1})}          
+\newcommand{\reffig}[1]{Fig.~\ref{fig:#1}}  
+\newcommand{\reffigs}[2]{Fig.~\ref{fig:#1}--\ref{fig:#2}}  
+\newcommand{\refFig}[1]{Figure~\ref{fig:#1}}          
+\newcommand{\reftab}[1]{Tab.~\ref{tab:#1}}          
+\newcommand{\refsec}[1]{Sec.~\ref{sec:#1}}
+\newcommand{\refapp}[1]{App.~\ref{app:#1}}
+\newcommand{\specialcell}[2][c]{%
+	\begin{tabular}[#1]{@{}c@{}}#2\end{tabular}}
+
+%%%%%%%%%%%%%%
+%% Notation %%
+%%%%%%%%%%%%%%
+
+\newcommand{\codefont}[1]{{\texttt{#1}}}
+
+\newcommand{\g}{\gamma}
+\newcommand{\s}{\sigma}
+
+\def\freeIC{\textsc{freeIC}}
+\def\fixedIC{\textsc{fixedIC}}
+
+\newcommand{\fsky}{f_{\rm sky}}
+\def\cH{\mathcal{H}}
+\def\FMV{\mathcal{F}_{\textsc{mv}}}
+
+\def\Plin{P_{\rm L}}
+\def\dlin{\delta_{\rm L}}
+\def\knl{k_\text{NL}}
+\def\Pnl{P_{\rm m}}
+
+% VECTOR -> bold face
+
+\renewcommand{\emph}[1]{\textit{#1}}
+
+\newcommand{\vn}{\bm{n}}
+\newcommand{\nhat}{\hat{n}}
+\newcommand{\vnhat}{\bm{\nhat}}
+\newcommand{\vx}{\bm{x}}
+\newcommand{\vy}{\bm{y}}
+\newcommand{\vu}{\bm{u}}
+\newcommand{\vr}{\bm{r}}
+\newcommand{\vk}{\bm{k}}
+\newcommand{\vq}{\bm{q}}
+\newcommand{\vp}{\bm{p}}
+\newcommand{\Deg}{^{\circ}}
+
+\newcommand{\<}{\langle}
+\renewcommand{\>}{\rangle}
+
+\newcommand{\D}{\Delta}
+\newcommand{\dLambda}{\delta^{(1)}_\Lambda}
+\newcommand{\dLambdazero}{\delta^{(1)}_{\Lambda_0}}
+\newcommand{\ddet}{\delta_{\mathrm{det}}}
+\newcommand{\ddetLambda}{\delta_{\mathrm{det},\Lambda}}
+
+\newcommand{\eps}{\epsilon}
+\newcommand{\Om}{\Omega_m}
+\newcommand{\OK}{\Omega_K}
+\newcommand{\OL}{\Omega_\Lambda}
+\def\rhocr{\rho_{\rm cr,0}}
+\newcommand{\rhob}{\bar\rho}
+\newcommand{\hubble}{\mathcal{H}}
+
+\def\Mpch{\,h^{-1}\text{Mpc}}
+\def\iMpch{\,h\,\text{Mpc}^{-1}}
+\def\Mpchcubed{\, h^{-3} \, \text{Mpc}^{3}}
+\def\Msunh{\,h^{-1} M_\odot}
+\def\Plin{P_\text{L}}
+
+\def\shat{\hat{s}}
+\def\epshat{\hat{\eps}}
+\def\shatMV{\hat{s}_{\textsc{mv}}}
+\def\L{\Lambda}
+\def\kmax{k_{\rm max}}
+\def\LL{\mathcal{L}}
+\def\M{\mathcal{M}}
+\def\N{\mathcal{N}}
+\def\O{\mathcal{O}}
+\def\P{\mathcal{P}}
+\def\R{\mathcal{R}}
+\def\G{\mathcal{G}}
+\def\J{\mathcal{J}}
+\def\NGeul{\verb!NGeul!}
+
+\DeclareMathOperator{\Tr}{Tr}
+\DeclareMathOperator{\diag}{diag}
+\newcommand{\resp}[2]{R^{#1}_{\,\,\,#2}}
+\newcommand{\resptwo}[3]{{R_2}^{#1}_{\,\,\,#2,#3}}
+\newcommand{\dd}{\mathrm{d}}
+
+\newcommand{\UnitM}{\mathbb{1}}
+
+% bias parameters
+\newcommand{\bdelta}{b_{\delta}}
+\newcommand{\bdeltatwo}{b_{\delta^2}}
+\newcommand{\blapldelta}{b_{\nabla^2\delta}}
+\newcommand{\btrMoneMone}{b_{\tr [M^{(1)}M^{(1)}]}}
+\newcommand{\bsigmasigma}{b_{\sigma^2}}
+
+
+% functional derivative
+\def\Del{\mathcal{D}}
+% tidal derivativ operator
+\def\DT{\mathfrak{D}}
+
+% window function / mask
+\def\Wi{\mathcal{W}}
+
+% Dirac distribution in nD
+\def\dirac#1{\delta_{\mathrm{D}}^{(#1)}}
+
+% notation for third order operator from conv. time derivative
+\def\otd{\text{td}}
+\def\Otd{O_{\otd}}
+
+% (un)checked boxes
+\def\topen{$\square$}
+\protected\def\tpass{\textcolor{ForestGreen}{$\checkmark$}}
+\def\tfail{\protect\textcolor{red}{$X$}}
+
+% to denote permutations within equations
+% - uses 'etoolbox' package
+% \perm{n} -> ``$n$ perm.''
+% \perm{}  -> ``perm.''
+\newcommand{\perm}[1]{ \expandafter\ifstrempty\expandafter{#1} {\mbox{perm.}} {\mbox{$#1$ perm.}} }
+
+\newcommand{\lcdm}{$\Lambda${\rm CDM}}
+
+\DeclareMathOperator{\tr}{tr}
+\DeclareMathOperator{\Cov}{Cov}
+\let\Re\relax
+\DeclareMathOperator{\Re}{Re}
+\let\Im\relax
+\DeclareMathOperator{\Im}{Im}
+\def\lapl{\nabla^2}
+\newcommand{\levicivita}{}% initialize
+\def\levicivita#1#{\tensor#1{\epsilon}}
+
+\newcommand{\se}{\ensuremath{\sigma_\mathrm{8}}\xspace}
+
+\definecolor{RoyalBlue}{rgb}{0.25,.41,.88}
+\definecolor{ForestGreen}{rgb}{.13,.54,.13}
+\definecolor{DeepPurple}{rgb}{.45,.1,.75}
+
+\newcommand{\hl}[1]{\textcolor{ForestGreen}{#1}}
+\newcommand{\chg}[1]{\textcolor{RoyalBlue}{#1}}
+\newcommand{\mn}[1]{\textcolor{DeepPurple}{[\textbf{MN:}~#1]}}
+\newcommand{\mnedit}[1]{\textcolor{ForestGreen}{#1}}
+\newcommand{\slackcomments}[1]{{\leavevmode\color{blue}[#1]}}
+
+\def\mnras{MNRAS}
+\def\jcap{JCAP}
+\def\physrep{Phys.~Rep.}
+
+% Use arabic numbering instead of Roman (to avoid mixing with chain label)
+\makeatletter
+\renewcommand*{\thesection}{\arabic{section}}
+\renewcommand*{\thesubsection}{\thesection.\arabic{subsection}}
+\renewcommand*{\p@subsection}{}
+\makeatother
+
+%%%%%%%%%%%%%%%%
+% RESULTS PATH %
+%%%%%%%%%%%%%%%%
+\newcommand{\figurespath}{figs}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% EFT cross-cal macros    %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\PFS}{\text{PFS}}
+\newcommand{\DESI}{\text{DESI}}
+\newcommand{\fsig}{f\se}
+\newcommand{\Mnu}{M_\nu}
+\newcommand{\ctilde}{\tilde{c}}
+\newcommand{\Pshot}{P_{\rm shot}}
+\newcommand{\Bshot}{B_{\rm shot}}
+\newcommand{\Ashot}{A_{\rm shot}}
+\newcommand{\rsv}{r_{\sigma_v}}
+\newcommand{\nbar}{\bar{n}}
+\newcommand{\Vov}{V_{\rm overlap}}
+\newcommand{\Vfull}{V_{\rm full}}
+
+\title{Data-driven EFT prior calibration from the PFS\,$\times$\,DESI overlap}
+\author[a,b,c]{Nhat-Minh Nguyen (Nguyễn Nhật Minh)\orcidlink{0000-0002-2542-7233}}
+\affiliation[a]{Center for Data-Driven Discovery, Kavli IPMU (WPI), UTIAS, The University of Tokyo, Kashiwa, Chiba 277-8583, Japan}
+\affiliation[b]{Kavli IPMU (WPI), UTIAS, The University of Tokyo, 5-1-5 Kashiwanoha, Kashiwa, Chiba 277-8583, Japan}
+\affiliation[c]{Institute For Interdisciplinary Research in Science and Education, ICISE, Quy Nhon, 55121, Vietnam}
+\emailAdd{nhat.minh.nguyen@ipmu.jp}
+\keywords{Large-scale structure of the universe, Power spectrum, Galaxy surveys, Cosmological parameters from LSS}
+
+\abstract{%
+Full-shape analyses of galaxy clustering in the effective field theory
+of large-scale structure (EFTofLSS) have emerged as a powerful probe
+of cosmological parameters---but marginalizing over \(\sim\!12\) nuisance
+parameters per tracer per redshift bin remains the dominant source of
+degradation.
+%
+Recent work has demonstrated that informative priors on these parameters
+can substantially sharpen constraints: HOD-informed priors improve
+\(\sigma(\se)\) by \(\sim\!23\%\) [Zhang et al.\ 2025], and field-level
+simulation-based priors by \(\sim\!50\%\) [Chudaykin, Ivanov \& Philcox 2026].
+%
+However, all existing approaches rely on halo-occupation-distribution
+model assumptions.
+%
+\emph{Can the nuisance parameters be calibrated directly from the data,
+without HOD modelling?}
+%
+We show that they can.
+%
+The \(\sim\!1{,}200\;\text{deg}^2\) overlap of PFS-ELG and DESI-ELG at
+\(0.8<z<1.6\) provides a natural calibration laboratory: the cross-power
+spectrum \(P^{\PFS\times\DESI}_\ell\) carries zero stochastic
+contribution, so jointly analysing it with the two auto-spectra cleanly
+separates shot noise from signal.
+%
+This constrains the stochastic parameters \(\Pshot\) and \(a_0\) to
+15--45\% of their conservative prior widths---a 2--7\(\times\)
+tightening that requires no simulations, no HOD model, and no
+assumptions beyond the EFT framework itself.
+%
+Exporting these calibrated priors to DESI's full
+\(14{,}000\;\text{deg}^2\) footprint improves \(\sigma(f\se)\) by
+19--35\% and \(\sigma(\Mnu)\) by 48--53\%, recovering 38--63\% of the
+gap to perfect nuisance knowledge.
+%
+The improvement is robust to the assumed FoG velocity ratio
+(\(\rsv\) sensitivity: 34--39\%), precisely because the dominant
+mechanism is stochastic separation---not counterterm calibration.
+%
+PFS's lower virial velocity dispersion further motivates an
+asymmetric scale cut \(\kmax^{\PFS}>\kmax^{\DESI}\), extending the
+usable \(k\)-range and adding \(\sim\!5\%\) on top.
+%
+The method is model-independent, complementary to simulation-based
+priors, and immediately generalizable to any pair of overlapping
+spectroscopic surveys---including Euclid\(\,\times\,\)DESI,
+Roman\(\,\times\,\)Spec-S5, and DESI-II\(\,\times\,\)MegaMapper.
+}
+
+
+\begin{document}
+\date{\today}
+
+\maketitle
+\flushbottom
+
+%%% ============================================================
+%%% SKELETON SECTIONS — to be filled from SPEC_WRITEUP.md
+%%% ============================================================
+
+%-------------------------------------------------------------------
+\section{Introduction}
+\label{sec:intro}
+%-------------------------------------------------------------------
+
+% 1. The problem: EFT nuisance marginalization is expensive
+% Cite Chudaykin+ 2025 (prior reparameterization enables CMB+DESI without SNe),
+% Zhang+ 2025 (HOD-informed priors improve sigma8 by 23%),
+% Chudaykin+ 2026 (field-level SBPs improve H0 by 40%).
+% All existing informative-prior approaches depend on HOD assumptions.
+
+% 2. The concept: cross-calibration from survey overlap.
+% When two surveys with different target selections observe the same volume,
+% their cross-power spectrum constrains per-tracer nuisance parameters
+% model-independently.
+
+% 3. PFS x DESI overlap as a concrete realization.
+
+% 4. Paper roadmap.
+
+% TODO(NMN): Write introduction.
+
+
+%-------------------------------------------------------------------
+\section{Data-driven EFT prior calibration}
+\label{sec:method}
+%-------------------------------------------------------------------
+
+\subsection{The marginalization cost}
+\label{sec:marg_cost}
+
+% Review the EFT parameter set (Chudaykin+ 2025, Table I).
+% 12 nuisance parameters per tracer per z-bin.
+% Which parameters are analytically marginalized and why their priors matter.
+% Cite Zhang+ 2025: HOD-informed priors improve sigma(sigma8) by 23%.
+
+% TODO(NMN): Write marginalization cost subsection.
+
+
+\subsection{Cross-power constraints on nuisance parameters}
+\label{sec:cross_power}
+
+% Write the auto-power P^{AA}, P^{BB} and cross-power P^{AB} in terms of
+% EFT parameters. Key features:
+% - P^{AB} has zero auto-stochastic term (Pshot, a0, a2 enter only in auto).
+%   This is the PRIMARY calibration mechanism.
+% - Cross-counterterms averaged: (ctr_A + ctr_B)/2.
+% - Three spectra at each (k, ell) jointly constrain per-tracer nuisance
+%   parameters more tightly than either auto alone.
+
+% TODO(NMN): Write cross-power subsection with equations.
+
+
+\subsection{Asymmetric scale cuts}
+\label{sec:asymmetric_kmax}
+
+% PFS has lower FoG -> EFT converges to higher k -> kmax_PFS > kmax_DESI.
+% Formula: kmax_PFS = kmax_DESI x r_sigma_v^{-1/2}.
+% At k > kmax_DESI: only P^{AA} and P^{AB} available (6 observables).
+% Fisher sums two k-ranges: 9-obs below kmax_DESI + 6-obs above.
+% Cite Rubira & Conteddu (2025) for the single-survey precedent.
+
+% TODO(NMN): Write asymmetric kmax subsection.
+
+
+\subsection{The prior export mechanism}
+\label{sec:prior_export}
+
+% Overlap multi-tracer Fisher -> marginalized sigma for each DESI nuisance
+% parameter -> Gaussian prior -> added to DESI full-area Fisher.
+% Lever arm: V_full / V_overlap ~ 12.
+
+% TODO(NMN): Write prior export subsection.
+
+
+\subsection{Comparison with simulation-based priors}
+\label{sec:sbp_comparison}
+
+% Frame as complementary:
+% - SBPs: tight, but dependent on HOD model correctness.
+% - Cross-cal: model-independent, but limited by overlap volume.
+% - The two can be combined; cross-cal serves as consistency check.
+% - Fair comparison: Zhang+ 2025 (~23% on sigma8).
+% - Ceiling: Chudaykin+ 2026 (field-level, ~50% on sigma8).
+
+% TODO(NMN): Write SBP comparison subsection.
+
+
+%-------------------------------------------------------------------
+\section{PFS and DESI ELG samples}
+\label{sec:surveys}
+%-------------------------------------------------------------------
+
+% Survey specs: areas, z-ranges, nbar(z), b1(z).
+% Cite DESI Collaboration (arXiv:2503.14738) and Takada+ (2014).
+% n(z) from desimodel forecast files (fine-binned, Dz=0.01).
+% Volume-weighted rebinning into 4 matched z-bins [0.8,1.0]-[1.4,1.6].
+
+% TODO(NMN): Write survey section with Table 1.
+
+\begin{table}[t]
+\centering
+\begin{tabular}{lcccccc}
+\hline
+\multirow{2}{*}{$z$-bin} & \multicolumn{2}{c}{$\nbar$ $[h^3\,\text{Mpc}^{-3}]$} & \multicolumn{2}{c}{$b_1$} & $\Vov$ & $\Vfull^{\DESI}$ \\
+ & PFS & DESI & PFS & DESI & \multicolumn{2}{c}{$[h^{-3}\,\text{Gpc}^3]$} \\
+\hline
+$[0.8,\,1.0]$  & $8.6\times 10^{-4}$ & $8.1\times 10^{-4}$ & 1.26 & 1.24 & 0.59 & 6.9 \\
+$[1.0,\,1.2]$  & $9.3\times 10^{-4}$ & $4.6\times 10^{-4}$ & 1.34 & 1.36 & 0.70 & 8.2 \\
+$[1.2,\,1.4]$  & $6.4\times 10^{-4}$ & $2.8\times 10^{-4}$ & 1.42 & 1.50 & 0.79 & 9.2 \\
+$[1.4,\,1.6]$  & $3.1\times 10^{-4}$ & $1.2\times 10^{-4}$ & 1.50 & 1.65 & 0.85 & 10.0 \\
+\hline
+\end{tabular}
+\caption{Survey properties per matched redshift bin. Number densities are
+volume-weighted averages from fine-binned $n(z)$ files.
+$\Vov$ uses $1{,}200\;\text{deg}^2$; $\Vfull^{\DESI}$ uses $14{,}000\;\text{deg}^2$.}
+\label{tab:surveys}
+\end{table}
+
+
+%-------------------------------------------------------------------
+\section{Fisher forecast setup}
+\label{sec:fisher}
+%-------------------------------------------------------------------
+
+\subsection{EFT parameterization}
+\label{sec:eft_params}
+
+% Follow Chudaykin+ 2025 exactly.
+% Table 2: fiducial values and prior widths per tracer.
+
+% TODO(NMN): Write EFT param subsection with Table 2.
+
+\begin{table}[t]
+\centering
+\begin{tabular}{lcccl}
+\hline
+Parameter & Fiducial & Prior $\mathcal{N}(\mu,\sigma^2)$ & Units & Notes \\
+\hline
+$b_1\se$      & $b_1\se(z)$ & flat $[0,3]$     & ---              & \\
+$b_2\se^2$    & Lazeyras+   & $\mathcal{N}(0,5^2)$  & ---        & \\
+$b_{G_2}\se^2$& $-2/7(b_1{-}1)\se^2$ & $\mathcal{N}(0,5^2)$ & --- & \\
+$b_{\Gamma_3}$& $23/42(b_1{-}1)$ & $\mathcal{N}(\mu,1^2)$ & --- & \\
+$c_0$         & 0           & $\mathcal{N}(0,30^2)$  & $[\Mpch]^2$ & \\
+$c_2$         & 30          & $\mathcal{N}(30,30^2)$  & $[\Mpch]^2$ & \\
+$c_4$         & 0           & $\mathcal{N}(0,30^2)$  & $[\Mpch]^2$ & \\
+$\ctilde$     & 400         & $\mathcal{N}(400,400^2)$ & $[\Mpch]^4$ & FoG \\
+$c_1$         & 0           & $\mathcal{N}(0,5^2)$  & $[\Mpch]^2$ & sub-leading \\
+$\Pshot$      & 0           & $\mathcal{N}(0,1^2)$  & ---          & rel.\ to $1/\nbar$ \\
+$a_0$         & 0           & $\mathcal{N}(0,1^2)$  & ---          & \\
+$a_2$         & 0           & $\mathcal{N}(0,1^2)$  & ---          & \\
+\hline
+\end{tabular}
+\caption{EFT nuisance parameters following Chudaykin, Ivanov \& Philcox (2025).
+DESI-ELG fiducials shown; PFS-ELG fiducials scaled as described in the text.}
+\label{tab:eft_params}
+\end{table}
+
+
+\subsection{PFS-ELG EFT fiducials}
+\label{sec:pfs_fiducials}
+
+% Scaling from DESI: ctilde by sigma_v ratio (default 0.75),
+% Pshot by nbar, counterterms by b1.
+% State the sensitivity parameter r_sigma_v and range tested.
+
+% TODO(NMN): Write PFS fiducials subsection.
+
+
+\subsection{Multi-tracer Fisher matrix}
+\label{sec:mt_fisher}
+
+% Observable vector: P_ell(k) multipoles (ell=0,2,4) for three spectra
+% (AA, BB, AB). 9x9 Gaussian covariance at each k from one-loop P(k,mu)
+% via Gauss-Legendre. Asymmetric k-range: 9 obs at k <= kmax_DESI,
+% 6 obs (AA+AB) at kmax_DESI < k <= kmax_PFS.
+% Derivatives via JAX autodiff through ps_1loop_jax.
+
+% TODO(NMN): Write multi-tracer Fisher subsection.
+
+
+\subsection{Analysis scenarios and benchmarks}
+\label{sec:scenarios}
+
+% Define broad, cross-cal, cross-cal-ext, oracle.
+% HOD-prior benchmark (Zhang+ 2025): 23% on sigma8, 4% on Omega_m.
+% Field-level benchmark (Chudaykin+ 2026): 50% on sigma8.
+
+% TODO(NMN): Write scenarios subsection.
+
+
+\subsection{Transferability assumption}
+\label{sec:transferability}
+
+% DESI's uniform target selection guarantees ELGs in/outside overlap
+% have the same EFT parameters.
+
+% TODO(NMN): Write transferability subsection.
+
+
+%-------------------------------------------------------------------
+\section{Results}
+\label{sec:results}
+%-------------------------------------------------------------------
+
+\subsection{Nuisance calibration in the overlap}
+\label{sec:results_overlap}
+
+% -> Fig 1.
+% Pshot and a0 tighten most (to 15-45% of broad).
+% c_tilde and c0 barely move (~85-95%).
+% The cross-spectrum's zero stochastic contribution is the primary mechanism.
+% PFS-only does better than DESI-only on c_tilde (asymmetric kmax).
+
+% TODO(NMN): Write overlap calibration results.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{\figurespath/fig1_overlap_calibration.pdf}
+\caption{Overlap calibration. Marginalized $\sigma/\sigma_{\rm broad}$ for
+selected DESI-ELG nuisance parameters from three Fisher analyses in the
+$1{,}200\;\text{deg}^2$ overlap: DESI-only (blue), PFS-only (orange),
+and the full PFS$\times$DESI multi-tracer combination (green).
+The dashed line marks the broad-prior floor ($\sigma/\sigma_{\rm broad}=1$).
+The stochastic parameters $\Pshot$ and $a_0$ show the strongest
+tightening---driven by the zero-stochastic property of the cross-spectrum
+$P^{\PFS\times\DESI}_\ell$, which cleanly separates shot noise from signal.
+The FoG counterterm $\ctilde$ is better constrained by PFS-only than
+DESI-only thanks to the asymmetric scale cut
+$\kmax^{\PFS}>\kmax^{\DESI}$. In all cases, the multi-tracer analysis
+(green) provides the tightest constraint---as expected from information
+monotonicity.}
+\label{fig:overlap_calibration}
+\end{figure}
+
+
+\subsection{Calibrated priors vs broad}
+\label{sec:results_priors}
+
+% -> Fig 2.
+% Pshot: nearly order-of-magnitude improvement.
+% b2, bG2: modest tightening.
+% Counterterms: barely move.
+
+% TODO(NMN): Write calibrated priors results.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{\figurespath/fig2_calibrated_vs_broad.pdf}
+\caption{Calibrated vs.\ broad priors. Cross-calibrated prior widths
+$\sigma_{\rm cal}$ (colored dots, one per $z$-bin) compared with the
+conservative broad priors $\sigma_{\rm broad}$ (light bars) for all
+DESI-ELG nuisance parameters. The stochastic parameter $\Pshot$ tightens
+by nearly an order of magnitude---this is the parameter that drives the
+cosmological improvement in \cref{fig:full_area}. The nonlinear biases
+$b_2\se^2$ and $b_{G_2}\se^2$ show modest tightening from one-loop
+sensitivity. The counterterms ($c_0$, $c_2$, $c_4$, $\ctilde$) remain
+close to their broad values: the overlap data at $k\leq 0.23\iMpch$
+carry little information on these $k^2$ and $k^4$ contributions.}
+\label{fig:calibrated_vs_broad}
+\end{figure}
+
+
+\subsection{Full-area DESI constraints}
+\label{sec:results_full_area}
+
+% -> Fig 3 (money figure).
+% Table 3: sigma per scenario, improvement %, efficiency.
+% Cross-cal exceeds HOD-prior benchmark for fsigma8 (19% vs 23% line).
+% Cross-cal-ext reaches 35%.
+% Mnu improves 48-53%.
+
+% TODO(NMN): Write full-area results with Table 3.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{\figurespath/fig3_full_area_constraints.pdf}
+\caption{Full-area DESI-ELG constraints. Marginalized $1\sigma$ uncertainties
+on $f\se$, $\Mnu$, and $\Om$ from $14{,}000\;\text{deg}^2$, combining
+four $z$-bins, under four analysis scenarios.
+The cross-calibration at $\kmax=0.20\iMpch$ (orange) already matches the
+HOD-prior benchmark of Zhang et al.\ (2025; dashed, 23\% on $\se$);
+extending to $\kmax=0.25\iMpch$ (green) surpasses it.
+The gap to the oracle (red) is dominated by counterterm parameters that
+the $1{,}200\;\text{deg}^2$ overlap cannot constrain at these $k$-scales---the
+stochastic parameters, which the cross-calibration \emph{does} constrain,
+are no longer the bottleneck.
+Dotted line: field-level SBP ceiling (Chudaykin, Ivanov \& Philcox 2026;
+50\% on $\se$), which breaks parameter degeneracies inaccessible to
+two-point statistics.}
+\label{fig:full_area}
+\end{figure}
+
+\begin{table}[t]
+\centering
+\begin{tabular}{lcccccccc}
+\hline
+Scenario & $\kmax$ & $\sigma(f\se)$ & $\Delta\%$ & $\sigma(\Mnu)$ [eV] & $\Delta\%$ & $\sigma(\Om)$ & $\Delta\%$ \\
+\hline
+Broad          & 0.20 & 0.076 & ---   & 1.08 & ---   & 0.050 & ---   \\
+Cross-cal      & 0.20 & 0.061 & $-19$ & 0.56 & $-48$ & 0.040 & $-19$ \\
+Cross-cal-ext  & 0.25 & 0.049 & $-35$ & 0.51 & $-53$ & 0.039 & $-22$ \\
+Oracle         & 0.25 & 0.010 & $-87$ & 0.12 & $-89$ & 0.019 & $-61$ \\
+\hline
+\end{tabular}
+\caption{Headline constraints from the full-area DESI-ELG Fisher forecast,
+combined across four $z$-bins. Improvement percentages are relative to the
+broad-prior baseline.}
+\label{tab:headline}
+\end{table}
+
+
+\subsection{Calibration efficiency}
+\label{sec:results_efficiency}
+
+% -> Fig 4.
+% Efficiency = (sigma_broad - sigma_xcal-ext) / (sigma_broad - sigma_oracle).
+% Mnu: ~60%. fsigma8: 38-47% (rises with z). Omega_m: ~35%.
+
+% TODO(NMN): Write efficiency results.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.65\textwidth]{\figurespath/fig4_calibration_efficiency.pdf}
+\caption{Calibration efficiency per $z$-bin, defined as
+$(\sigma_{\rm broad}-\sigma_{\rm xcal\text{-}ext})/(\sigma_{\rm broad}-\sigma_{\rm oracle})$.
+An efficiency of unity would mean the cross-calibration fully closes the gap
+to perfect nuisance knowledge.
+$\Mnu$ achieves the highest efficiency ($\sim\!60\%$): the neutrino mass
+constraint is most sensitive to precisely the stochastic parameters that
+the cross-calibration tightens.
+$f\se$ rises with redshift (38\%\,$\to$\,47\%), reflecting PFS's growing
+$\nbar$ advantage at higher $z$.
+$\Om$ is flat at $\sim\!35\%$---$\Om$ is primarily shape-constrained and
+less sensitive to amplitude-related nuisance parameters.}
+\label{fig:efficiency}
+\end{figure}
+
+
+\subsection{Sensitivity to the FoG velocity ratio}
+\label{sec:results_sensitivity}
+
+% -> Fig 5.
+% r_sigma_v in [0.5, 1.0]: sigma(fsigma8) ranges from 0.046 (39%)
+% to 0.050 (34%). Confirms asymmetric kmax adds real FoG leverage.
+% Even at r_sigma_v = 1.0, 34% improvement from stochastic separation.
+
+% TODO(NMN): Write sensitivity results.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.65\textwidth]{\figurespath/fig5_sensitivity_rsigmav.pdf}
+\caption{Sensitivity to the FoG velocity ratio. Combined $\sigma(f\se)$
+from the cross-cal-ext scenario as a function of
+$\rsv=\sigma_{v,\PFS}/\sigma_{v,\DESI}$.
+Lower $\rsv$ means weaker PFS FoG, hence higher $\kmax^{\PFS}$, more
+usable modes, and tighter constraints.
+The improvement ranges from 34\% at $\rsv=1$ (identical FoG; the gain
+comes entirely from stochastic separation) to 39\% at $\rsv=0.5$ (maximum
+FoG leverage via asymmetric $\kmax$).
+The mild slope is itself an important result: the cross-calibration is
+robust to the assumed $\rsv$, which is currently uncertain, precisely
+because the dominant mechanism does not depend on FoG modelling.}
+\label{fig:sensitivity}
+\end{figure}
+
+
+%-------------------------------------------------------------------
+\section{Discussion}
+\label{sec:discussion}
+%-------------------------------------------------------------------
+
+% 1. Stochastic dominance: improvement comes from Pshot/a0, not ctilde.
+%    This is a strength: robust to FoG modeling.
+% 2. Complementarity with SBPs: model-independent cross-check.
+% 3. Survey coordination: 19-35% improvement justifies maximizing overlap.
+% 4. Generalization: Euclid x DESI, Roman x Spec-S5, DESI-II x MegaMapper.
+% 5. Bispectrum extension: would activate c1, break bias degeneracies.
+% 6. Caveats: Gaussian Fisher, scaled PFS fiducials, no bispectrum,
+%    no window function, approximate SBP comparison.
+
+% TODO(NMN): Write discussion.
+
+
+%-------------------------------------------------------------------
+\section{Conclusions}
+\label{sec:conclusions}
+%-------------------------------------------------------------------
+
+% Five takeaways:
+% 1. EFT nuisance marginalization is the dominant cost in FS analyses.
+% 2. Cross-survey overlap provides data-driven, model-independent
+%    calibration -- primarily through the zero-stochastic cross-spectrum.
+% 3. For PFS x DESI: sigma(fsigma8) improves by 19-35%, sigma(Mnu) by 48-53%.
+% 4. Robust to FoG modeling (r_sigma_v sensitivity: 34-39%).
+% 5. Complementary to HOD-informed priors; competitive at the Pk level.
+
+% TODO(NMN): Write conclusions.
+
+
+%-------------------------------------------------------------------
+\acknowledgments
+%-------------------------------------------------------------------
+
+% TODO(NMN): Add acknowledgments.
+
+
+%-------------------------------------------------------------------
+% Appendices
+%-------------------------------------------------------------------
+\appendix
+
+\section{Derivative convergence}
+\label{app:derivatives}
+
+% JAX autodiff vs 5-point stencil agreement.
+% Median relative error < 10% for b1_sigma8, c2, c_tilde.
+% Step-size dependence for c_tilde (large fiducial, needs step ~ 50).
+
+% TODO(NMN): Write derivative convergence appendix.
+
+
+\section{Fisher code verification}
+\label{app:fisher_verification}
+
+% Analytic test: P_0(k) = A k^n + 1/nbar reproduces closed-form Fisher.
+% MT >= ST (information monotonicity).
+% Identical tracers -> F_MT = 2 x F_ST.
+% Scenario ordering: sigma_oracle <= sigma_xcal-ext <= sigma_xcal <= sigma_broad.
+
+% TODO(NMN): Write Fisher verification appendix.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\clearpage
+\bibliographystyle{JHEP}
+\bibliography{PFSxDESI-multi-fish}
+
+\end{document}

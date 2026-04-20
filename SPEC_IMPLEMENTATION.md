@@ -2,8 +2,9 @@
 
 **Target executor:** Claude Code
 **Owner:** N.-M. Nguyen (Kavli IPMU)
-**Scope:** 1–2 weekend project. Pure Python (NumPy / SciPy / CAMB).
+**Scope:** 1–2 weekend project. JAX-native stack (cosmopower-jax + ps_1loop_jax + clax fallbacks + NumPy / SciPy).
 **Self-contained:** This spec has no dependencies on earlier versions.
+**Runtime:** conda env `sbi_pytorch_osx-arm64_py310forge` (JAX 0.6.2, cosmopower-jax, ps_1loop_jax, clax with ept module on clax-pt branch).
 
 ---
 
@@ -141,12 +142,16 @@ in DESI's pipeline.
 
 ## 2. Survey specifications
 
-All survey numbers are **hardcoded in the code** (not read from
-user-supplied CSV files). The user can override via config.
+Survey n(z) tables are **read from `survey_specs/` at runtime**.
+Fine-binned files (`*_fine.txt`, Δz = 0.01) and FDR-binned files
+(`*_fdr.txt`) are available for DESI-ELG, DESI-LRG, DESI-QSO,
+and PFS-ELG. Columns: `z_min z_max nz[(h⁻¹Mpc)⁻³] Vz[(h⁻¹Mpc)⁻³]`.
+Fiducial cosmology in the volume column: Planck 2018 with
+Mν = 0.06 eV. The user can override via config.
 
 ### 2.1 PFS-ELG
 
-Source: Takada+ 2014 (PASJ 66 R1); nbar from user-supplied table.
+Source: `survey_specs/PFS_nz_pfs_fine.txt`; bias from Takada+ 2014 (PASJ 66 R1).
 Linear bias: b1(z) = 0.9 + 0.4z.
 Area: 1,200 deg².
 
@@ -160,22 +165,29 @@ Area: 1,200 deg².
 
 ### 2.2 DESI-ELG
 
-Source: DESI Collaboration 2016 (arXiv:1611.00036), Table 2.3; Y5.
+Source: `survey_specs/DESI_nz_elg_fine.txt` (desimodel full-survey
+forecast; cf. Table III of DESI Collaboration, arXiv:2503.14738).
 Linear bias: b1(z) = 0.84/D(z), where D(z) is the linear growth
 factor normalized to D(0)=1.
 Area: 14,000 deg².
 
+Fine-binned n(z) (80 bins, Δz = 0.01) are read directly from file.
+Representative values at selected z_mid:
+
 | z_mid | nbar [(h⁻¹Mpc)⁻³] | b1   |
 |-------|---------------------|------|
-| 0.75  | 3.4e-4              | 1.18 |
-| 0.85  | 4.0e-4              | 1.24 |
-| 0.95  | 4.4e-4              | 1.30 |
-| 1.05  | 3.9e-4              | 1.36 |
-| 1.15  | 3.3e-4              | 1.43 |
-| 1.25  | 2.7e-4              | 1.50 |
-| 1.35  | 2.3e-4              | 1.57 |
-| 1.45  | 1.7e-4              | 1.65 |
-| 1.55  | 1.4e-4              | 1.74 |
+| 0.80  | 1.07e-3             | 1.18 |
+| 0.90  | 8.07e-4             | 1.24 |
+| 1.00  | 6.42e-4             | 1.30 |
+| 1.10  | 4.44e-4             | 1.36 |
+| 1.20  | 4.09e-4             | 1.43 |
+| 1.30  | 2.91e-4             | 1.50 |
+| 1.40  | 1.55e-4             | 1.57 |
+| 1.50  | 1.25e-4             | 1.65 |
+| 1.60  | 7.78e-5             | 1.74 |
+
+Note: these values supersede the older DESI 2016 FDR projections
+(arXiv:1611.00036, Table 2.3) used in earlier drafts of this spec.
 
 ### 2.3 Matched z-bins for the overlap
 
@@ -293,93 +305,223 @@ Chudaykin+ numbers represent the field-level ceiling.
 
 ## 4. Theory model
 
-### 4.1 User-supplied module (`pkmu_module.py`)
+### 4.1 One-loop galaxy power spectrum
 
-If the user supplies `data/pkmu_module.py`, the code imports it.
-Required interface:
+Two backends compute one-loop EFTofLSS galaxy multipoles.
+Both are JAX-native, JIT-compiled, and autodiff-compatible.
+The code tries the primary first; if it fails or is unavailable,
+it falls back.
+
+**Primary: `ps_1loop_jax`** (source in `ps_1loop_jax/`, installed
+editable).
+
+The `PowerSpectrum1Loop` class computes the full one-loop galaxy
+power spectrum in redshift space following Chudaykin et al. (2020):
+- Third-order galaxy bias expansion (b1, b2, bG2, bΓ3)
+- Redshift-space distortions
+- UV counterterms (c0, c2, c4) and NLO FoG counterterm (cfog)
+- Stochastic terms (P_shot, a0, a2)
+- IR resummation (BAO wiggle/no-wiggle decomposition)
+- Alcock-Paczynski effect
 
 ```python
-def compute_pkmu(
-    k: np.ndarray,       # (Nk,), h/Mpc
-    mu: np.ndarray,      # (Nmu,), cosine of angle to LOS
-    z: float,
-    params: dict,        # EFT + cosmology params
-) -> np.ndarray:
-    """Return P(k, mu, z; params) with shape (Nk, Nmu)."""
+ps = PowerSpectrum1Loop(do_irres=True)
+pk_ell = ps.get_pk_ell(k, ell, pk_data, params)           # auto
+pk_ell_x = ps.get_pk_ell_pair(k, ell, pk_data, params,    # cross
+                               add_stochasticity=False)
+```
 
-def compute_multipoles(
-    k: np.ndarray,
-    z: float,
-    params: dict,
-    ells: tuple = (0, 2, 4),
-) -> dict[int, np.ndarray]:
-    """Return {ell: P_ell(k, z; params)} with shape (Nk,)."""
+Cross-stochasticity = 0 for independent surveys (enforced:
+`get_pk_ell_pair` raises `NotImplementedError` for additive
+stochasticity when `bias2`/`ctr2` are present).
+Cross-counterterms are **averaged**: `(ctr_A + ctr_B) / 2`.
 
-def compute_cross_multipoles(
-    k: np.ndarray,
-    z: float,
-    params_A: dict,      # PFS params
-    params_B: dict,      # DESI params
-    ells: tuple = (0, 2, 4),
-) -> dict[int, np.ndarray]:
-    """Return {ell: P^{AB}_ell(k, z)} with shape (Nk,).
+**Fallback: `clax.ept`** (source at `/Users/nguyenmn/clax/`,
+branch `clax-pt`, installed in env).
 
-    Cross-power between two independent tracers.
-    Cross-stochastic = 0.
-    Cross-FoG damping = F_FoG(k,mu; c̃_A)^{1/2} × F_FoG(k,mu; c̃_B)^{1/2}.
-    Cross-counterterms: at tree level,
-      c0^{AB} = (c0_A b1_B + c0_B b1_A) / (b1_A + b1_B).
+The `compute_ept` function implements the CLASS-PT algorithm in
+JAX (FFTLog + precomputed kernel matrices). It returns a 43-field
+`EPTComponents` pytree decomposing tree, loop, counterterm, and
+bias contributions. Wrapper functions assemble final multipoles:
+
+```python
+from clax.ept import compute_ept, ept_kgrid, pk_gg_l0, pk_gg_l2, pk_gg_l4
+
+k_ept = ept_kgrid()                          # (256,) h/Mpc
+ept = compute_ept(pk_lin_h, k_ept, h=h, f=f)
+p0 = pk_gg_l0(ept, b1, b2, bG2, bGamma3, cs0=c0, Pshot=Pshot, b4=0.)
+p2 = pk_gg_l2(ept, b1, b2, bG2, bGamma3, cs2=c2, b4=0.)
+p4 = pk_gg_l4(ept, b1, b2, bG2, bGamma3, cs4=c4, b4=0.)
+```
+
+Cross-spectra: `compute_ept` produces bias-independent building
+blocks; different {b1, b2, bG2, bΓ3, cs} per tracer are applied
+via the wrapper functions. The adapter (§4.3) constructs
+cross-power from the shared `EPTComponents` pytree.
+
+Autodiff: differentiable when IR resummation is precomputed
+outside the JAX trace (pass `_ir_precomputed` tuple).
+Validated to <0.5% vs CLASS-PT across all 9 RSD multipole
+components.
+
+### 4.2 ps_1loop_jax params dict structure
+
+The `params` dict expected by `PowerSpectrum1Loop` methods:
+
+```python
+params = {
+    'h': float,                 # Hubble parameter
+    'f': float,                 # Growth rate f(z)
+    'bias': {
+        'b1': float,            # Linear bias
+        'b2': float,            # Quadratic bias
+        'bG2': float,           # Galileon tidal bias
+        'bGamma3': float,       # Cubic tidal bias
+    },
+    'ctr': {
+        'c0': float,            # [Mpc/h]², monopole counterterm
+        'c2': float,            # [Mpc/h]², quadrupole counterterm
+        'c4': float,            # [Mpc/h]², hexadecapole counterterm
+        'cfog': float,          # [Mpc/h]⁴, FoG counterterm
+    },
+    'stoch': {                  # Only for auto-spectra
+        'P_shot': float,        # Shot noise (divided by ndens internally)
+        'a0': float,            # k²-dependent stochastic
+        'a2': float,            # k²μ²-dependent stochastic
+    },
+    'k_nl': float,              # Nonlinear scale for stochasticity
+    'ndens': float,             # Number density [h³/Mpc³]
+}
+```
+
+For cross-spectra, add `'bias2'` and `'ctr2'` dicts with the
+second tracer's parameters.
+
+`clax.ept` wrapper functions take flat arguments instead:
+`pk_gg_l0(ept, b1, b2, bG2, bGamma3, cs0, Pshot, b4)`.
+Note: `clax.ept` uses `b4` for the k²-dependent stochastic
+term (= `a2` in the Chudaykin+ convention).
+
+### 4.3 Adapter layer (`ps1loop_adapter.py`)
+
+A thin adapter maps between the Fisher forecast's σ8-scaled EFT
+parameter vector (§3.1) and the backend-specific formats:
+
+```python
+def fisher_params_to_ps1loop(
+    cosmo_params: dict,      # {fsigma8, Mnu, Omegam}
+    eft_params: dict,        # {b1_sigma8, b2_sigma8sq, ...}
+    z: float,
+    cosmo: FiducialCosmology,
+) -> dict:
+    """Convert Fisher-level parameters to ps_1loop_jax format.
+
+    Inverse-scales σ8 factors:
+      b1 = b1_sigma8 / sigma8(z)
+      b2 = b2_sigma8sq / sigma8(z)²
+      etc.
+    Constructs the full params dict including f, h, ndens.
+    """
+
+def fisher_params_to_ept(
+    cosmo_params: dict,
+    eft_params: dict,
+    z: float,
+    cosmo: FiducialCosmology,
+) -> dict:
+    """Convert Fisher-level parameters to clax.ept format.
+
+    Returns flat dict with keys matching pk_gg_l0/l2/l4 args:
+    {b1, b2, bG2, bGamma3, cs0, cs2, cs4, Pshot, b4}.
     """
 ```
 
-### 4.2 Built-in fallback model (`builtin_pkmu.py`)
+Both adapters handle the A_AP and A_amp rescaling factors
+described in §3.1 when computing derivatives w.r.t. cosmological
+parameters.
 
-If `pkmu_module.py` is absent, the code uses a built-in model
-sufficient for the Fisher forecast:
+### 4.4 Linear power spectrum and background input
 
-**Auto-power:**
-```
-P(k, μ, z) = D_FoG(k, μ; c̃) × [b1 + f μ²]² × P_lin(k, z)
-             + c0 (k/k_norm)² P_lin
-             + c2 (k/k_norm)² μ² P_lin
-             + c4 (k/k_norm)² μ⁴ P_lin
-             + (1/nbar)(1 + Pshot + a0 + a2 (k/k_norm)²)
-```
+Two backends provide P_lin(k, z) and σ8(z). The code tries
+cosmopower-jax first; if the requested cosmology is unavailable,
+it falls back to clax.
 
-where k_norm = 0.1 h/Mpc (Chudaykin+ convention),
-f = f(z) is the logarithmic growth rate,
-and
+**Primary: `cosmopower-jax`** (source at
+`/Users/nguyenmn/cosmopower-jax-for-pfs/`, installed in env).
 
-```
-D_FoG(k, μ; c̃) = 1 / (1 + c̃ (k μ)⁴ / k_norm⁴)
-```
+Neural-network emulators from Jense et al. (2024,
+arXiv:2405.07903). For this forecast, use the ΛCDM+Mν model
+(`jense_2023_camb_mnu`), which accepts {ωb, ωcdm, logA, ns, h,
+z, A_b, η_b, logT_AGN, mnu}:
 
-is a Lorentzian-like FoG damping in the c̃ parameterization. This
-captures the k⁴μ⁴ dependence that the NLO counterterm c̃ represents
-in the EFT expansion.
+```python
+from cosmopower_jax.cosmopower_jax import CosmoPowerJAX as CPJ
 
-**Cross-power (independent tracers):**
-```
-P^{AB}(k, μ, z) = D_FoG^{1/2}(k, μ; c̃_A) × D_FoG^{1/2}(k, μ; c̃_B)
-                  × [b1_A + f μ²] [b1_B + f μ²] × P_lin(k, z)
-                  + cross-counterterms (averaged)
+JENSE_DIR = "/Users/nguyenmn/cosmopower-jax-for-pfs/cosmology/jense2024"
+MODEL = "jense_2023_camb_mnu"
+
+emu_pklin = CPJ(probe='custom_log',
+    filepath=f"{JENSE_DIR}/{MODEL}/networks/{MODEL}_Pk_lin.npz")
+emu_sigma8 = CPJ(probe='custom_log',
+    filepath=f"{JENSE_DIR}/{MODEL}/networks/{MODEL}_sigma8.npz")
 ```
 
-Cross-stochastic = 0 for independent surveys.
+Output: P_lin on 1000 log-spaced k ∈ [5×10⁻⁵, 50] Mpc⁻¹,
+z ∈ [0, 5]. σ8 on 1000 z-modes in [0, 5].
+Units are Mpc⁻¹ / Mpc³; the adapter converts to h/Mpc / (Mpc/h)³
+for ps_1loop_jax:
 
-**Multipoles** are obtained by Gauss-Legendre quadrature over μ:
+```python
+pk_h = pk_mpc * h**3       # Mpc³ → (Mpc/h)³
+k_h  = k_mpc / h           # Mpc⁻¹ → h/Mpc
 ```
-P_ℓ(k) = (2ℓ+1)/2 ∫_{-1}^{1} P(k, μ) L_ℓ(μ) dμ
-```
-Use 20-point Gauss-Legendre (sufficient for ℓ ≤ 4).
 
-**Limitations:** This model omits one-loop bias contributions
-(b2, bG2 loop integrals). At the Fisher level, the missing terms
-affect the absolute size of the power spectrum but not the
-*derivatives* w.r.t. the nuisance parameters that drive the
-calibration comparison. The built-in model is adequate for
-weekend-1 results; the user's one-loop module refines them in
-weekend 2.
+Baryon feedback parameters (A_b, η_b, logT_AGN) are set to
+training-range midpoints; they are irrelevant for the linear P(k)
+emulator but must be supplied.
+
+Fully JIT-compiled and autodiff-compatible via `jax.grad`
+(verified).
+
+**Fallback: `clax`** (JAX-native Boltzmann solver).
+
+Used when the cosmology falls outside the cosmopower-jax training
+range, or for cross-validation:
+
+```python
+from ps_1loop_jax.clax_adapter import make_clax_pk_data
+
+pk_data = make_clax_pk_data(clax_params, z=z_eff)
+```
+
+Returns `pk_data = {'k': ..., 'pk': ...}` in h/Mpc and
+(Mpc/h)³ units, directly consumable by `PowerSpectrum1Loop`.
+σ8(z) from clax: integrate P_lin × W²(kR) k² dk / (2π²).
+
+**Background quantities** (H(z), D(z), f(z), χ(z), D_A(z)) come
+from `ps_1loop_jax.background` (pure JAX functions taking physical
+densities ω_X = Ω_X h²). These are lightweight and do not require
+a Boltzmann solver. The clax background (`bg.f_of_loga`,
+`bg.D_of_loga`) provides the same via differentiable cubic
+splines and is used when full clax is already initialized.
+
+### 4.5 Lightweight fallback model (`builtin_pkmu.py`)
+
+A Kaiser + FoG + counterterm model is retained **only for unit
+tests and rapid sanity checks** (does not require clax,
+cosmopower-jax, or ps_1loop_jax initialization):
+
+```
+P(k, μ, z) = [b1 + f μ²]² × P_lin(k, z)
+             - 2 k² [c0 + c2 f μ² + c4 f² μ⁴] P_lin
+             - cfog k⁴ f⁴ μ⁴ [b1 + f μ²]² P_lin
+             + (1/nbar)(P_shot + a0 (k/k_nl)² + a2 (k/k_nl)² μ²)
+```
+
+Cross-stochastic = 0. Cross-counterterms averaged.
+
+This model omits one-loop bias contributions (b2, bG2 loop
+integrals). It is **not** used for production forecasts.
 
 ---
 
@@ -389,16 +531,19 @@ weekend 2.
 pfsfog/
 ├── __init__.py
 ├── config.py               # ForecastConfig dataclass + YAML loader
-├── cosmo.py                # CAMB wrapper: H(z), D_A(z), D(z), f(z),
-│                           #   sigma8(z), P_lin(k,z)
-├── surveys.py              # PFS, DESI survey specs; SurveyPair;
+├── cosmo.py                # FiducialCosmology: cosmopower-jax (default)
+│                           #   or clax (fallback) for P_lin, sigma8;
+│                           #   ps_1loop_jax.background for H,D,f,chi
+├── surveys.py              # Load survey_specs/*.txt files; SurveyPair;
 │                           #   volume computation; z-binning
 ├── eft_params.py           # EFTFiducials, EFTPriors dataclasses;
 │                           #   desi_elg_fiducials(), pfs_elg_fiducials(),
 │                           #   broad_priors()
-├── builtin_pkmu.py         # Built-in Kaiser+FoG+CT model (§4.2)
-├── derivatives.py          # 5-point stencil numerical derivatives
-│                           #   for auto and cross multipoles
+├── ps1loop_adapter.py      # Map Fisher param vector ↔ ps_1loop_jax
+│                           #   or clax.ept; σ8-scaling; A_AP/A_amp
+├── builtin_pkmu.py         # Lightweight Kaiser+FoG+CT (tests only)
+├── derivatives.py          # JAX autodiff (primary) + 5-point stencil
+│                           #   (validation) for auto and cross multipoles
 ├── covariance.py           # Gaussian multipole covariance matrix
 │                           #   for single-tracer and multi-tracer
 ├── fisher.py               # Single-tracer Fisher matrix assembly
@@ -409,10 +554,31 @@ pfsfog/
 ├── plots.py                # All figures (serif, CM, ≥14pt)
 └── cli.py                  # `python -m pfsfog run`
 
+ps_1loop_jax/               # Installed editable; primary 1-loop backend
+└── ps_1loop_jax/
+    ├── ps_1loop.py         # PowerSpectrum1Loop class
+    ├── clax_adapter.py     # clax → pk_data bridge
+    ├── background.py       # JAX-native H(z), D(z), f(z), χ(z)
+    └── ...                 # PT matrices, IR resum, utils
+
+# External (not in this repo, installed in conda env):
+# /Users/nguyenmn/clax/              (branch clax-pt)
+#   └── clax/ept.py                  # Fallback 1-loop backend
+# /Users/nguyenmn/cosmopower-jax-for-pfs/
+#   └── cosmology/jense2024/         # P_lin, sigma8 emulators
+#       └── jense_2023_camb_mnu/     # ΛCDM+Mν model
+
+survey_specs/               # n(z) data files (committed)
+├── DESI_nz_elg_fine.txt    # Δz=0.01, 80 bins, z∈[0.8,1.6]
+├── PFS_nz_pfs_fine.txt     # Δz=0.01–0.025, 62 bins, z∈[0.7,2.2]
+├── *_fdr.txt               # Coarser FDR binning
+└── *.pdf                   # n(z) comparison plots
+
 tests/
 ├── test_cosmo.py           # H(z), D(z), sigma8(z) against known values
 ├── test_builtin_pkmu.py    # P0 > 0, P2 sign flip, P4 small; multipole sum rule
-├── test_derivatives.py     # convergence vs step size (decade sweep)
+├── test_ps1loop_adapter.py # round-trip Fisher↔ps1loop params; autodiff smoke
+├── test_derivatives.py     # autodiff vs stencil convergence agreement
 ├── test_covariance.py      # positive definite; diagonal ≥ 0
 ├── test_fisher.py          # analytic Gaussian: P(k) = A k^n + 1/nbar
 ├── test_fisher_mt.py       # MT ≥ ST; identical tracers → 2×ST
@@ -436,12 +602,26 @@ configs/
 
 ### 6.1 Cosmology (`cosmo.py`)
 
-Single class `FiducialCosmology` wrapping CAMB:
+Single class `FiducialCosmology` with a two-tier backend:
 
 ```python
 class FiducialCosmology:
-    def __init__(self, params: dict = FIDUCIAL):
-        """Initialize CAMB with fiducial params. Cache results."""
+    def __init__(self, params: dict = FIDUCIAL,
+                 backend: str = "cosmopower"):
+        """Initialize cosmological computation.
+
+        backend="cosmopower" (default):
+          - P_lin(k,z) and sigma8(z) from cosmopower-jax emulators
+            (jense_2023_camb_mnu model in jense2024/).
+          - H(z), D(z), f(z), chi(z) from ps_1loop_jax.background.
+          - Fastest; fully JAX-differentiable.
+
+        backend="clax":
+          - P_lin(k,z) from clax_adapter.make_clax_pk_data.
+          - H(z), D(z), f(z) from clax.background_solve splines.
+          - sigma8(z) from ∫ k² P_lin W²(kR) dk / (2π²).
+          - More accurate; slower initialization.
+        """
     def H(self, z: float) -> float:          # km/s/Mpc
     def D_A(self, z: float) -> float:        # Mpc/h
     def chi(self, z: float) -> float:        # comoving distance, Mpc/h
@@ -450,17 +630,34 @@ class FiducialCosmology:
     def sigma8(self, z: float) -> float:
     def fsigma8(self, z: float) -> float:
     def Plin(self, k: np.ndarray, z: float) -> np.ndarray:  # (Nk,)
+    def pk_data(self, z: float) -> dict:     # {'k': ..., 'pk': ...}
 ```
+
+Fiducial cosmology (Planck 2018):
+h=0.6736, ωb=0.02237, ωcdm=0.12, ns=0.9649,
+ln(10¹⁰As)=3.0445, Mν=0.06 eV.
+Both `clax.CosmoParams()` defaults and cosmopower-jax inputs
+match these values.
+
+cosmopower-jax emulator outputs are in Mpc⁻¹ / Mpc³ units;
+the class converts to h/Mpc / (Mpc/h)³ for ps_1loop_jax.
+
+`ps_1loop_jax.background` provides H(z), D(z), f(z), χ(z),
+D_A(z) as pure JAX functions (no Boltzmann solve needed).
+These are used regardless of the P_lin backend.
 
 ### 6.2 Surveys (`surveys.py`)
 
 ```python
+def load_nz_table(path: str) -> tuple[np.ndarray, ...]:
+    """Load survey_specs/*.txt → (z_min, z_max, nz, Vz) arrays."""
+
 @dataclass
 class Survey:
     name: str
     area_deg2: float
     z_bins: list[tuple[float, float]]  # [(zmin, zmax), ...]
-    nbar_of_z: Callable[[float], float]
+    nbar_of_z: Callable[[float], float]  # interpolated from file
     b1_of_z: Callable[[float], float]
 
 @dataclass
@@ -482,50 +679,62 @@ class SurveyPair:
         """V_full_B / V_overlap ≈ 14000/1200 ≈ 12."""
 ```
 
-### 6.3 Numerical derivatives (`derivatives.py`)
+### 6.3 Derivatives (`derivatives.py`)
 
-Five-point stencil:
+**Primary method: JAX automatic differentiation.**
+
+Since `ps_1loop_jax` is fully JAX-native and JIT-compiled,
+derivatives w.r.t. all EFT parameters are computed exactly via
+`jax.jacfwd`:
+
+```python
+def dPell_dtheta_autodiff(
+    ps_model: PowerSpectrum1Loop,
+    k: jnp.ndarray,
+    z: float,
+    fiducial_params: dict,
+    param_names: list[str],
+    pk_data: dict,
+    ells: tuple = (0, 2, 4),
+) -> dict[str, dict[int, jnp.ndarray]]:
+    """Jacobian of auto-power multipoles w.r.t. parameters.
+
+    Uses jax.jacfwd through ps_model.get_pk_ell.
+    Returns {param_name: {ell: dP_ell/dtheta(k)}}.
+    """
+
+def dPcross_dtheta_autodiff(
+    ps_model: PowerSpectrum1Loop,
+    k: jnp.ndarray,
+    z: float,
+    fiducial_params: dict,
+    param_names: list[str],
+    pk_data: dict,
+    which_tracer: str,    # "A", "B", or "shared"
+    ells: tuple = (0, 2, 4),
+) -> dict[str, dict[int, jnp.ndarray]]:
+    """Jacobian of cross-power multipoles.
+
+    For shared params (fσ8, Mν, Ωm): differentiate through both
+    tracers' param mappings.
+    For tracer-A params: differentiate only through bias/ctr dicts.
+    For tracer-B params: differentiate only through bias2/ctr2 dicts.
+    """
+```
+
+**Validation method: five-point stencil.**
+
+Retained for convergence verification and for any parameters
+where the autodiff chain is not yet wired (e.g., if the
+clax → P_lin path has issues for certain cosmo params):
+
 ```
 f'(x) ≈ [−f(x+2h) + 8f(x+h) − 8f(x−h) + f(x−2h)] / (12h)
 ```
 
-Step sizes per parameter from a config dict. Never hardcode steps
-inside the Fisher routine.
-
-Convergence test helper: sweep step h over a decade
-(h_0/10, h_0/3, h_0, 3h_0, 10h_0) and verify the derivative is
-stable to < 1%.
-
-```python
-def dPell_dtheta(
-    pkmu_func: Callable,
-    k: np.ndarray,
-    z: float,
-    fiducial_params: dict,
-    param_name: str,
-    step: float,
-    ells: tuple = (0, 2, 4),
-) -> dict[int, np.ndarray]:
-    """Derivative of auto-power multipoles w.r.t. one parameter."""
-
-def dPcross_dtheta(
-    cross_func: Callable,
-    k: np.ndarray,
-    z: float,
-    fiducial_params_A: dict,
-    fiducial_params_B: dict,
-    param_name: str,
-    step: float,
-    which_tracer: str,    # "A", "B", or "shared"
-    ells: tuple = (0, 2, 4),
-) -> dict[int, np.ndarray]:
-    """Derivative of cross-power multipoles.
-
-    For shared params (fσ8, Mν, Ωm): perturb in both A and B dicts.
-    For tracer-A params (b1_A, c̃_A, ...): perturb only in A.
-    For tracer-B params: perturb only in B.
-    """
-```
+Step sizes per parameter from a config dict.
+Convergence test: sweep step h over a decade and verify agreement
+with autodiff to < 1%.
 
 ### 6.4 Covariance (`covariance.py`)
 
@@ -723,7 +932,8 @@ no gridlines on bar charts, thin axis frames.
 ## 8. Engineering requirements
 
 - `ruff check .` clean. Type hints on all public functions.
-- `pytest -q` < 60 s.
+- `pytest -q` < 60 s (excluding clax initialization; mark slow
+  tests with `@pytest.mark.slow`).
 - Tests (see code tree in §5 for full list):
   - Analytic Fisher regression (Gaussian P(k) case).
   - MT ≥ ST (information monotonicity).
@@ -737,6 +947,12 @@ no gridlines on bar charts, thin axis frames.
 - Config snapshot: copy of YAML into output dir.
 - numpy-style docstrings on all public functions.
 - No notebooks as source of truth: scripts produce figures.
+- Dependencies: `jax>=0.4.26`, `ps_1loop_jax` (editable install
+  from `ps_1loop_jax/`), `cosmopower-jax` (from
+  `/Users/nguyenmn/cosmopower-jax-for-pfs/`), `clax` (from
+  `/Users/nguyenmn/clax/`, branch `clax-pt`), `numpy`, `scipy`,
+  `quadax`, `interpax`. No CAMB dependency.
+  All available in conda env `sbi_pytorch_osx-arm64_py310forge`.
 
 ---
 
@@ -744,11 +960,11 @@ no gridlines on bar charts, thin axis frames.
 
 | Day | Deliverable |
 |-----|-------------|
-| Sat AM | Skeleton, `cosmo.py`, `surveys.py`, `eft_params.py`, `builtin_pkmu.py`; all unit tests green |
-| Sat PM | `derivatives.py`, `covariance.py`, `fisher.py`; single-tracer Fisher verified against analytic |
-| Sun AM | `fisher_mt.py`, `prior_export.py`; overlap calibration working; Fig. 1 on built-in model |
-| Sun PM | `fisher_full_area.py`, `scenarios.py`; Figs 2–3; `summary.csv` |
-| Wk2 Sat | Figs 4–5 (sensitivity); plug in user's `pkmu_module.py` if available |
+| Sat AM | Skeleton; `cosmo.py` (clax wrapper); `surveys.py` (load from `survey_specs/`); `eft_params.py`; `ps1loop_adapter.py`; unit tests green |
+| Sat PM | `derivatives.py` (autodiff + stencil validation); `covariance.py`; `fisher.py`; single-tracer Fisher verified against analytic |
+| Sun AM | `fisher_mt.py`; `prior_export.py`; overlap calibration working; Fig. 1 on ps_1loop_jax model |
+| Sun PM | `fisher_full_area.py`; `scenarios.py`; Figs 2–3; `summary.csv` |
+| Wk2 Sat | Figs 4–5 (sensitivity); `builtin_pkmu.py` for fast cross-checks |
 | Wk2 Sun | Robustness (vary kmax, r_σv, overlap area); finalize README + `NOTES.md` for writeup |
 
 ---
@@ -758,7 +974,7 @@ no gridlines on bar charts, thin axis frames.
 - Non-Gaussian covariances / super-sample covariance.
 - Survey window function / integral constraint.
 - MCMC / posterior sampling — Fisher only.
-- C++ acceleration (pure Python; forecast runs in seconds).
+- C++ acceleration (JAX + JIT; forecast runs in seconds).
 - Fitting to real data.
 - Bispectrum (power spectrum multipoles P0, P2, P4 only).
 - z > 1.6 PFS-only bins (no DESI ELG overlap).

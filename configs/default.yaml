@@ -1,0 +1,23 @@
+# Default forecast configuration
+kmin: 0.01
+kmax: 0.20
+dk: 0.005
+
+z_bins:
+  - [0.8, 1.0]
+  - [1.0, 1.2]
+  - [1.2, 1.4]
+  - [1.4, 1.6]
+
+pfs_area_deg2: 1200.0
+desi_area_deg2: 14000.0
+overlap_area_deg2: 1200.0
+
+r_sigma_v: 0.75
+
+cosmo_backend: cosmopower
+oneloop_backend: ps_1loop_jax
+
+k_nl: 0.7
+
+output_dir: results

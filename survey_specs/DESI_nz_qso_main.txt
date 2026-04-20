@@ -1,5 +1,0 @@
-# DESI QSO main bins from Table III of arXiv:2503.14738
-# n(z) is volume-averaged from official desimodel full-survey forecast target file
-# Vz uses Planck 2018 fiducial with Mnu=0.06 eV and area=14000 deg^2
-# z_min z_max z_mid nz[(h^-1 Mpc)^-3] Vz[(h^-1 Mpc)^3]
-0.8 2.1 1.450000000000000178e+00 2.936235878590673032e-05 6.099669430820302582e+10
