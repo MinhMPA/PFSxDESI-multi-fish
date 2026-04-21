@@ -298,15 +298,24 @@ generalize to any pair of overlapping spectroscopic surveys.
 \label{sec:intro}
 %-------------------------------------------------------------------
 
-Full-shape analyses of galaxy clustering in the effective field theory
-of large-scale structure
-(EFTofLSS)~\cite{Chudaykin:2020aoj} have become a cornerstone of
-spectroscopic cosmology---delivering competitive constraints on the
-growth rate \(f\se\), the neutrino mass sum \(\Mnu\), and the matter
-density \(\Om\) from BOSS and, more recently,
-DESI~\cite{Chudaykin:2025abc}. The EFT framework parameterises our
+Full-shape analyses of galaxy clustering in the effective field
+theory of large-scale structure
+(EFTofLSS)~\cite{Baumann:2010tm,Carrasco:2012cv,Senatore:2014eva}
+have become a cornerstone of spectroscopic cosmology. Three
+independent groups applied the one-loop EFT power spectrum to BOSS
+DR12~\cite{Ivanov:2019pdj,dAmico:2019fhj,Chen:2021wdi}, delivering
+percent-level constraints on the growth rate, the Hubble constant,
+and the matter density within \(\Lambda\)CDM, and subsequently
+extending to neutrino masses~\cite{Ivanov:2019hqk}, primordial
+non-Gaussianity~\cite{Cabass:2022wjy}, and the galaxy
+bispectrum~\cite{Philcox:2021kcw}. Most recently, both the DESI
+Collaboration~\cite{DESI:2024fs,DESI:2024cosmo} and independent
+reanalyses~\cite{Chudaykin:2025abc} have applied the same framework
+to DESI DR1, probing dark energy, modified gravity, and neutrino
+masses at the full-shape level. The EFT framework parameterises our
 ignorance of small-scale physics through \(\sim\!12\) nuisance
-parameters per tracer per redshift bin: bias coefficients, EFT
+parameters per tracer per redshift
+bin~\cite{Chudaykin:2020aoj,Desjacques:2016bnm}: bias coefficients,
 counterterms, and stochastic amplitudes (\cref{tab:eft_params}).
 Marginalizing over these parameters with conservative Gaussian priors
 is the dominant cost in current full-shape
@@ -316,23 +325,25 @@ Tightening the nuisance priors is therefore a direct route to sharper
 cosmological constraints. All existing approaches to informative
 priors are \emph{simulation-based}: HOD mock catalogues are generated
 from N-body simulations, the EFT parameters are measured from the
-mocks, and the resulting distribution is used as a
-prior~\cite{Ivanov:2024sbp,Zhang:2024meth,Ivanov:2024rsd}. At the
-power-spectrum level, Zhang et al.~\cite{Zhang:2025desi} improved
-\(\sigma(\se)\) by \(\sim\!23\%\) over the conservative baseline;
-at the field level, Chudaykin, Ivanov \&
-Philcox~\cite{Chudaykin:2026field} achieved \(\sim\!50\%\). These
-gains are substantial---but the priors are only as accurate as the HOD
-model used to produce them.
+mocks---either at the power-spectrum level or at the field
+level---and the resulting distribution is used as a
+prior~\cite{Ivanov:2024sbp,Zhang:2024meth,Ivanov:2024rsd}. Zhang et
+al.~\cite{Zhang:2025desi} applied power-spectrum-level priors to
+DESI DR1, improving \(\sigma(\se)\) by \(\sim\!23\%\); Chudaykin,
+Ivanov \& Philcox~\cite{Chudaykin:2026field} achieved
+\(\sim\!50\%\) with field-level priors. These gains are
+substantial---but the priors are only as accurate as the HOD model
+used to produce them.
 
-Meanwhile, multi-tracer EFT analyses have demonstrated that jointly
-fitting multiple galaxy populations breaks parameter degeneracies
-beyond what single-tracer analyses can
-achieve~\cite{Mergulhao:2022multitracer}. Zhao et
-al.~\cite{Zhao:2024eboss} applied this to eBOSS DR16, jointly
-analysing LRGs and ELGs within a single survey and improving
-\(\sigma(\se)\) by 18--27\%. However, same-survey multi-tracer
-analyses share survey-specific systematics and have non-trivial
+Meanwhile, multi-tracer EFT analyses have shown that jointly fitting
+multiple galaxy populations breaks parameter degeneracies beyond
+what single-tracer analyses can
+achieve~\cite{Mergulhao:2022multitracer,Alarcon:2018multitracer}.
+Zhao et al.~\cite{Zhao:2024eboss} demonstrated this on eBOSS DR16
+data, jointly analysing LRGs and ELGs within a single survey and
+improving \(\sigma(\se)\) by 18--27\% depending on the treatment of
+cross-stochasticity. However, same-survey multi-tracer analyses
+share survey-specific systematics and have non-trivial
 cross-stochasticity between overlapping populations.
 
 \emph{Can the EFT nuisance parameters be calibrated directly from
