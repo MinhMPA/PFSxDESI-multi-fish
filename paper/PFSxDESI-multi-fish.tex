@@ -252,7 +252,7 @@
 \newcommand{\Vov}{V_{\rm overlap}}
 \newcommand{\Vfull}{V_{\rm full}}
 
-\title{Data-driven EFT prior calibration from the PFS\,$\times$\,DESI overlap}
+\title{Multi-tracers, multi-surveys: data-driven EFT prior calibration from the PFS--DESI overlap}
 \author[a,b,c]{Nhat-Minh Nguyen (Nguyễn Nhật Minh)\orcidlink{0000-0002-2542-7233}}
 \affiliation[a]{Center for Data-Driven Discovery, Kavli IPMU (WPI), UTIAS, The University of Tokyo, Kashiwa, Chiba 277-8583, Japan}
 \affiliation[b]{Kavli IPMU (WPI), UTIAS, The University of Tokyo, 5-1-5 Kashiwanoha, Kashiwa, Chiba 277-8583, Japan}
@@ -261,59 +261,35 @@
 \keywords{Large-scale structure of the universe, Power spectrum, Galaxy surveys, Cosmological parameters from LSS}
 
 \abstract{%
-Full-shape analyses of galaxy clustering in the effective field theory
-of large-scale structure (EFTofLSS) have emerged as a powerful probe
-of cosmological parameters---but marginalizing over \(\sim\!12\) nuisance
-parameters per tracer per redshift bin remains the dominant source of
-degradation.
+Marginalizing over \(\sim\!12\) EFT nuisance parameters per tracer
+per redshift bin is the dominant cost in full-shape galaxy power
+spectrum analyses. All existing routes to informative priors---whether
+power-spectrum-level or field-level---rely on simulation-based HOD
+model assumptions. We propose \emph{multi-survey priors}: a
+data-driven alternative that calibrates EFT nuisance parameters
+directly from the multi-tracer analysis of overlapping spectroscopic
+surveys, without simulations or HOD modelling.
 %
-Recent work has demonstrated that informative priors on these parameters
-can substantially sharpen constraints: HOD-informed priors improve
-\(\sigma(\se)\) by \(\sim\!23\%\) [Zhang et al.\ 2025], and field-level
-simulation-based priors by \(\sim\!50\%\) [Chudaykin, Ivanov \& Philcox 2026].
+The method has two steps. First, a multi-tracer Fisher analysis of
+the \(\sim\!1{,}200\;\text{deg}^2\) PFS--DESI overlap at
+\(0.8<z<1.6\)---using PFS-ELG together with DESI-ELG, DESI-LRG,
+and DESI-QSO (up to 4 tracers, 10 cross-spectra per \(z\)-bin)---calibrates
+the DESI nuisance parameters. Cross-power spectra between different
+galaxy populations carry zero stochastic contribution, cleanly
+separating shot noise from signal. Second, the calibrated priors are
+exported to DESI's full \(14{,}000\;\text{deg}^2\) footprint (lever
+arm \(\sim\!12\times\)), tightening cosmological constraints.
 %
-However, all existing approaches rely on halo-occupation-distribution
-model assumptions.
-%
-\emph{Can the nuisance parameters be calibrated directly from the data,
-without HOD modelling?}
-%
-We show that they can.
-%
-The \(\sim\!1{,}200\;\text{deg}^2\) overlap of PFS-ELG with three DESI
-tracers---ELG, LRG, and QSO---at \(0.8<z<1.6\) provides a natural
-calibration laboratory with up to 4 tracers and 10 cross-spectra per
-redshift bin. Cross-power spectra between \emph{different} galaxy
-populations (PFS-ELG\(\,\times\,\)DESI-LRG, PFS-ELG\(\,\times\,\)DESI-QSO)
-carry exactly zero stochastic contribution. Cross-spectra between
-\emph{similar} populations (PFS-ELG\(\,\times\,\)DESI-ELG) have non-zero
-cross-shot noise from shared galaxies, but the combination of both types
-of cross-spectra robustly separates shot noise from signal.
-%
-This constrains the shot-noise departure \(\Pshot\) to 11--23\% of its
-conservative prior width and the tidal bias \(b_{G_2}\se^2\) to
-13--35\%---while the \(k\)-dependent stochastic terms \(a_0\) and
-\(a_2\) and the counterterms remain prior-dominated. The impact on cosmological constraints is insensitive to the assumed
-shared-catalogue fraction: \(\sigma(f\se)\) varies by less than
-\(\pm 1\) percentage point across \(f_{\rm shared}\in[0,1]\).
-%
-Exporting these calibrated priors to DESI's full
-\(14{,}000\;\text{deg}^2\) footprint improves \(\sigma(f\se)\) by
-26--40\% and \(\sigma(\Mnu)\) by 62--65\%.
-%
-The improvement is robust to the assumed FoG velocity ratio
-(\(\rsv\) sensitivity: 34--48\%), precisely because
-the dominant mechanism is stochastic separation---not counterterm
-calibration.
-%
-PFS's lower virial velocity dispersion further motivates an
-asymmetric scale cut \(\kmax^{\PFS}>\kmax^{\DESI}\), extending the
-usable \(k\)-range and adding \(\sim\!5\%\) on top.
-%
-The method is model-independent, complementary to simulation-based
-priors, and immediately generalizable to any pair of overlapping
-spectroscopic surveys---including Euclid\(\,\times\,\)DESI,
-Roman\(\,\times\,\)Spec-S5, and DESI-II\(\,\times\,\)MegaMapper.
+The cross-calibration constrains \(\Pshot\) to 11--23\% of its
+broad prior and \(b_{G_2}\se^2\) to 13--35\%, improving
+\(\sigma(f\se)\) by 26--40\% and \(\sigma(\Mnu)\) by 62--65\%
+over the conservative baseline. The improvement is robust to the
+shared-catalogue fraction between PFS-ELG and DESI-ELG
+(\(\sigma(f\se)\) varies by \({<}\,\pm 1\) percentage point) and
+to the assumed FoG velocity ratio (34--48\%). Multi-survey priors
+are complementary to simulation-based priors, provide a
+model-independent consistency check on HOD assumptions, and
+generalize to any pair of overlapping spectroscopic surveys.
 }
 
 
@@ -323,86 +299,87 @@ Roman\(\,\times\,\)Spec-S5, and DESI-II\(\,\times\,\)MegaMapper.
 \maketitle
 \flushbottom
 
-%%% ============================================================
-%%% SKELETON SECTIONS — to be filled from SPEC_WRITEUP.md
-%%% ============================================================
-
 %-------------------------------------------------------------------
 \section{Introduction}
 \label{sec:intro}
 %-------------------------------------------------------------------
 
-Full-shape analyses of galaxy clustering in the effective field theory of
-large-scale structure (EFTofLSS)~\cite{Chudaykin:2020aoj} have become a
-cornerstone of spectroscopic cosmology---delivering competitive constraints
-on the growth rate \(f\se\), the neutrino mass sum \(\Mnu\), and the matter
-density \(\Om\) from BOSS and, more recently, DESI~\cite{Chudaykin:2025abc}.
-The EFT framework parameterises our ignorance of small-scale physics through
-\(\sim\!12\) nuisance parameters per tracer per redshift bin: galaxy bias
-coefficients (\(b_1\), \(b_2\), \(b_{G_2}\), \(b_{\Gamma_3}\)),
-counterterms (\(c_0\), \(c_2\), \(c_4\), \(\ctilde\), \(c_1\)), and
-stochastic amplitudes (\(\Pshot\), \(a_0\), \(a_2\)).
-Marginalizing over these parameters with conservative (broad) Gaussian
-priors is the dominant source of degradation on cosmological
-constraints~\cite{Chudaykin:2024abc}.
+Full-shape analyses of galaxy clustering in the effective field theory
+of large-scale structure
+(EFTofLSS)~\cite{Chudaykin:2020aoj} have become a cornerstone of
+spectroscopic cosmology---delivering competitive constraints on the
+growth rate \(f\se\), the neutrino mass sum \(\Mnu\), and the matter
+density \(\Om\) from BOSS and, more recently,
+DESI~\cite{Chudaykin:2025abc}. The EFT framework parameterises our
+ignorance of small-scale physics through \(\sim\!12\) nuisance
+parameters per tracer per redshift bin: bias coefficients, EFT
+counterterms, and stochastic amplitudes (\cref{tab:eft_params}).
+Marginalizing over these parameters with conservative Gaussian priors
+is the dominant cost in current full-shape
+analyses~\cite{Chudaykin:2024abc}.
 
-Recent work has demonstrated that informative priors on EFT nuisance
-parameters can substantially sharpen cosmological constraints.
-Zhang et al.~\cite{Zhang:2025desi} trained normalizing flows on
-\(\sim\!320{,}000\) AbacusSummit HOD mocks and applied the resulting
-priors to the DESI DR1 full-shape analysis, improving \(\sigma(\se)\)
-by \(\sim\!23\%\) and \(\sigma(\Om)\) by \(\sim\!4\%\) over the
-conservative baseline.
-Chudaykin, Ivanov \& Philcox~\cite{Chudaykin:2026field} pushed further
-with field-level simulation-based priors, achieving \(\sim\!50\%\) on
-\(\sigma(\se)\) and \(\sim\!40\%\) on \(\sigma(H_0)\)---gains that
-break parameter degeneracies inaccessible to two-point
-statistics~\cite{Ivanov:2024sbp,Ivanov:2024rsd}.
+Tightening the nuisance priors is therefore a direct route to sharper
+cosmological constraints. All existing approaches to informative
+priors are \emph{simulation-based}: HOD mock catalogues are generated
+from N-body simulations, the EFT parameters are measured from the
+mocks, and the resulting distribution is used as a
+prior~\cite{Ivanov:2024sbp,Zhang:2024meth,Ivanov:2024rsd}. At the
+power-spectrum level, Zhang et al.~\cite{Zhang:2025desi} improved
+\(\sigma(\se)\) by \(\sim\!23\%\) over the conservative baseline;
+at the field level, Chudaykin, Ivanov \&
+Philcox~\cite{Chudaykin:2026field} achieved \(\sim\!50\%\). These
+gains are substantial---but the priors are only as accurate as the HOD
+model used to produce them.
 
-However, all existing informative-prior approaches---HOD-informed priors
-and simulation-based priors alike---rely on halo-occupation-distribution
-model assumptions. The priors are only as good as the HOD model used to
-generate the training mocks, and any systematic mismatch between the
-assumed and true galaxy--halo connection propagates directly into the
-cosmological posterior.
+Meanwhile, multi-tracer EFT analyses have demonstrated that jointly
+fitting multiple galaxy populations breaks parameter degeneracies
+beyond what single-tracer analyses can
+achieve~\cite{Mergulhao:2022multitracer}. Zhao et
+al.~\cite{Zhao:2024eboss} applied this to eBOSS DR16, jointly
+analysing LRGs and ELGs within a single survey and improving
+\(\sigma(\se)\) by 18--27\%. However, same-survey multi-tracer
+analyses share survey-specific systematics and have non-trivial
+cross-stochasticity between overlapping populations.
 
-\emph{Can the EFT nuisance parameters be calibrated directly from the
-data, without HOD modelling?}
+\emph{Can the EFT nuisance parameters be calibrated directly from
+observational data, without HOD modelling?}
 
-We show that they can. When two spectroscopic surveys with different
-target selections observe the same cosmic volume, their cross-power
-spectrum carries zero stochastic contribution (for distinct galaxy
-populations) or a quantifiable, reduced stochastic floor (for
-overlapping populations). Jointly analysing the auto- and cross-spectra
-cleanly separates shot noise from the cosmological signal, constraining
-the stochastic nuisance parameters model-independently. The calibrated
-priors can then be exported to the larger survey's full footprint,
-tightening cosmological constraints without any simulation input.
+We propose \emph{multi-survey priors}---a data-driven alternative to
+simulation-based priors that exploits the overlap volume between two
+independent spectroscopic surveys. The idea is simple: when PFS and
+DESI observe the same patch of sky, their cross-power spectra---especially
+between \emph{different} galaxy populations such as
+PFS-ELG\(\,\times\,\)DESI-LRG---carry zero stochastic contribution
+by construction, since the two catalogues share no galaxies. A
+multi-tracer Fisher analysis of the auto- and cross-spectra in the
+overlap isolates the stochastic nuisance parameters
+model-independently. The calibrated priors are then exported to DESI's
+full \(14{,}000\;\text{deg}^2\) footprint, tightening cosmological
+constraints without any simulation input.
 
 The \(\sim\!1{,}200\;\text{deg}^2\) overlap of the Subaru Prime Focus
-Spectrograph (PFS) emission-line galaxy (ELG) survey~\cite{Takada:2014pfs}
-with three DESI tracers---ELG, luminous red galaxies (LRG), and
-quasars (QSO)~\cite{DESI:2016fdr,DESI:2025forecast}---at
-\(0.8 < z < 1.6\) provides a concrete realization of this idea.
-With up to 4 tracers and 10 cross-spectra per redshift bin, and PFS's
-lower finger-of-god (FoG) contamination motivating an asymmetric scale
-cut \(\kmax^{\PFS} > \kmax^{\DESI}\)~\cite{Rubira:2025asym}, the
-overlap volume functions as a calibration laboratory for the EFT
-parameters that limit the full DESI analysis.
+Spectrograph (PFS) ELG survey~\cite{Takada:2014pfs} with three DESI
+tracers---ELG, luminous red galaxies (LRG), and quasars
+(QSO)~\cite{DESI:2016fdr,DESI:2025forecast}---at \(0.8<z<1.6\)
+provides a concrete realization. With up to 4 tracers and 10
+cross-spectra per redshift bin, the overlap volume functions as a
+calibration laboratory for the EFT parameters that limit the full
+DESI analysis. PFS's lower finger-of-god (FoG) contamination further
+motivates an asymmetric scale cut
+\(\kmax^{\PFS}>\kmax^{\DESI}\)~\cite{Rubira:2025asym}, extending the
+usable \(k\)-range in the overlap.
 
-This paper is organised as follows. In \cref{sec:method} we describe
-the cross-calibration mechanism, including the asymmetric scale cut and
-the prior-export procedure. \Cref{sec:surveys} presents the PFS and
+This paper is organised as follows. \Cref{sec:method} describes the
+multi-survey prior mechanism. \Cref{sec:surveys} presents the PFS and
 DESI survey specifications. \Cref{sec:fisher} details the Fisher
-forecast setup. \Cref{sec:results} presents the main results---the
-calibrated priors, the full-area DESI constraints under four analysis
-scenarios, the calibration efficiency, and sensitivity tests.
-We discuss implications and caveats in \cref{sec:discussion} and
-conclude in \cref{sec:conclusions}.
+forecast setup. \Cref{sec:results} presents the calibrated priors,
+the full-area DESI constraints, the calibration efficiency, and
+sensitivity tests. We discuss implications in \cref{sec:discussion}
+and conclude in \cref{sec:conclusions}.
 
 
 %-------------------------------------------------------------------
-\section{Data-driven EFT prior calibration}
+\section{Multi-survey priors}
 \label{sec:method}
 %-------------------------------------------------------------------
 
@@ -877,11 +854,6 @@ carry little information on these $k^2$ and $k^4$ contributions.}
 \label{sec:results_full_area}
 
 \Cref{fig:full_area} and \cref{tab:headline} present the headline
-result: marginalized \(1\sigma\) constraints on \(f\se\), \(\Mnu\),
-and \(\Om\) from the full DESI-ELG footprint under the four analysis
-scenarios.
-
-\Cref{fig:full_area} and \cref{tab:headline} present the headline
 results. At the standard scale cut \(\kmax=0.20\iMpch\), cross-calibration
 improves \(\sigma(f\se)\) by 26\% and \(\sigma(\Mnu)\) by 62\%
 over the broad baseline---already exceeding the PS-level SBP benchmark
@@ -911,7 +883,7 @@ cross-cal scenarios are derived from the multi-tracer overlap with
 PFS-ELG, DESI-LRG, and DESI-QSO (up to 10 cross-spectra per $z$-bin).
 The cross-calibration at $\kmax=0.20\iMpch$ (orange) matches the
 PS-level SBP benchmark of Zhang et al.\ (2025; dashed, 23\% on $\se$);
-extending to $\kmax=0.25\iMpch$ (green) surpasses it at 37\%.
+extending to $\kmax=0.25\iMpch$ (green) surpasses it at 40\%.
 The gap to the fixed-nuisance limit (red) is dominated by counterterm parameters that
 the overlap cannot constrain at these $k$-scales.
 Dotted line: field-level SBP (Chudaykin, Ivanov \& Philcox 2026;
@@ -1049,87 +1021,74 @@ not depend on $f_{\rm shared}$.}
 \label{sec:discussion}
 %-------------------------------------------------------------------
 
-\paragraph{What drives the improvement.}
-The cosmological gains come from two parameters: the shot-noise
-departure \(\Pshot\), constrained by the zero-stochastic
-cross-spectrum, and the tidal bias \(b_{G_2}\se^2\), constrained by
-the one-loop \(\mu\)-structure. The \(k\)-dependent stochastic terms
-\(a_0\) and \(a_2\) do \emph{not} tighten significantly because they
-scale as \(k^2\) and are degenerate with the leading counterterms
-\(c_0\) and \(c_2\)---the cross-spectrum cannot separate two
-\(k^2\)-dependent contributions to the monopole. Neither does the FoG
-counterterm \(\ctilde\) tighten: its \(k^4\) contribution is
-sub-percent at \(k\leq 0.25\iMpch\). This was not the original
-expectation---the PFS proposal emphasised the lower FoG as the key
-advantage. In practice, the dominance of \(\Pshot\) and
-\(b_{G_2}\se^2\) is a strength: the cross-calibration gain does not
-depend on uncertain FoG modelling (\(\rsv\) sensitivity:
-\(\pm 3\)--14 percentage points), making the result robust.
+The cosmological gains from multi-survey priors are driven by two
+parameters through two distinct mechanisms. The shot-noise departure
+\(\Pshot\) is constrained by the zero-stochastic property of the
+cross-spectrum between different galaxy populations: since
+PFS-ELG\(\,\times\,\)DESI-LRG and PFS-ELG\(\,\times\,\)DESI-QSO
+share no galaxies, their cross-spectra measure the deterministic
+signal free of any shot-noise contamination, pinning down \(\Pshot\)
+to 11--23\% of its broad prior. The tidal bias \(b_{G_2}\se^2\) is
+constrained by a qualitatively different mechanism---the one-loop
+\(\mu\)-structure of the power spectrum, which is sensitive to the
+\(b_{G_2}\) operator through loop integrals with distinct angular
+dependence. Critically, the \(k\)-dependent stochastic terms \(a_0\)
+and \(a_2\) do \emph{not} tighten: they scale as \(k^2\), making
+them degenerate with the leading counterterms \(c_0\) and \(c_2\).
+The FoG counterterm \(\ctilde\) is also poorly constrained, since its
+\(k^4\) contribution is sub-percent at \(k\leq 0.25\iMpch\). This
+was not the original expectation---PFS's lower FoG was thought to be
+the primary advantage---but the dominance of \(\Pshot\) and
+\(b_{G_2}\) is in fact a strength, since the improvement does not
+depend on uncertain FoG modelling.
 
-\paragraph{Multi-population cross-spectra.}
-A subtlety arises for PFS-ELG\(\,\times\,\)DESI-ELG: both surveys
-target [OII] emitters, so a fraction \(f_{\rm shared}\sim 0.5\) of
-DESI-ELGs also appear in the PFS catalogue, introducing non-zero
-cross-shot noise (\cref{eqn:cross_shot}). The impact on \(\sigma(f\se)\) is negligible
-(\(\pm 1\) percentage point; \cref{fig:fshared}), and the
-different-population cross-spectra
-(PFS\(\times\)LRG, PFS\(\times\)QSO)---which have guaranteed zero
-cross-shot---recover the lost ground. This multi-population structure
-is a key advantage of using the full DESI tracer suite rather than
-ELGs alone.
+A practical subtlety arises for the PFS-ELG\(\,\times\,\)DESI-ELG
+cross-spectrum, where both surveys target [OII] emitters and a
+fraction \(f_{\rm shared}\sim 0.5\) of DESI-ELGs also appear in the
+PFS catalogue, introducing non-zero cross-shot noise
+(\cref{eqn:cross_shot}). However, the impact on \(\sigma(f\se)\) is
+negligible (\({<}\,\pm 1\) percentage point across
+\(f_{\rm shared}\in[0,1]\); \cref{fig:fshared}), because the
+different-population cross-spectra (PFS\(\times\)LRG,
+PFS\(\times\)QSO)---whose zero cross-shot is guaranteed by
+construction---dominate the calibration. This multi-population
+structure is a key advantage of using the full DESI tracer suite.
 
-\paragraph{Complementarity with SBPs.}
-The cross-calibration and simulation-based priors target the same
-bottleneck but from opposite directions: the former is
-model-independent and data-driven; the latter is HOD-dependent but
-can capture parameter correlations and constrain counterterms that the
-overlap volume cannot reach. The optimal strategy is to use both:
-cross-calibrate \(\Pshot\) and \(b_{G_2}\) from the data, and import
-SBP constraints on the counterterms and \(k\)-dependent stochastic
-terms from simulations. The cross-calibrated values provide a direct,
-data-driven consistency check on the HOD assumptions underlying the
-SBPs---particularly for the shot-noise departure, which depends
+Multi-survey priors and simulation-based priors are naturally
+complementary. The former calibrate \(\Pshot\) and \(b_{G_2}\)
+from observational data; the latter can tighten the counterterms and
+\(k\)-dependent stochastic terms that the overlap volume cannot
+constrain. The optimal strategy is to combine both, using the
+multi-survey-calibrated values as a data-driven consistency check on
+the HOD assumptions underlying the simulation-based
+priors---particularly for the shot-noise departure, which depends
 sensitively on sub-Poisson corrections from the satellite fraction.
-
-\paragraph{Survey coordination.}
 A 26--40\% improvement on \(\sigma(f\se)\) from
-\(\sim\!1{,}200\;\text{deg}^2\) of overlap is significant---comparable
-to the gain from the full PS-level SBP pipeline. This makes a strong case
-for maximizing the PFS--DESI overlap area in survey planning: every
-additional square degree of overlap tightens the calibration.
+\(\sim\!1{,}200\;\text{deg}^2\) of overlap, comparable to the full
+PS-level simulation-based prior pipeline~\cite{Zhang:2025desi}, makes
+a strong case for maximizing the PFS--DESI overlap area in survey
+planning.
 
-\paragraph{Generalization.}
-The method applies to any pair of overlapping spectroscopic surveys
-with different target selections. Near-term applications include
-Euclid\(\,\times\,\)DESI (sharing the northern extragalactic sky),
-Roman\(\,\times\,\)Spec-S5, and future DESI-II\(\,\times\,\)MegaMapper
-combinations. The key requirement is that the cross-spectrum between
-the two surveys' tracers has zero or reduced stochastic
-contribution---a condition automatically satisfied when the surveys
-target different galaxy populations.
+The multi-survey prior method generalizes immediately to any pair of
+overlapping spectroscopic surveys with different target selections:
+Euclid\(\,\times\,\)DESI, Roman\(\,\times\,\)Spec-S5, and
+DESI-II\(\,\times\,\)MegaMapper are natural future applications.
+Adding the tree-level bispectrum would further activate the
+sub-leading counterterm \(c_1\) (which enters the bispectrum \(Z_1\)
+kernel but has zero power-spectrum derivative) and break the
+\(b_1\)--\(b_2\)--\(b_{G_2}\) degeneracies through the \(Z_2\)
+kernel structure; we defer this to future work.
 
-\paragraph{Bispectrum extension.}
-Adding the tree-level bispectrum \(B_0(k_1,k_2,k_3)\) would activate
-the sub-leading counterterm \(c_1\) (which enters the bispectrum
-\(Z_1\) kernel but has zero derivative in the power spectrum), break
-\(b_1\)--\(b_2\)--\(b_{G_2}\) degeneracies (the bispectrum is
-quadratic in \(Z_2\)), and introduce two additional stochastic
-parameters \(B_{\rm shot}\) and \(A_{\rm shot}\) per tracer. We defer
-this extension to future work; the power-spectrum-only analysis
-already demonstrates the core calibration mechanism and delivers
-competitive results.
-
-\paragraph{Caveats.}
-This analysis uses a Gaussian Fisher forecast, which provides a
-conservative lower bound on the information content (the actual
-posterior may be tighter). The PFS-ELG EFT fiducials are scaled from
-DESI---no PFS mock fits exist yet. We do not include the bispectrum,
-the survey window function, super-sample covariance, or
-non-Gaussian covariance contributions. The comparison with
-simulation-based priors uses published improvement ratios, not a
-re-implementation of the SBP pipeline. Each of these simplifications
-is conservative in the sense that relaxing them would likely
-strengthen the case for cross-calibration.
+Several simplifications should be noted. We use a Gaussian Fisher
+forecast, which provides a conservative lower bound on the
+information content. The PFS-ELG EFT fiducials are scaled from DESI
+rather than fitted to PFS mocks (which do not yet exist). We omit
+the bispectrum, survey window functions, super-sample covariance,
+and non-Gaussian covariance contributions. The comparison with
+simulation-based priors uses published improvement ratios rather than
+a re-implementation. Each of these simplifications is conservative:
+relaxing them would likely strengthen the case for multi-survey
+priors.
 
 
 %-------------------------------------------------------------------
@@ -1137,9 +1096,10 @@ strengthen the case for cross-calibration.
 \label{sec:conclusions}
 %-------------------------------------------------------------------
 
-We have proposed and quantified a data-driven calibration of EFT
-nuisance parameters from the cross-survey overlap of PFS and DESI. Our
-main findings are:
+We have proposed \emph{multi-survey priors}---a data-driven
+alternative to simulation-based priors that calibrates EFT nuisance
+parameters from the multi-tracer analysis of the PFS--DESI overlap
+volume. Our main findings are:
 
 \begin{enumerate}
 \item EFT nuisance marginalization is the dominant cost in current
@@ -1167,14 +1127,14 @@ main findings are:
 \item The improvement is robust to the assumed FoG velocity ratio
   (\(\rsv\) sensitivity: 34--48\%) and to the
   shared-catalogue fraction between PFS-ELG and DESI-ELG
-  (\(f_{\rm shared}\) sensitivity: \(\pm 2\) percentage points),
+  (\(\sigma(f\se)\) varies by \({<}\,\pm 1\) percentage point),
   because the dominant mechanism is stochastic separation, not
   counterterm calibration.
 
-\item The method is complementary to simulation-based priors:
-  cross-calibration provides a data-driven consistency check on HOD
-  assumptions, while SBPs can tighten the counterterm parameters that
-  the overlap volume cannot reach. The approach generalizes to any
+\item Multi-survey priors are complementary to simulation-based
+  priors: the former calibrate stochastic parameters from data, the
+  latter tighten counterterms from simulations. Together they provide
+  mutual consistency checks. The approach generalizes to any
   pair of overlapping spectroscopic surveys---including
   Euclid\(\,\times\,\)DESI, Roman\(\,\times\,\)Spec-S5, and
   DESI-II\(\,\times\,\)MegaMapper.
