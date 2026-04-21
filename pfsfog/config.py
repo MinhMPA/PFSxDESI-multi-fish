@@ -51,12 +51,13 @@ class ForecastConfig:
     def compute_kmax_pfs(self) -> float:
         """kmax for PFS auto-spectrum in overlap.
 
-        If not set, derived from kmax_DESI × r_σv^{-1/2}
-        (EFT convergence: k_max ∝ c̃^{-1/4} ∝ σ_v^{-1/2}).
+        If not set, derived from kmax_DESI × r_σv^{-1}
+        (EFT convergence: k_max ∝ c̃^{-1/4} ∝ σ_v^{-1},
+        since c̃ ∝ σ_v⁴).
         """
         if self.kmax_pfs_overlap is not None:
             return self.kmax_pfs_overlap
-        return self.kmax_desi_overlap * self.r_sigma_v ** (-0.5)
+        return self.kmax_desi_overlap * self.r_sigma_v ** (-1.0)
 
     def compute_kmax_cross(self) -> float:
         """kmax for cross-spectrum in overlap. Defaults to kmax_PFS."""

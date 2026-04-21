@@ -150,38 +150,27 @@ def desi_elg_fiducials(b1: float, sigma8_z: float) -> EFTFiducials:
 # ---------------------------------------------------------------------------
 
 
+# σ_v values from Zhang et al. (2025, arXiv:2504.10407, Table 1)
+# Used to set the c̃ hierarchy via c̃ ∝ σ_v⁴.
+_SIGMA_V = {
+    "DESI-ELG": 3.11,   # h⁻¹Mpc
+    "DESI-LRG": 6.20,   # h⁻¹Mpc
+    "DESI-QSO": 5.68,   # h⁻¹Mpc
+}
+
+# c̃_ELG = 400 is the Chudaykin+ 2025 prior mean.
+# Scale other tracers: c̃_X = c̃_ELG × (σ_v,X / σ_v,ELG)⁴.
+_CTILDE_ELG = 400.0
+_CTILDE_LRG = _CTILDE_ELG * (_SIGMA_V["DESI-LRG"] / _SIGMA_V["DESI-ELG"]) ** 4  # ≈ 6320
+_CTILDE_QSO = _CTILDE_ELG * (_SIGMA_V["DESI-QSO"] / _SIGMA_V["DESI-ELG"]) ** 4  # ≈ 4440
+
+
 def desi_lrg_fiducials(b1: float, sigma8_z: float) -> EFTFiducials:
     """DESI-LRG EFT fiducials.
 
-    LRGs live in massive halos → larger virial velocities → larger c̃.
-    c̃_LRG ≈ 800 (2× ELG fiducial, reflecting higher σ_v).
-    Counterterms scale with bias.
-    """
-    b2 = lazeyras_b2(b1)
-    bG2 = lazeyras_bG2(b1)
-    bGamma3 = 23.0 / 42.0 * (b1 - 1.0)
-
-    return EFTFiducials(
-        b1_sigma8=b1 * sigma8_z,
-        b2_sigma8sq=b2 * sigma8_z**2,
-        bG2_sigma8sq=bG2 * sigma8_z**2,
-        bGamma3=bGamma3,
-        c0=0.0,
-        c2=30.0 * b1 / 1.3,       # scale from ELG fiducial by bias ratio
-        c4=0.0,
-        c_tilde=800.0,              # larger FoG for LRGs
-        c1=0.0,
-        Pshot=0.0,
-        a0=0.0,
-        a2=0.0,
-    )
-
-
-def desi_qso_fiducials(b1: float, sigma8_z: float) -> EFTFiducials:
-    """DESI-QSO EFT fiducials.
-
-    QSOs have the highest FoG (massive host halos, broad-line kinematics).
-    c̃_QSO ≈ 1200 (3× ELG fiducial).
+    LRGs live in massive halos with σ_v = 6.20 h⁻¹Mpc (Zhang+ 2025,
+    Table 1), giving c̃_LRG ≈ 6300 via c̃ ∝ σ_v⁴.
+    Counterterms scale with bias ratio.
     """
     b2 = lazeyras_b2(b1)
     bG2 = lazeyras_bG2(b1)
@@ -195,7 +184,33 @@ def desi_qso_fiducials(b1: float, sigma8_z: float) -> EFTFiducials:
         c0=0.0,
         c2=30.0 * b1 / 1.3,
         c4=0.0,
-        c_tilde=1200.0,             # largest FoG
+        c_tilde=_CTILDE_LRG,
+        c1=0.0,
+        Pshot=0.0,
+        a0=0.0,
+        a2=0.0,
+    )
+
+
+def desi_qso_fiducials(b1: float, sigma8_z: float) -> EFTFiducials:
+    """DESI-QSO EFT fiducials.
+
+    QSOs have σ_v = 5.68 h⁻¹Mpc (Zhang+ 2025, Table 1),
+    giving c̃_QSO ≈ 4400 via c̃ ∝ σ_v⁴.
+    """
+    b2 = lazeyras_b2(b1)
+    bG2 = lazeyras_bG2(b1)
+    bGamma3 = 23.0 / 42.0 * (b1 - 1.0)
+
+    return EFTFiducials(
+        b1_sigma8=b1 * sigma8_z,
+        b2_sigma8sq=b2 * sigma8_z**2,
+        bG2_sigma8sq=bG2 * sigma8_z**2,
+        bGamma3=bGamma3,
+        c0=0.0,
+        c2=30.0 * b1 / 1.3,
+        c4=0.0,
+        c_tilde=_CTILDE_QSO,
         c1=0.0,
         Pshot=0.0,
         a0=0.0,
@@ -255,7 +270,7 @@ def pfs_elg_fiducials(
 
     # FoG counterterm scales with σ_v²
     c_tilde_desi = 400.0
-    c_tilde_pfs = c_tilde_desi * r_sigma_v**2
+    c_tilde_pfs = c_tilde_desi * r_sigma_v**4
 
     return EFTFiducials(
         b1_sigma8=b1_pfs * sigma8_z,

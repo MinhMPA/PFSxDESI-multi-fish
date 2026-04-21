@@ -37,7 +37,8 @@ class TestPFSFiducials:
         fid = pfs_elg_fiducials(
             b1_pfs=1.34, b1_desi=1.3, sigma8_z=0.5, r_sigma_v=0.75,
         )
-        assert abs(fid.c_tilde - 400 * 0.75**2) < 1e-10
+        # c_tilde ∝ sigma_v^4, so scales as r_sigma_v^4
+        assert abs(fid.c_tilde - 400 * 0.75**4) < 1e-10
 
     def test_c2_scaled_by_bias_ratio(self):
         fid = pfs_elg_fiducials(
