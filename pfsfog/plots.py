@@ -112,40 +112,54 @@ def fig2_calibrated_vs_broad(overlap_results, out_dir: Path):
 
     bp = broad_priors()
     bp_dict = bp.sigma_dict()
-    params_with_prior = [n for n in NUISANCE_NAMES if bp_dict[n] is not None]
+    # Include ALL nuisance params, including b1_sigma8 (flat prior)
+    params_to_show = list(NUISANCE_NAMES)
     param_labels = {
+        "b1_sigma8": r"$b_1\sigma_8$",
         "b2_sigma8sq": r"$b_2\sigma_8^2$",
         "bG2_sigma8sq": r"$b_{G_2}\sigma_8^2$",
         "bGamma3": r"$b_{\Gamma_3}$",
         "c0": r"$c_0$", "c2": r"$c_2$", "c4": r"$c_4$",
         "c_tilde": r"$\tilde{c}$", "c1": r"$c_1$",
-        "Pshot": r"$P_\mathrm{shot}$", "a0": r"$a_0$", "a2": r"$a_2$",
+        "Pshot": r"$P_{\rm shot}$", "a0": r"$a_0$", "a2": r"$a_2$",
     }
 
     z_bins = sorted(overlap_results.keys())
-    fig, ax = plt.subplots(figsize=(10, 5))
+    fig, ax = plt.subplots(figsize=(11, 5))
 
-    x = np.arange(len(params_with_prior))
-    # Broad priors as baseline
-    broad_vals = [bp_dict[p] for p in params_with_prior]
-    ax.bar(x, broad_vals, 0.4, label="Broad", color="#4C72B0", alpha=0.4)
+    x = np.arange(len(params_to_show))
+    # Broad priors as bars (skip b1_sigma8 which has flat prior)
+    broad_vals = []
+    for p in params_to_show:
+        s = bp_dict[p]
+        broad_vals.append(s if s is not None else np.nan)
+    # Plot bars only where broad prior exists
+    for i, (p, bv) in enumerate(zip(params_to_show, broad_vals)):
+        if not np.isnan(bv):
+            ax.bar(i, bv, 0.4, color="#4C72B0", alpha=0.4,
+                   label="Broad" if i == 1 else None)
 
     # Overlay calibrated for each z-bin
     colors = plt.cm.viridis(np.linspace(0.2, 0.8, len(z_bins)))
     offset_step = 0.08
     for iz, zb in enumerate(z_bins):
         cal = overlap_results[zb].calibrated_priors
-        cal_vals = [cal.params[p] for p in params_with_prior]
+        cal_vals = [cal.params.get(p, np.nan) for p in params_to_show]
         offset = (iz - len(z_bins) / 2 + 0.5) * offset_step
         ax.scatter(x + offset, cal_vals, color=colors[iz], s=30, zorder=5,
                    label=f"$z \\in [{zb[0]:.1f},{zb[1]:.1f}]$")
 
     ax.set_xticks(x)
-    ax.set_xticklabels([param_labels.get(p, p) for p in params_with_prior], rotation=45, ha="right")
+    ax.set_xticklabels([param_labels.get(p, p) for p in params_to_show],
+                        rotation=45, ha="right")
     ax.set_ylabel(r"Prior width $\sigma$")
     ax.set_yscale("log")
     ax.legend(frameon=False, fontsize=10, ncol=2)
     ax.set_title("Calibrated vs broad priors (DESI-ELG nuisance)")
+    # Annotate b1_sigma8 as "flat prior"
+    b1_idx = params_to_show.index("b1_sigma8")
+    ax.annotate("flat prior", xy=(b1_idx, 0.5), fontsize=8, ha="center",
+                color="gray", style="italic")
 
     fig.tight_layout()
     fig.savefig(out_dir / "fig2_calibrated_vs_broad.pdf", bbox_inches="tight")

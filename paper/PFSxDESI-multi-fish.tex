@@ -290,9 +290,11 @@ carry exactly zero stochastic contribution. Cross-spectra between
 cross-shot noise from shared galaxies, but the combination of both types
 of cross-spectra robustly separates shot noise from signal.
 %
-This constrains the stochastic parameters \(\Pshot\) and \(a_0\) to
-10--45\% of their conservative prior widths---with the impact on
-cosmological constraints insensitive to the assumed shared-catalogue
+This constrains the shot-noise departure \(\Pshot\) to 10--45\% of its
+conservative prior width and the tidal bias \(b_{G_2}\se^2\) to
+16--36\%---while the \(k\)-dependent stochastic terms \(a_0\) and
+\(a_2\) and the counterterms remain prior-dominated. The impact on
+cosmological constraints is insensitive to the assumed shared-catalogue
 fraction (\(f_{\rm shared}\) sensitivity: \(\pm 2\) percentage points).
 %
 Exporting these calibrated priors to DESI's full
@@ -489,8 +491,14 @@ The key observation is that jointly fitting the auto-spectra
 deterministic signal is shared (up to bias ratios), while the
 stochastic terms enter only the auto-spectra (or are quantifiably
 reduced in the cross). The multi-tracer combination therefore
-isolates the stochastic parameters---\(\Pshot\), \(a_0\),
-\(a_2\)---far more tightly than any single tracer can.
+isolates the \emph{constant} shot-noise departure \(\Pshot\)---which
+enters the monopole as a \(k\)-independent offset---far more tightly
+than any single tracer can. The \(k\)-dependent stochastic terms
+\(a_0\) and \(a_2\), by contrast, are degenerate with the leading
+counterterms \(c_0\) and \(c_2\) (both scale as \(k^2\)) and
+benefit less from the cross-spectrum. The one-loop bias structure
+additionally constrains \(b_{G_2}\) through its distinct
+\(\mu\)-dependence in the loop integrals.
 
 
 \subsection{Asymmetric scale cuts}
@@ -802,19 +810,22 @@ mismatch between the calibrated and in-situ posteriors.
 from the overlap Fisher, comparing DESI-only, PFS-only, and the full
 multi-tracer combination.
 
-The stochastic parameters \(\Pshot\) and \(a_0\) show the strongest
-tightening---down to 10--45\% of their broad prior widths across
-redshift bins. This is a direct consequence of the zero-stochastic
-cross-spectrum: the multi-tracer combination isolates the shot-noise
-departure from the cosmological signal. The tightening increases with
-redshift as PFS's \(\nbar\) advantage over DESI grows.
+Two parameters show substantial tightening. The shot-noise departure
+\(\Pshot\) constrains to 10--45\% of its broad prior width---a
+2--10\(\times\) improvement driven by the zero-stochastic
+cross-spectrum, which isolates the constant noise floor from the
+cosmological signal. The tidal bias \(b_{G_2}\se^2\) tightens to
+16--36\% of broad, reflecting the distinct \(\mu\)-dependence of the
+\(b_{G_2}\) operator in the one-loop power spectrum. The quadratic
+bias \(b_2\se^2\) shows a more modest improvement (57--95\% of broad).
 
-The counterterms (\(\ctilde\), \(c_0\)) are barely constrained by the
-overlap data---remaining at 85--95\% of their broad values. At
-\(k\leq 0.23\iMpch\), the \(k^4\) FoG term is sub-percent of the
-signal, leaving little Fisher information on \(\ctilde\). PFS-only
-(orange) does marginally better than DESI-only (blue) on \(\ctilde\)
-thanks to the asymmetric scale cut.
+The \(k\)-dependent stochastic terms \(a_0\) and \(a_2\) remain
+prior-dominated (96--99\% of broad). This is expected: both scale as
+\(k^2\), making them degenerate with the leading counterterms \(c_0\)
+and \(c_2\), which the cross-spectrum cannot separate. The counterterms
+themselves (\(\ctilde\), \(c_0\), \(c_2\), \(c_4\)) barely tighten
+(82--99\%), consistent with the \(k^2\) and \(k^4\) terms being
+sub-percent of the signal at \(k\leq 0.23\iMpch\).
 
 \begin{figure}[t]
 \centering
@@ -824,14 +835,10 @@ selected DESI-ELG nuisance parameters from three Fisher analyses in the
 $1{,}200\;\text{deg}^2$ overlap: DESI-only (blue), PFS-only (orange),
 and the full PFS$\times$DESI multi-tracer combination (green).
 The dashed line marks the broad-prior floor ($\sigma/\sigma_{\rm broad}=1$).
-The stochastic parameters $\Pshot$ and $a_0$ show the strongest
-tightening---driven by the zero-stochastic property of the cross-spectrum
-$P^{\PFS\times\DESI}_\ell$, which cleanly separates shot noise from signal.
-The FoG counterterm $\ctilde$ is better constrained by PFS-only than
-DESI-only thanks to the asymmetric scale cut
-$\kmax^{\PFS}>\kmax^{\DESI}$. In all cases, the multi-tracer analysis
-(green) provides the tightest constraint---as expected from information
-monotonicity.}
+$\Pshot$ shows the strongest tightening (to 10--45\% of broad)---driven by
+the zero-stochastic cross-spectrum. The $k$-dependent stochastic terms
+$a_0$ and $a_2$ remain prior-dominated because they are degenerate with
+the $k^2$ counterterms.}
 \label{fig:overlap_calibration}
 \end{figure}
 
@@ -841,14 +848,17 @@ monotonicity.}
 
 \Cref{fig:calibrated_vs_broad} compares the cross-calibrated prior
 widths with the conservative broad priors for all 11 DESI-ELG nuisance
-parameters with Gaussian priors. The shot-noise parameter \(\Pshot\)
-shows the most dramatic improvement---tightening by nearly an order of
-magnitude (from \(\sigma=1\) to \(\sigma\approx 0.1\text{--}0.3\)
-depending on redshift). This is the parameter that drives the
-cosmological improvement in \cref{fig:full_area}.
-The nonlinear biases \(b_2\se^2\) and \(b_{G_2}\se^2\) show modest
-tightening from the one-loop sensitivity. The counterterms remain
-close to their broad values, consistent with \cref{fig:overlap_calibration}.
+parameters with Gaussian priors. Two parameters stand out. The shot-noise departure \(\Pshot\) tightens
+by nearly an order of magnitude (from \(\sigma=1\) to
+\(\sigma\approx 0.1\text{--}0.3\)), reflecting the clean separation
+enabled by the zero-stochastic cross-spectrum. The tidal bias
+\(b_{G_2}\se^2\) tightens by \(3\text{--}6\times\) (from \(\sigma=5\)
+to \(\sigma\approx 0.8\text{--}1.8\)), driven by its distinct
+\(\mu\)-dependence in the one-loop power spectrum---a qualitatively
+different mechanism from the shot-noise calibration. Together, these
+two parameters drive the cosmological improvement in
+\cref{fig:full_area}. The counterterms and the \(k\)-dependent
+stochastic terms \(a_0\), \(a_2\) remain close to their broad values.
 
 \begin{figure}[t]
 \centering
@@ -892,11 +902,13 @@ combination (including LRG and QSO cross-spectra, which have
 guaranteed zero cross-shot) recovers the lost ground and reaches
 34\% even with \(f_{\rm shared}=0.5\).
 
-The gap between cross-cal-ext and the fixed-nuisance limit (87\%) is dominated by
-the counterterm parameters (\(\ctilde\), \(c_0\), \(c_2\)) that the
-overlap volume cannot constrain at the available \(k\)-scales. The
-stochastic parameters, which the cross-calibration \emph{does}
-constrain, are no longer the bottleneck.
+The gap between cross-cal-ext and the fixed-nuisance limit (87\%) is
+dominated by the counterterm parameters (\(\ctilde\), \(c_0\), \(c_2\))
+and the \(k\)-dependent stochastic terms (\(a_0\), \(a_2\)) that the
+overlap volume cannot separate from the counterterms at the available
+\(k\)-scales. The parameters that the cross-calibration \emph{does}
+constrain---\(\Pshot\) and \(b_{G_2}\se^2\)---are no longer the
+bottleneck.
 
 \begin{figure}[t]
 \centering
@@ -1018,18 +1030,22 @@ because the dominant mechanism does not depend on FoG modelling.}
 \label{sec:discussion}
 %-------------------------------------------------------------------
 
-\paragraph{Stochastic dominance.}
-The improvement in cosmological constraints comes primarily from the
-tightening of the stochastic parameters \(\Pshot\) and \(a_0\)---not
-from the FoG counterterm \(\ctilde\) or the leading counterterms
-\(c_0\), \(c_2\). This was not the original expectation: the PFS
-proposal emphasised the lower FoG of PFS-ELGs as the key advantage.
-In practice, the FoG counterterm contributes sub-percent at
-\(k\leq 0.25\iMpch\), leaving little Fisher information for
-calibration. The stochastic dominance is, however, a strength: the
-cross-calibration gain does not depend on uncertain FoG modelling
-(\(\rsv\) sensitivity: \(\pm 3\) percentage points), making the
-result robust.
+\paragraph{What drives the improvement.}
+The cosmological gains come from two parameters: the shot-noise
+departure \(\Pshot\), constrained by the zero-stochastic
+cross-spectrum, and the tidal bias \(b_{G_2}\se^2\), constrained by
+the one-loop \(\mu\)-structure. The \(k\)-dependent stochastic terms
+\(a_0\) and \(a_2\) do \emph{not} tighten significantly because they
+scale as \(k^2\) and are degenerate with the leading counterterms
+\(c_0\) and \(c_2\)---the cross-spectrum cannot separate two
+\(k^2\)-dependent contributions to the monopole. Neither does the FoG
+counterterm \(\ctilde\) tighten: its \(k^4\) contribution is
+sub-percent at \(k\leq 0.25\iMpch\). This was not the original
+expectation---the PFS proposal emphasised the lower FoG as the key
+advantage. In practice, the dominance of \(\Pshot\) and
+\(b_{G_2}\se^2\) is a strength: the cross-calibration gain does not
+depend on uncertain FoG modelling (\(\rsv\) sensitivity:
+\(\pm 3\) percentage points), making the result robust.
 
 \paragraph{Multi-population cross-spectra.}
 A subtlety arises for PFS-ELG\(\,\times\,\)DESI-ELG: both surveys
@@ -1049,11 +1065,12 @@ bottleneck but from opposite directions: the former is
 model-independent and data-driven; the latter is HOD-dependent but
 can capture parameter correlations and constrain counterterms that the
 overlap volume cannot reach. The optimal strategy is to use both:
-cross-calibrate the stochastic parameters from the data, and
-import SBP constraints on the counterterms from simulations. The
-cross-calibrated \(\Pshot\) and \(a_0\) values provide a direct,
+cross-calibrate \(\Pshot\) and \(b_{G_2}\) from the data, and import
+SBP constraints on the counterterms and \(k\)-dependent stochastic
+terms from simulations. The cross-calibrated values provide a direct,
 data-driven consistency check on the HOD assumptions underlying the
-SBPs.
+SBPs---particularly for the shot-noise departure, which depends
+sensitively on sub-Poisson corrections from the satellite fraction.
 
 \paragraph{Survey coordination.}
 A 32--34\% improvement on \(\sigma(f\se)\) from
@@ -1115,7 +1132,11 @@ main findings are:
   between different galaxy populations (PFS-ELG\(\,\times\,\)DESI-LRG,
   PFS-ELG\(\,\times\,\)DESI-QSO)---carries zero stochastic
   contribution, providing a clean, model-independent handle on the
-  stochastic nuisance parameters \(\Pshot\) and \(a_0\).
+  shot-noise departure \(\Pshot\). The one-loop bias structure
+  additionally constrains \(b_{G_2}\se^2\) through its distinct
+  angular dependence. The \(k\)-dependent stochastic terms \(a_0\)
+  and \(a_2\) remain degenerate with the counterterms and are not
+  significantly tightened.
 
 \item For PFS\(\,\times\,\)DESI with up to 4 tracers and 10
   cross-spectra per redshift bin, the cross-calibration improves
