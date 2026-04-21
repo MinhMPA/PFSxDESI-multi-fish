@@ -766,13 +766,13 @@ distinguished by the nuisance prior source and the maximum wavenumber:
 \item \textbf{Cross-cal-ext}: calibrated priors,
   \(\kmax=0.25\iMpch\). Exploits the tighter nuisance priors to
   extend the usable \(k\)-range.
-\item \textbf{Oracle}: nuisance parameters fixed to their fiducial
+\item \textbf{Fixed nuisance}: nuisance parameters fixed to their fiducial
   values, \(\kmax=0.25\iMpch\). Theoretical ceiling.
 \end{itemize}
-We also plot horizontal reference lines at the published HOD-prior
-benchmark of Zhang et al.\ \cite{Zhang:2025desi} (23\% on
-\(\sigma(\se)\)) and the field-level SBP ceiling of Chudaykin et al.\
-\cite{Chudaykin:2026field} (50\% on \(\sigma(\se)\)).
+We also plot horizontal reference lines at the published PS-level SBP
+of Zhang et al.\ \cite{Zhang:2025desi} (23\% on \(\sigma(\se)\)) and
+the field-level SBP of Chudaykin et al.\ \cite{Chudaykin:2026field}
+(50\% on \(\sigma(\se)\)).
 
 
 \subsection{Transferability assumption}
@@ -877,7 +877,7 @@ scenarios.
 
 The cross-calibration at \(\kmax=0.20\iMpch\) improves
 \(\sigma(f\se)\) by 32\% and \(\sigma(\Mnu)\) by 52\% over the
-broad baseline---matching the HOD-prior benchmark of Zhang et al.\
+broad baseline---matching the PS-level SBP benchmark of Zhang et al.\
 \cite{Zhang:2025desi} (\cref{fig:full_area}, dashed line).
 Extending to \(\kmax=0.25\iMpch\) (cross-cal-ext) reaches 34\% on
 \(\sigma(f\se)\) and 55\% on \(\sigma(\Mnu)\), surpassing the
@@ -892,7 +892,7 @@ combination (including LRG and QSO cross-spectra, which have
 guaranteed zero cross-shot) recovers the lost ground and reaches
 34\% even with \(f_{\rm shared}=0.5\).
 
-The gap between cross-cal-ext and the oracle (87\%) is dominated by
+The gap between cross-cal-ext and the fixed-nuisance limit (87\%) is dominated by
 the counterterm parameters (\(\ctilde\), \(c_0\), \(c_2\)) that the
 overlap volume cannot constrain at the available \(k\)-scales. The
 stochastic parameters, which the cross-calibration \emph{does}
@@ -907,11 +907,11 @@ four $z$-bins, under four analysis scenarios. Nuisance priors for the
 cross-cal scenarios are derived from the multi-tracer overlap with
 PFS-ELG, DESI-LRG, and DESI-QSO (up to 10 cross-spectra per $z$-bin).
 The cross-calibration at $\kmax=0.20\iMpch$ (orange) matches the
-HOD-prior benchmark of Zhang et al.\ (2025; dashed, 23\% on $\se$);
+PS-level SBP benchmark of Zhang et al.\ (2025; dashed, 23\% on $\se$);
 extending to $\kmax=0.25\iMpch$ (green) surpasses it at 37\%.
-The gap to the oracle (red) is dominated by counterterm parameters that
+The gap to the fixed-nuisance limit (red) is dominated by counterterm parameters that
 the overlap cannot constrain at these $k$-scales.
-Dotted line: field-level SBP ceiling (Chudaykin, Ivanov \& Philcox 2026;
+Dotted line: field-level SBP (Chudaykin, Ivanov \& Philcox 2026;
 50\% on $\se$).}
 \label{fig:full_area}
 \end{figure}
@@ -929,7 +929,7 @@ Broad & --- & 0.20 & 0.076 & ---   & 1.08 & ---   & 0.050 & --- \\
  & PFS$\times$ELG ($f_{\rm sh}{=}0.5$) & 0.25 & 0.051 & $-32$ & 0.51 & $-52$ & 0.040 & $-20$ \\
  & All combined ($f_{\rm sh}{=}0.5$)    & 0.25 & 0.050 & $-34$ & 0.48 & $-55$ & 0.038 & $-25$ \\
 \hline
-Oracle & --- & 0.25 & 0.010 & $-87$ & 0.12 & $-89$ & 0.019 & $-61$ \\
+Fixed nuisance & --- & 0.25 & 0.010 & $-87$ & 0.12 & $-89$ & 0.019 & $-61$ \\
 \hline
 \end{tabular}
 \caption{Full-area DESI-ELG constraints (combined $z$-bins) under different
@@ -963,7 +963,7 @@ to amplitude nuisance parameters.
 \centering
 \includegraphics[width=0.65\textwidth]{\figurespath/fig4_calibration_efficiency.pdf}
 \caption{Calibration efficiency per $z$-bin, defined as
-$(\sigma_{\rm broad}-\sigma_{\rm xcal\text{-}ext})/(\sigma_{\rm broad}-\sigma_{\rm oracle})$.
+$(\sigma_{\rm broad}-\sigma_{\rm xcal\text{-}ext})/(\sigma_{\rm broad}-\sigma_{\rm fixed})$.
 An efficiency of unity would mean the cross-calibration fully closes the gap
 to perfect nuisance knowledge.
 $\Mnu$ achieves the highest efficiency ($\sim\!60\%$): the neutrino mass
@@ -1058,7 +1058,7 @@ SBPs.
 \paragraph{Survey coordination.}
 A 32--34\% improvement on \(\sigma(f\se)\) from
 \(\sim\!1{,}200\;\text{deg}^2\) of overlap is significant---comparable
-to the gain from the full HOD-prior pipeline. This makes a strong case
+to the gain from the full PS-level SBP pipeline. This makes a strong case
 for maximizing the PFS--DESI overlap area in survey planning: every
 additional square degree of overlap tightens the calibration.
 
@@ -1120,7 +1120,7 @@ main findings are:
 \item For PFS\(\,\times\,\)DESI with up to 4 tracers and 10
   cross-spectra per redshift bin, the cross-calibration improves
   \(\sigma(f\se)\) by 32--34\% and \(\sigma(\Mnu)\) by 52--55\% over
-  conservative priors---competitive with the HOD-prior benchmark of
+  conservative priors---competitive with the PS-level SBP benchmark of
   Zhang et al.~\cite{Zhang:2025desi} and achieved without any
   simulation input.
 
@@ -1188,7 +1188,7 @@ We verify the Fisher matrix code against three analytic checks:
   sense) for every parameter tested.
 
 \item \textbf{Scenario ordering.} The marginalized constraints obey
-  \(\sigma_{\rm oracle}\leq \sigma_{\rm xcal\text{-}ext}\leq
+  \(\sigma_{\rm fixed}\leq \sigma_{\rm xcal\text{-}ext}\leq
   \sigma_{\rm xcal}\leq \sigma_{\rm broad}\) for all cosmological
   parameters and redshift bins.
 \end{enumerate}

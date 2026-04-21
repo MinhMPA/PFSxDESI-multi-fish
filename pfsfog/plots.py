@@ -47,7 +47,7 @@ SCENARIO_LABELS = {
     "broad": "Broad",
     "cross-cal": "Cross-cal",
     "cross-cal-ext": "Cross-cal-ext",
-    "oracle": "Oracle",
+    "oracle": "Fixed nuis.",
 }
 
 
@@ -189,17 +189,17 @@ def fig3_full_area_constraints(scenario_results, out_dir: Path):
         if cp == "Omegam":
             hod_imp = HOD_BENCHMARK["Omegam_improvement"]
             ax.axhline(sigma_broad * (1 - hod_imp), ls="--", color="gray",
-                       lw=1, label=f"HOD-prior ({hod_imp*100:.0f}%)")
+                       lw=1, label=f"SBP, PS ({hod_imp*100:.0f}%)")
             ax.legend(frameon=False, fontsize=9)
 
         if cp == "fsigma8":
             # Use sigma8 improvement as proxy for fsigma8
             hod_imp = HOD_BENCHMARK["sigma8_improvement"]
             ax.axhline(sigma_broad * (1 - hod_imp), ls="--", color="gray",
-                       lw=1, label=f"HOD-prior ({hod_imp*100:.0f}%)")
+                       lw=1, label=f"SBP, PS ({hod_imp*100:.0f}%)")
             fl_imp = FIELD_LEVEL_BENCHMARK["sigma8_improvement"]
             ax.axhline(sigma_broad * (1 - fl_imp), ls=":", color="gray",
-                       lw=1, label=f"Field-level ({fl_imp*100:.0f}%)")
+                       lw=1, label=f"SBP, FL ({fl_imp*100:.0f}%)")
             ax.legend(frameon=False, fontsize=9)
 
     fig.suptitle("Full-area DESI-ELG constraints (combined z-bins)", y=1.02)
