@@ -293,9 +293,9 @@ of cross-spectra robustly separates shot noise from signal.
 This constrains the shot-noise departure \(\Pshot\) to 11--23\% of its
 conservative prior width and the tidal bias \(b_{G_2}\se^2\) to
 13--35\%---while the \(k\)-dependent stochastic terms \(a_0\) and
-\(a_2\) and the counterterms remain prior-dominated. The impact on
-cosmological constraints is insensitive to the assumed shared-catalogue
-fraction (\(f_{\rm shared}\) sensitivity: \(\pm 2\) percentage points).
+\(a_2\) and the counterterms remain prior-dominated. The impact on cosmological constraints is insensitive to the assumed
+shared-catalogue fraction: \(\sigma(f\se)\) varies by less than
+\(\pm 1\) percentage point across \(f_{\rm shared}\in[0,1]\).
 %
 Exporting these calibrated priors to DESI's full
 \(14{,}000\;\text{deg}^2\) footprint improves \(\sigma(f\se)\) by
@@ -476,11 +476,12 @@ catalogue (both surveys target [OII] emitters, and PFS goes
 \(\sim\!1\;\text{mag}\) deeper in [OII] flux). The cross-shot noise is
 \be
 \label{eqn:cross_shot}
-\frac{1}{\nbar_{\rm shared}}
-= \frac{1}{f_{\rm shared}\,\nbar_{\DESI\text{-ELG}}}\,,
+P_{\rm shot}^{\PFS\times\DESI\text{-ELG}}
+= \frac{f_{\rm shared}}{\nbar_{\PFS}}\,.
 \ee
-which is non-zero but still reduced relative to the auto-spectrum
-noise \(1/\nbar_{\DESI\text{-ELG}}\). We adopt a fiducial
+This interpolates smoothly between zero (\(f_{\rm shared}=0\),
+fully independent) and \(1/\nbar_{\PFS}\) (\(f_{\rm shared}=1\),
+all DESI-ELGs also in PFS). We adopt a fiducial
 \(f_{\rm shared}=0.5\) and show in \cref{sec:results_full_area}
 that the impact on cosmological constraints is mild
 (\(\pm 2\) percentage points on \(\sigma(f\se)\)).
@@ -1048,6 +1049,38 @@ leverage). At the fiducial $\rsv=0.75$, the improvement is 37\%.}
 \end{figure}
 
 
+\subsection{Sensitivity to the shared-catalogue fraction}
+\label{sec:results_fshared}
+
+\Cref{fig:fshared} shows how the improvement depends on the
+shared-catalogue fraction \(f_{\rm shared}\) between PFS-ELG and
+DESI-ELG. The \(\sigma(f\se)\) constraint is essentially flat
+(38--40\% improvement) across the full range
+\(f_{\rm shared}\in[0,1]\)---the growth rate is insensitive to the
+shared-catalogue assumption. The \(\sigma(\Mnu)\) constraint is
+stable at \(\sim\!61\%\) improvement for \(f_{\rm shared}\leq 0.8\)
+and degrades to 52\% only at \(f_{\rm shared}=1\) (fully shared
+catalogues). This robustness reflects the dominance of the
+different-population cross-spectra (PFS\(\times\)LRG,
+PFS\(\times\)QSO), which have guaranteed zero cross-shot noise
+regardless of \(f_{\rm shared}\).
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{\figurespath/fig_fshared_sensitivity.pdf}
+\caption{Sensitivity to the shared-catalogue fraction
+$f_{\rm shared}$ between PFS-ELG and DESI-ELG. Left: $\sigma(f\se)$
+is essentially flat (38--40\% improvement) across the full range---the
+cross-calibration is insensitive to the shared-catalogue assumption.
+Right: $\sigma(M_\nu)$ is stable at $\sim\!61\%$ for
+$f_{\rm shared}\leq 0.8$ and degrades only at $f_{\rm shared}=1$.
+The robustness is driven by the different-population cross-spectra
+(PFS$\times$LRG, PFS$\times$QSO), whose zero cross-shot noise does
+not depend on $f_{\rm shared}$.}
+\label{fig:fshared}
+\end{figure}
+
+
 %-------------------------------------------------------------------
 \section{Discussion}
 \label{sec:discussion}
@@ -1074,9 +1107,9 @@ depend on uncertain FoG modelling (\(\rsv\) sensitivity:
 A subtlety arises for PFS-ELG\(\,\times\,\)DESI-ELG: both surveys
 target [OII] emitters, so a fraction \(f_{\rm shared}\sim 0.5\) of
 DESI-ELGs also appear in the PFS catalogue, introducing non-zero
-cross-shot noise (\cref{eqn:cross_shot}). The impact on cosmological
-constraints is mild (\(\pm 2\) percentage points on
-\(\sigma(f\se)\)), and the different-population cross-spectra
+cross-shot noise (\cref{eqn:cross_shot}). The impact on \(\sigma(f\se)\) is negligible
+(\(\pm 1\) percentage point; \cref{fig:fshared}), and the
+different-population cross-spectra
 (PFS\(\times\)LRG, PFS\(\times\)QSO)---which have guaranteed zero
 cross-shot---recover the lost ground. This multi-population structure
 is a key advantage of using the full DESI tracer suite rather than
@@ -1238,6 +1271,48 @@ We verify the Fisher matrix code against three analytic checks:
 \end{enumerate}
 
 All 90 unit tests pass in \(\sim\!10\;\text{s}\) on a single CPU core.
+
+
+\section{Co-evolution prior test}
+\label{app:coevolution}
+
+In the baseline analysis, the nonlinear biases \(b_2\) and \(b_{G_2}\)
+are assigned independent Gaussian priors (\(\sigma=5\) for
+\(b_2\se^2\) and \(b_{G_2}\se^2\)). Their fiducial values are set
+from the Lazeyras et al.\ \cite{Lazeyras:2016coevol} co-evolution
+relations, but the relation itself is not enforced as a prior
+constraint.
+
+Mergulh\~{a}o et al.\ \cite{Mergulhao:2022multitracer} tested
+whether imposing co-evolution relations (fixing \(b_2\) and
+\(b_{G_2}\) as functions of \(b_1\)) improves cosmological
+constraints in a multi-tracer EFT analysis and found the gain to be
+limited at the power-spectrum level (their Appendix~B).
+
+We confirm this finding in our setup. Fixing \(b_2\se^2\) and
+\(b_{G_2}\se^2\) to their co-evolution values (reducing the nuisance
+space by 2 parameters per tracer) yields the following changes
+relative to the free-bias baseline with broad priors:
+
+\begin{center}
+\begin{tabular}{lccc}
+\hline
+Parameter & Free \(b_2,b_{G_2}\) & Fixed \(b_2,b_{G_2}\) & Change \\
+\hline
+\(\sigma(f\se)\) & 0.0757 & 0.0731 & \(-3.5\%\) \\
+\(\sigma(\Mnu)\) [eV] & 1.075 & 1.056 & \(-1.8\%\) \\
+\(\sigma(\Om)\) & 0.0499 & 0.0430 & \(-13.8\%\) \\
+\hline
+\end{tabular}
+\end{center}
+
+The improvement on \(\sigma(f\se)\) and \(\sigma(\Mnu)\) is marginal
+(\({<}\,4\%\)), confirming that the one-loop power spectrum provides
+sufficient \(k\)-dependent information to constrain \(b_2\) and
+\(b_{G_2}\) without theoretical priors from gravitational evolution.
+The more notable \(13.8\%\) improvement on \(\sigma(\Om)\) reflects
+the \(\Om\)-sensitivity of the \(b_2\) loop integrals, but this is
+small compared to the 26--40\% gain from the cross-calibration.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

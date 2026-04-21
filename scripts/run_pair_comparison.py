@@ -43,14 +43,12 @@ from pfsfog.scenarios import SCENARIOS, nuisance_prior_diag, compute_improvement
 def compute_cross_shot_noise(nbar_pfs, nbar_desi_elg, f_shared):
     """Cross-shot noise for partially shared ELG catalogues.
 
-    If f_shared of DESI-ELGs also appear in PFS, the shared number
-    density is n_shared = f_shared × n_DESI_ELG, and the cross-shot
-    noise is 1/n_shared.
+    P^{AB}_shot = f_shared / n_bar_PFS.
+    Limits: f_shared=0 → 0 (independent); f_shared=1 → 1/n_PFS (fully shared).
     """
-    n_shared = f_shared * nbar_desi_elg
-    if n_shared <= 0:
+    if f_shared <= 0 or nbar_pfs <= 0:
         return 0.0
-    return 1.0 / n_shared
+    return f_shared / nbar_pfs
 
 
 def run_overlap_calibration(

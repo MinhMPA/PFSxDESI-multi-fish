@@ -144,9 +144,17 @@ def run_multitrace_pipeline(cfg: ForecastConfig, verbose: bool = True) -> MultiT
                 pkmu_funcs[(a, b)] = make_ps1loop_pkmu_cross_func(
                     ps, pk_data, cross_params)
 
+        # Cross-shot noise for PFS-ELG × DESI-ELG (shared catalogue).
+        # P^{AB}_shot = f_shared / n_bar_PFS.
+        # Limits: f=0 → 0 (independent); f=1 → 1/n_PFS (fully shared).
+        cross_shot = None
+        if cfg.f_shared_elg > 0 and "PFS-ELG" in active and "DESI-ELG" in active:
+            cross_shot = {("DESI-ELG", "PFS-ELG"): cfg.f_shared_elg / nbars["PFS-ELG"]}
+
         # Multi-tracer covariance
         cov = multi_tracer_cov_general(
-            tracer_names, pkmu_funcs, nbars, k, V_ov, cfg.dk, ells)
+            tracer_names, pkmu_funcs, nbars, k, V_ov, cfg.dk, ells,
+            cross_shot=cross_shot)
 
         # Derivatives
         derivs_auto = {}
