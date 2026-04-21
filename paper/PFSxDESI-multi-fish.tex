@@ -422,6 +422,8 @@ bottleneck in current full-shape analyses.
 \subsection{Cross-power constraints on nuisance parameters}
 \label{sec:cross_power}
 
+The multi-tracer approach exploits the different stochastic properties
+of distinct galaxy populations~\cite{Seljak:2009mt,Mergulhao:2022multitracer}.
 The auto-power spectrum of tracer \(X\) at multipole \(\ell\) can be
 written schematically as
 \be
@@ -480,9 +482,10 @@ enters the monopole as a \(k\)-independent offset---far more tightly
 than any single tracer can. The \(k\)-dependent stochastic terms
 \(a_0\) and \(a_2\), by contrast, are degenerate with the leading
 counterterms \(c_0\) and \(c_2\) (both scale as \(k^2\)) and
-benefit less from the cross-spectrum. The one-loop bias structure
-additionally constrains \(b_{G_2}\) through its distinct
-\(\mu\)-dependence in the loop integrals.
+benefit less from the cross-spectrum~\cite{Zhao:2024eboss}. The
+one-loop bias structure additionally constrains \(b_{G_2}\) through
+its distinct \(\mu\)-dependence in the loop
+integrals~\cite{Mergulhao:2022multitracer}.
 
 
 \subsection{Asymmetric scale cuts}
@@ -526,9 +529,9 @@ the reduced versions excluding the DESI auto-spectrum rows and columns.
 \subsection{The prior export mechanism}
 \label{sec:prior_export}
 
-From the overlap multi-tracer Fisher \(F_{\rm overlap}\)
-(\cref{eqn:fisher_asym}), we extract calibrated priors for each DESI
-nuisance parameter as follows:
+From the overlap multi-tracer Fisher~\cite{Tegmark:1997rp}
+\(F_{\rm overlap}\) (\cref{eqn:fisher_asym}), we extract calibrated
+priors for each DESI nuisance parameter as follows:
 \begin{enumerate}
 \item Regularise: \(F_{\rm reg} = F_{\rm overlap} + F_{\rm broad}\),
   where \(F_{\rm broad}\) is diagonal with entries \(1/\sigma_{\rm broad}^2\)
@@ -733,8 +736,8 @@ of LRGs and the broad-line kinematics of QSOs. The leading counterterm
 \label{sec:mt_fisher}
 
 The observables are power spectrum multipoles
-\(P_\ell(k)\) for \(\ell\in\{0,2,4\}\), computed for each auto- and
-cross-spectrum pair. At each wavenumber \(k\), the observable vector
+\(P_\ell(k)\) for \(\ell\in\{0,2,4\}\)~\cite{Ivanov:2019pdj,dAmico:2019fhj},
+computed for each auto- and cross-spectrum pair. At each wavenumber \(k\), the observable vector
 has \(3 N_{\rm spec}\) elements (\(N_{\rm spec}=N_t(N_t{+}1)/2\);
 up to 30 for 4 tracers).
 
@@ -752,8 +755,10 @@ where \(N_{\rm modes}(k)=k^2\Delta k\, V/(2\pi^2)\) and
 \cref{eqn:cross_shot}.
 The \(\mu\)-integrals are evaluated with 20-point Gauss--Legendre
 quadrature. The signal \(P^{XY}(k,\mu)\) is computed from the one-loop
-EFTofLSS model using \texttt{ps\_1loop\_jax}, ensuring consistency
-between the covariance and the derivative evaluation.
+EFTofLSS model~\cite{Chudaykin:2020aoj} using the FFTLog
+decomposition~\cite{Simonovic:2017mhp} implemented in
+\texttt{ps\_1loop\_jax}, ensuring consistency between the covariance
+and the derivative evaluation.
 
 Derivatives \(\partial P_\ell/\partial\theta\) with respect to all
 nuisance and cosmological parameters are computed via JAX
@@ -819,8 +824,10 @@ mismatch between the calibrated and in-situ posteriors.
 \label{sec:results_priors}
 
 \Cref{fig:calibrated_vs_broad} compares the cross-calibrated prior
-widths with the conservative broad priors for all 11 DESI-ELG nuisance
-parameters with Gaussian priors. Two parameters stand out. The shot-noise departure \(\Pshot\) tightens
+widths with the conservative broad
+priors~\cite{Chudaykin:2025abc,DESI:2024fs} for all 11 DESI-ELG
+nuisance parameters. Two parameters stand out. The shot-noise
+departure \(\Pshot\) tightens
 by nearly an order of magnitude (from \(\sigma=1\) to
 \(\sigma\approx 0.1\text{--}0.3\)), reflecting the clean separation
 enabled by the zero-stochastic cross-spectrum. The tidal bias
@@ -1039,8 +1046,9 @@ constrained by a qualitatively different mechanism---the one-loop
 \(b_{G_2}\) operator through loop integrals with distinct angular
 dependence. Critically, the \(k\)-dependent stochastic terms \(a_0\)
 and \(a_2\) do \emph{not} tighten: they scale as \(k^2\), making
-them degenerate with the leading counterterms \(c_0\) and \(c_2\).
-The FoG counterterm \(\ctilde\) is also poorly constrained, since its
+them degenerate with the leading counterterms \(c_0\) and
+\(c_2\)~\cite{Chudaykin:2020aoj,Chudaykin:2024abc}. The FoG
+counterterm \(\ctilde\) is also poorly constrained, since its
 \(k^4\) contribution is sub-percent at \(k\leq 0.25\iMpch\). This
 was not the original expectation---PFS's lower FoG was thought to be
 the primary advantage---but the dominance of \(\Pshot\) and
@@ -1059,11 +1067,12 @@ PFS\(\times\)QSO)---whose zero cross-shot is guaranteed by
 construction---dominate the calibration. This multi-population
 structure is a key advantage of using the full DESI tracer suite.
 
-Multi-survey priors and simulation-based priors are naturally
-complementary. The former calibrate \(\Pshot\) and \(b_{G_2}\)
-from observational data; the latter can tighten the counterterms and
-\(k\)-dependent stochastic terms that the overlap volume cannot
-constrain. The optimal strategy is to combine both, using the
+Multi-survey priors and simulation-based
+priors~\cite{Ivanov:2024sbp,Zhang:2025desi,Chudaykin:2026field} are
+naturally complementary. The former calibrate \(\Pshot\) and
+\(b_{G_2}\) from observational data; the latter can tighten the
+counterterms and \(k\)-dependent stochastic terms that the overlap
+volume cannot constrain. The optimal strategy is to combine both, using the
 multi-survey-calibrated values as a data-driven consistency check on
 the HOD assumptions underlying the simulation-based
 priors---particularly for the shot-noise departure, which depends
@@ -1074,8 +1083,9 @@ PS-level simulation-based prior pipeline~\cite{Zhang:2025desi}, makes
 a strong case for maximizing the PFS--DESI overlap area in survey
 planning.
 
-The multi-survey prior method generalizes immediately to any pair of
-overlapping spectroscopic surveys with different target selections:
+The multi-survey prior method generalizes to any pair of overlapping
+spectroscopic surveys with different target
+selections~\cite{Alarcon:2018multitracer}:
 Euclid\(\,\times\,\)DESI, Roman\(\,\times\,\)Spec-S5, and
 DESI-II\(\,\times\,\)MegaMapper are natural future applications.
 Adding the tree-level bispectrum would further activate the
