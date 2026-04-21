@@ -155,7 +155,7 @@ def fig2_calibrated_vs_broad(overlap_results, out_dir: Path):
     ax.set_ylabel(r"Prior width $\sigma$")
     ax.set_yscale("log")
     ax.legend(frameon=False, fontsize=10, ncol=2)
-    ax.set_title("Calibrated vs broad priors (DESI-ELG nuisance)")
+    # No title — caption provides context
     # Annotate b1_sigma8 as "flat prior"
     b1_idx = params_to_show.index("b1_sigma8")
     ax.annotate("flat prior", xy=(b1_idx, 0.5), fontsize=8, ha="center",
@@ -216,7 +216,7 @@ def fig3_full_area_constraints(scenario_results, out_dir: Path):
                        lw=1, label=f"SBP, FL ({fl_imp*100:.0f}%)")
             ax.legend(frameon=False, fontsize=9)
 
-    fig.suptitle("Full-area DESI-ELG constraints (combined z-bins)", y=1.02)
+    # No suptitle — caption provides context
     fig.tight_layout()
     fig.savefig(out_dir / "fig3_full_area_constraints.pdf", bbox_inches="tight")
     plt.close(fig)
@@ -254,7 +254,7 @@ def fig4_calibration_efficiency(scenario_results, z_bins, out_dir: Path):
     ax.axhline(1.0, ls=":", color="gray", lw=0.5)
     ax.axhline(0.0, ls=":", color="gray", lw=0.5)
     ax.legend(frameon=False)
-    ax.set_title("Cross-cal-ext efficiency per z-bin")
+    # No title
 
     fig.tight_layout()
     fig.savefig(out_dir / "fig4_calibration_efficiency.pdf", bbox_inches="tight")
@@ -292,7 +292,7 @@ def fig5_sensitivity_rsigmav(sensitivity_data: dict, out_dir: Path):
     ax.set_xlabel(r"$r_{\sigma_v} = \sigma_{v,\mathrm{PFS}} / \sigma_{v,\mathrm{DESI}}$")
     ax.set_ylabel(r"$\sigma(f\sigma_8)$ combined")
     ax.legend(frameon=False)
-    ax.set_title("Sensitivity to FoG velocity ratio")
+    # No title
 
     fig.tight_layout()
     fig.savefig(out_dir / "fig5_sensitivity_rsigmav.pdf", bbox_inches="tight")

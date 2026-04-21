@@ -64,17 +64,17 @@ ax1.plot(f_arr, fs_arr, "o-", color="#55A868", lw=2, ms=7)
 ax1.axhline(broad["fsigma8"], ls="--", color="#4C72B0", lw=1, label="Broad")
 ax1.set_xlabel(r"$f_{\rm shared}$")
 ax1.set_ylabel(r"$\sigma(f\sigma_8)$")
-ax1.set_title(r"$f\sigma_8$")
+# No title
 ax1.legend(frameon=False)
 
 ax2.plot(f_arr, mn_arr, "o-", color="#DD8452", lw=2, ms=7)
 ax2.axhline(broad["Mnu"], ls="--", color="#4C72B0", lw=1, label="Broad")
 ax2.set_xlabel(r"$f_{\rm shared}$")
 ax2.set_ylabel(r"$\sigma(M_\nu)$ [eV]")
-ax2.set_title(r"$M_\nu$")
+# No title
 ax2.legend(frameon=False)
 
-fig.suptitle(r"Sensitivity to shared-catalogue fraction $f_{\rm shared}$", y=1.02)
+# No suptitle
 fig.tight_layout()
 (out / "figures").mkdir(exist_ok=True)
 fig.savefig(out / "figures" / "fig_fshared_sensitivity.pdf", bbox_inches="tight")

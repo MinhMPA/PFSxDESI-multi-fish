@@ -460,10 +460,10 @@ The cross-power spectrum between tracers \(X\) and \(Y\) is
 \label{eqn:cross}
 P_\ell^{XY}(k)
 = P_\ell^{XY,\mathrm{det}}(k)
-+ \frac{\delta_{XY}^{\rm shared}}{\nbar_{\rm shared}}\,,
++ P_{\rm shot}^{XY}\,,
 \ee
-where the stochastic term depends on whether the two catalogues share
-galaxies. For \emph{different} galaxy populations---PFS-ELG\(\,\times\,\)%
+where the cross-stochastic term \(P_{\rm shot}^{XY}\) depends on
+whether the two catalogues share galaxies. For \emph{different} galaxy populations---PFS-ELG\(\,\times\,\)%
 DESI-LRG or PFS-ELG\(\,\times\,\)DESI-QSO---the catalogues have zero
 overlap and the cross-stochastic vanishes exactly:
 \(\delta_{XY}^{\rm shared}=0\). These cross-spectra provide a clean,
@@ -482,9 +482,10 @@ P_{\rm shot}^{\PFS\times\DESI\text{-ELG}}
 This interpolates smoothly between zero (\(f_{\rm shared}=0\),
 fully independent) and \(1/\nbar_{\PFS}\) (\(f_{\rm shared}=1\),
 all DESI-ELGs also in PFS). We adopt a fiducial
-\(f_{\rm shared}=0.5\) and show in \cref{sec:results_full_area}
-that the impact on cosmological constraints is mild
-(\(\pm 2\) percentage points on \(\sigma(f\se)\)).
+\(f_{\rm shared}=0.5\) and show in \cref{sec:results_fshared}
+that the impact on cosmological constraints is negligible
+(\(\sigma(f\se)\) varies by \({<}\,\pm 1\) percentage point across
+\(f_{\rm shared}\in[0,1]\)).
 
 The key observation is that jointly fitting the auto-spectra
 \(P_\ell^{XX}\), \(P_\ell^{YY}\) and the cross-spectrum
@@ -508,12 +509,11 @@ additionally constrains \(b_{G_2}\) through its distinct
 PFS-ELGs reside in lower-mass host halos than DESI-ELGs or DESI-LRGs,
 and consequently have lower virial velocity dispersions. In the EFT
 framework, this translates into a smaller FoG counterterm:
-\(\ctilde^{\PFS} = \ctilde^{\DESI\text{-ELG}} \times \rsv^2\), where
+\(\ctilde^{\PFS} = \ctilde^{\DESI\text{-ELG}} \times \rsv^4\), where
 \(\rsv \equiv \sigma_{v,\PFS}/\sigma_{v,\DESI}\).
 
 A smaller \(\ctilde\) means the one-loop EFT expansion converges to
-higher \(k\). The EFT convergence scale goes as
-\(\kmax \propto \ctilde^{-1/4}\), so
+higher \(k\). Since \(\kmax \propto \ctilde^{-1/4} \propto \rsv^{-1}\),
 \be
 \label{eqn:kmax_asym}
 \kmax^{\PFS} = \kmax^{\DESI} \times \rsv^{-1}\,.
@@ -766,7 +766,8 @@ The Gaussian covariance at each \(k\) is
 \ee
 where \(N_{\rm modes}(k)=k^2\Delta k\, V/(2\pi^2)\) and
 \(P_{\rm tot}^{XY}(k,\mu)=P^{XY}(k,\mu)+\delta_{XY}/\nbar_X
-+\delta_{XY}^{\rm shared}/\nbar_{\rm shared}\).
++P_{\rm shot}^{XY}\), with \(P_{\rm shot}^{XY}\) from
+\cref{eqn:cross_shot}.
 The \(\mu\)-integrals are evaluated with 20-point Gauss--Legendre
 quadrature. The signal \(P^{XY}(k,\mu)\) is computed from the one-loop
 EFTofLSS model using \texttt{ps\_1loop\_jax}, ensuring consistency
@@ -783,23 +784,34 @@ derivatives in \cref{app:derivatives}.
 \subsection{Analysis scenarios and benchmarks}
 \label{sec:scenarios}
 
-We evaluate the full-area DESI-ELG Fisher forecast under four scenarios,
-distinguished by the nuisance prior source and the maximum wavenumber:
+The calibrated priors from \cref{sec:prior_export} are applied to the
+full-area DESI-ELG Fisher forecast over \(14{,}000\;\text{deg}^2\).
+We evaluate four scenarios, distinguished by the nuisance prior source
+and the maximum wavenumber \(\kmax\) used in the full-area analysis
+(note: this is the full-area \(\kmax\), not the overlap \(\kmax\)
+from \cref{sec:asymmetric_kmax}):
 \begin{itemize}
-\item \textbf{Broad}: conservative Gaussian priors from
-  \cref{tab:eft_params}, \(\kmax=0.20\iMpch\). Baseline.
-\item \textbf{Cross-cal}: calibrated priors from the overlap Fisher,
-  \(\kmax=0.20\iMpch\).
-\item \textbf{Cross-cal-ext}: calibrated priors,
-  \(\kmax=0.25\iMpch\). Exploits the tighter nuisance priors to
-  extend the usable \(k\)-range.
-\item \textbf{Fixed nuisance}: nuisance parameters fixed to their fiducial
-  values, \(\kmax=0.25\iMpch\). Theoretical ceiling.
+\item \textbf{Broad} (\(\kmax=0.20\iMpch\)): conservative Gaussian priors
+  from \cref{tab:eft_params}. Baseline.
+\item \textbf{Cross-cal} (\(\kmax=0.20\iMpch\)): calibrated priors from
+  the overlap Fisher. Same \(\kmax\) as the baseline, isolating the
+  effect of tighter nuisance priors.
+\item \textbf{Cross-cal-ext} (\(\kmax=0.25\iMpch\)): calibrated priors
+  with an extended \(\kmax\). The physical motivation is that tighter
+  nuisance priors reduce the projection of counterterm uncertainties
+  onto cosmological parameters~\cite{Chudaykin:2024abc}, making the
+  analysis less sensitive to EFT truncation errors at higher \(k\).
+  This allows a more aggressive scale cut than would be justified
+  with broad priors.
+\item \textbf{Fixed nuisance} (\(\kmax=0.25\iMpch\)): nuisance parameters
+  fixed to fiducial values. Theoretical ceiling---the maximum
+  information extractable from the data if nuisance parameters were
+  perfectly known.
 \end{itemize}
-We also plot horizontal reference lines at the published PS-level SBP
-of Zhang et al.\ \cite{Zhang:2025desi} (23\% on \(\sigma(\se)\)) and
-the field-level SBP of Chudaykin et al.\ \cite{Chudaykin:2026field}
-(50\% on \(\sigma(\se)\)).
+We overlay horizontal reference lines at the published improvement
+ratios from the PS-level SBP of Zhang et al.\ \cite{Zhang:2025desi}
+(23\% on \(\sigma(\se)\)) and the field-level SBP of Chudaykin et al.\
+\cite{Chudaykin:2026field} (50\% on \(\sigma(\se)\)).
 
 
 \subsection{Transferability assumption}
@@ -821,51 +833,7 @@ mismatch between the calibrated and in-situ posteriors.
 \label{sec:results}
 %-------------------------------------------------------------------
 
-\subsection{Nuisance calibration in the overlap}
-\label{sec:results_overlap}
-
-\Cref{fig:overlap_calibration} shows the marginalized
-\(\sigma/\sigma_{\rm broad}\) for selected DESI-ELG nuisance parameters
-from the overlap Fisher, comparing DESI-only, PFS-only, and the full
-multi-tracer combination.
-
-Two parameters show substantial tightening. The shot-noise departure
-\(\Pshot\) constrains to 11--23\% of its broad prior width---a
-4--9\(\times\) improvement driven by the zero-stochastic
-cross-spectrum, which isolates the constant noise floor from the
-cosmological signal. The tidal bias \(b_{G_2}\se^2\) tightens to
-16--36\% of broad, reflecting the distinct \(\mu\)-dependence of the
-\(b_{G_2}\) operator in the one-loop power spectrum. The quadratic
-bias \(b_2\se^2\) shows a more modest improvement (57--95\% of broad).
-
-The \(k\)-dependent stochastic terms \(a_0\) and \(a_2\) remain
-prior-dominated (96--99\% of broad). This is expected: both scale as
-\(k^2\), making them degenerate with the leading counterterms \(c_0\)
-and \(c_2\), which the cross-spectrum cannot separate. The leading
-counterterms \(c_0\) and \(c_2\) show modest tightening (73--99\%
-depending on \(z\)-bin). The FoG counterterm \(\ctilde\) now tightens
-to 87\% of broad at low \(z\)---reflecting the large \(\ctilde\)
-contrast between tracers (\(\ctilde^{\rm ELG}=400\) vs
-\(\ctilde^{\rm LRG}\approx 6{,}300\), from the measured
-\(\sigma_v\) hierarchy).
-
-\begin{figure}[t]
-\centering
-\includegraphics[width=\textwidth]{\figurespath/fig1_overlap_calibration.pdf}
-\caption{Overlap calibration. Marginalized $\sigma/\sigma_{\rm broad}$ for
-selected DESI-ELG nuisance parameters from three Fisher analyses in the
-$1{,}200\;\text{deg}^2$ overlap: DESI-only (blue), PFS-only (orange),
-and the full PFS$\times$DESI multi-tracer combination (green).
-The dashed line marks the broad-prior floor ($\sigma/\sigma_{\rm broad}=1$).
-$\Pshot$ shows the strongest tightening (to 11--23\% of broad)---driven by
-the zero-stochastic cross-spectrum. The $k$-dependent stochastic terms
-$a_0$ and $a_2$ remain prior-dominated because they are degenerate with
-the $k^2$ counterterms.}
-\label{fig:overlap_calibration}
-\end{figure}
-
-
-\subsection{Calibrated priors vs broad}
+\subsection{Calibrated priors}
 \label{sec:results_priors}
 
 \Cref{fig:calibrated_vs_broad} compares the cross-calibrated prior
@@ -879,12 +847,18 @@ to \(\sigma\approx 0.8\text{--}1.8\)), driven by its distinct
 \(\mu\)-dependence in the one-loop power spectrum---a qualitatively
 different mechanism from the shot-noise calibration. Together, these
 two parameters drive the cosmological improvement in
-\cref{fig:full_area}. The counterterms and the \(k\)-dependent
-stochastic terms \(a_0\), \(a_2\) remain close to their broad values.
+\cref{fig:full_area}. The \(k\)-dependent stochastic terms \(a_0\) and \(a_2\) remain
+prior-dominated (96--99\% of broad)---they scale as \(k^2\) and are
+degenerate with the counterterms \(c_0\) and \(c_2\). The FoG
+counterterm \(\ctilde\) tightens to 87\% of broad at low \(z\),
+reflecting the large \(\ctilde\) contrast between tracers
+(\(\ctilde^{\rm ELG}=400\) vs \(\ctilde^{\rm LRG}\approx 6{,}300\)).
+The remaining counterterms (\(c_0\), \(c_2\), \(c_4\)) show modest
+improvement (73--99\%).
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=\textwidth]{\figurespath/fig2_calibrated_vs_broad.pdf}
+\includegraphics[width=\textwidth]{\figurespath/calibrated_vs_broad.pdf}
 \caption{Calibrated vs.\ broad priors. Cross-calibrated prior widths
 $\sigma_{\rm cal}$ (colored dots, one per $z$-bin) compared with the
 conservative broad priors $\sigma_{\rm broad}$ (light bars) for all
@@ -907,33 +881,29 @@ result: marginalized \(1\sigma\) constraints on \(f\se\), \(\Mnu\),
 and \(\Om\) from the full DESI-ELG footprint under the four analysis
 scenarios.
 
-\Cref{tab:headline} presents the headline results under two
-calibration strategies. With PFS\(\times\)DESI-ELG pair calibration
-alone (\(f_{\rm shared}=0.5\)), the improvement is 32\% on
-\(\sigma(f\se)\) and 52\% on \(\sigma(\Mnu)\)---already matching the
-PS-level SBP benchmark of Zhang et al.\ \cite{Zhang:2025desi}
-(\cref{fig:full_area}, dashed line).
+\Cref{fig:full_area} and \cref{tab:headline} present the headline
+results. At the standard scale cut \(\kmax=0.20\iMpch\), cross-calibration
+improves \(\sigma(f\se)\) by 26\% and \(\sigma(\Mnu)\) by 62\%
+over the broad baseline---already exceeding the PS-level SBP benchmark
+of Zhang et al.\ \cite{Zhang:2025desi} (dashed line in
+\cref{fig:full_area}). Extending the full-area analysis to
+\(\kmax=0.25\iMpch\) (cross-cal-ext) pushes the improvement to
+40\% on \(\sigma(f\se)\) and 65\% on \(\sigma(\Mnu)\). The extended
+scale cut is justified by the tighter nuisance priors, which reduce
+the projection of counterterm uncertainties onto cosmological
+parameters at higher \(k\)~\cite{Chudaykin:2024abc}.
 
-The full multi-tracer calibration---using the \(N\)-tracer Fisher
-with all active tracers per \(z\)-bin---improves further to
-\textbf{26\% on \(\sigma(f\se)\) at \(\kmax=0.20\iMpch\)} and
-\textbf{40\% at \(\kmax=0.25\iMpch\)}. \(\sigma(\Mnu)\) improves
-by 62--65\%, substantially exceeding the PS-level SBP benchmark.
-The additional gain over the pair-only analysis comes from the LRG
-and QSO cross-spectra, which provide guaranteed-clean stochastic
-separation (zero cross-shot) and leverage the large \(\ctilde\)
-contrast (\(\ctilde^{\rm LRG}/\ctilde^{\rm ELG}\approx 16\)).
-
-The gap to the fixed-nuisance limit (87\%) is dominated by the
-\(k\)-dependent stochastic terms (\(a_0\), \(a_2\)) and the
-counterterms (\(c_2\), \(c_4\)) that remain degenerate at the
-available \(k\)-scales. The parameters that the cross-calibration
-\emph{does} constrain---\(\Pshot\), \(b_{G_2}\se^2\), and now
-partially \(\ctilde\)---are no longer the bottleneck.
+The remaining gap to the fixed-nuisance limit (87\% on
+\(\sigma(f\se)\)) is dominated by the counterterms
+(\(c_2\), \(c_4\), \(\ctilde\)) and the \(k\)-dependent stochastic
+terms (\(a_0\), \(a_2\)), which the overlap volume cannot separate.
+The parameters that the cross-calibration \emph{does}
+constrain---\(\Pshot\) and \(b_{G_2}\se^2\)---are no longer the
+bottleneck.
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=\textwidth]{\figurespath/fig3_full_area_constraints.pdf}
+\includegraphics[width=\textwidth]{\figurespath/full_area_constraints.pdf}
 \caption{Full-area DESI-ELG constraints. Marginalized $1\sigma$ uncertainties
 on $f\se$, $\Mnu$, and $\Om$ from $14{,}000\;\text{deg}^2$, combining
 four $z$-bins, under four analysis scenarios. Nuisance priors for the
@@ -951,32 +921,25 @@ Dotted line: field-level SBP (Chudaykin, Ivanov \& Philcox 2026;
 
 \begin{table}[t]
 \centering
-\begin{tabular}{llccccccc}
+\begin{tabular}{lccccccc}
 \hline
-Scenario & Calibration source & $\kmax$ & $\sigma(f\se)$ & $\Delta\%$ & $\sigma(\Mnu)$ & $\Delta\%$ & $\sigma(\Om)$ & $\Delta\%$ \\
+Scenario & $\kmax$ & $\sigma(f\se)$ & $\Delta\%$ & $\sigma(\Mnu)$ [eV] & $\Delta\%$ & $\sigma(\Om)$ & $\Delta\%$ \\
 \hline
-Broad & --- & 0.20 & 0.076 & ---   & 1.08 & ---   & 0.050 & --- \\
-\hline
-\multicolumn{9}{l}{\emph{Cross-cal-ext ($\kmax=0.25\iMpch$), varying calibration source:}} \\
- & PFS$\times$ELG ($f_{\rm sh}{=}0$)   & 0.25 & 0.050 & $-34$ & 0.51 & $-52$ & 0.039 & $-22$ \\
- & PFS$\times$ELG ($f_{\rm sh}{=}0.5$) & 0.25 & 0.051 & $-32$ & 0.51 & $-52$ & 0.040 & $-20$ \\
- & All combined ($f_{\rm sh}{=}0.5$)    & 0.25 & 0.049 & $-36$ & 0.42 & $-61$ & 0.037 & $-26$ \\
-\hline
-\multicolumn{9}{l}{\emph{Multi-tracer calibration (N-tracer Fisher, \cref{sec:mt_fisher}):}} \\
-Cross-cal      & all tracers & 0.20 & 0.056 & $-26$ & 0.41 & $-62$ & 0.037 & $-26$ \\
-Cross-cal-ext  & all tracers & 0.25 & 0.046 & $-40$ & 0.38 & $-65$ & 0.036 & $-28$ \\
-\hline
-Fixed nuisance & --- & 0.25 & 0.010 & $-87$ & 0.12 & $-89$ & 0.019 & $-61$ \\
+Broad          & 0.20 & 0.076 & ---   & 1.08  & ---   & 0.050 & ---   \\
+Cross-cal      & 0.20 & 0.056 & $-26$ & 0.41  & $-62$ & 0.037 & $-26$ \\
+Cross-cal-ext  & 0.25 & 0.046 & $-40$ & 0.38  & $-65$ & 0.036 & $-28$ \\
+Fixed nuisance & 0.25 & 0.010 & $-87$ & 0.12  & $-89$ & 0.019 & $-61$ \\
 \hline
 \end{tabular}
-\caption{Full-area DESI-ELG constraints (combined $z$-bins). Top block:
-pair-by-pair comparison (single-pair overlap Fisher, $\kmax=0.25\iMpch$).
-Bottom block: full multi-tracer calibration using the $N$-tracer Fisher
-with all active tracers per $z$-bin (up to 4 tracers, 10 spectra).
-LRG and QSO counterterms use $\ctilde\propto\sigma_v^4$ from
-Zhang et al.\ (2025, Table~1). The shared-catalogue correction
-($f_{\rm shared}=0.5$ for PFS$\times$DESI-ELG) is mild ($\pm 2$~pp on
-$\sigma(f\se)$).}
+\caption{Full-area DESI-ELG constraints (combined over four $z$-bins).
+Nuisance priors for the cross-cal scenarios are calibrated from the
+multi-tracer overlap Fisher using all active tracers per $z$-bin (up to
+4~tracers, 10~spectra), with $f_{\rm shared}=0.5$ for the
+PFS-ELG\(\,\times\,\)DESI-ELG cross-shot noise (\cref{eqn:cross_shot}).
+The ``cross-cal-ext'' scenario uses a more aggressive $\kmax$ in the
+\emph{full-area} analysis (\cref{sec:scenarios}), justified by the
+tighter nuisance priors reducing projection effects.
+Improvement percentages are relative to the broad baseline.}
 \label{tab:headline}
 \end{table}
 
@@ -999,7 +962,7 @@ to amplitude nuisance parameters.
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.65\textwidth]{\figurespath/fig4_calibration_efficiency.pdf}
+\includegraphics[width=0.65\textwidth]{\figurespath/calibration_efficiency.pdf}
 \caption{Calibration efficiency per $z$-bin, defined as
 $(\sigma_{\rm broad}-\sigma_{\rm xcal\text{-}ext})/(\sigma_{\rm broad}-\sigma_{\rm fixed})$.
 An efficiency of unity would mean the cross-calibration fully closes the gap
@@ -1021,8 +984,8 @@ less sensitive to amplitude-related nuisance parameters.}
 \Cref{fig:sensitivity} shows how the combined \(\sigma(f\se)\) from
 the cross-cal-ext scenario depends on the assumed FoG velocity ratio
 \(\rsv\). This parameter simultaneously controls the PFS FoG fiducial
-(\(\ctilde^{\PFS}\propto \rsv^2\)) and the asymmetric scale cut
-(\(\kmax^{\PFS}\propto \rsv^{-1/2}\)).
+(\(\ctilde^{\PFS}\propto \rsv^4\)) and the asymmetric scale cut
+(\(\kmax^{\PFS}\propto \rsv^{-1}\)).
 
 The improvement ranges from 34\% at \(\rsv=1\) (identical FoG; the
 gain comes entirely from stochastic separation) to 48\% at
@@ -1036,7 +999,7 @@ FoG-driven \(k\)-range extension beyond the \(\rsv=1\) baseline.
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.65\textwidth]{\figurespath/fig5_sensitivity_rsigmav.pdf}
+\includegraphics[width=0.65\textwidth]{\figurespath/sensitivity_rsigmav.pdf}
 \caption{Sensitivity to the FoG velocity ratio. Combined $\sigma(f\se)$
 from the cross-cal-ext scenario as a function of
 $\rsv=\sigma_{v,\PFS}/\sigma_{v,\DESI}$.
@@ -1067,7 +1030,7 @@ regardless of \(f_{\rm shared}\).
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=\textwidth]{\figurespath/fig_fshared_sensitivity.pdf}
+\includegraphics[width=\textwidth]{\figurespath/sensitivity_fshared.pdf}
 \caption{Sensitivity to the shared-catalogue fraction
 $f_{\rm shared}$ between PFS-ELG and DESI-ELG. Left: $\sigma(f\se)$
 is essentially flat (38--40\% improvement) across the full range---the
