@@ -32,6 +32,7 @@ def multi_tracer_cov_general(
     volume: float,
     dk: float,
     ells: tuple[int, ...] = (0, 2, 4),
+    cross_shot: dict[tuple[str, str], float] | None = None,
 ) -> np.ndarray:
     """N-tracer Gaussian covariance.
 
@@ -81,7 +82,10 @@ def multi_tracer_cov_general(
             else:
                 Pkmu[key] = np.zeros((Nk, len(mu)))
 
-    # P_tot^{XY} = P^{XY} + delta_{XY} / nbar_X
+    # P_tot^{XY} = P^{XY} + delta_{XY}/nbar_X + cross_shot^{XY}
+    # cross_shot is non-zero when surveys share galaxies (e.g. PFS-ELG × DESI-ELG)
+    _cross_shot = cross_shot or {}
+
     def get_ptot(X, Y):
         key = (X, Y) if X <= Y else (Y, X)
         if X == Y:
@@ -89,7 +93,10 @@ def multi_tracer_cov_general(
         p = Pkmu.get(key, np.zeros((Nk, len(mu))))
         if X == Y:
             return p + 1.0 / nbar[X]
-        return p
+        # Non-zero cross-shot for partially shared catalogues
+        cs_key = (X, Y) if X <= Y else (Y, X)
+        cs = _cross_shot.get(cs_key, 0.0)
+        return p + cs
 
     # Number of modes
     Nmodes = k**2 * dk * volume / (2.0 * np.pi**2)

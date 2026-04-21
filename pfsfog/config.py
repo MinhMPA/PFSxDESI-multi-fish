@@ -39,6 +39,9 @@ class ForecastConfig:
     kmax_pfs_overlap: float | None = None  # kmax for P^AA (PFS auto); None → auto
     kmax_cross_overlap: float | None = None  # kmax for P^AB; None → kmax_pfs
 
+    # Shared catalogue fraction for PFS-ELG × DESI-ELG cross-shot noise
+    f_shared_elg: float = 0.5   # fraction of DESI-ELGs also in PFS catalogue
+
     # Nonlinear scale for stochasticity
     k_nl: float = 0.7           # h/Mpc
 

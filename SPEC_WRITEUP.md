@@ -29,10 +29,13 @@ Attach all of the following when invoking this spec:
 > a complementary data-driven calibration: the multi-tracer analysis
 > of PFS-ELG with DESI-ELG, DESI-LRG, and DESI-QSO in their
 > ~1,200 deg² overlap volume (up to 4 tracers, 10 cross-spectra per
-> z-bin) constrains stochastic parameters (Pshot) 3–10× more tightly
-> than conservative priors, and exporting these to DESI's full
-> 14,000 deg² improves σ(fσ8) by 23–37% and σ(Mν) by 52–56%,
-> recovering 40–65% of the gap to perfect nuisance knowledge.
+> z-bin) constrains stochastic parameters (Pshot) to 10–45% of their
+> conservative prior widths, and exporting these to DESI's full
+> 14,000 deg² improves σ(fσ8) by 32–34% and σ(Mν) by 52–55%.
+> The improvement is robust to the shared-catalogue fraction between
+> PFS-ELG and DESI-ELG (f_shared sensitivity: ±2 percentage points),
+> because the different-population cross-spectra (PFS×LRG, PFS×QSO)
+> provide a guaranteed-clean calibration floor.
 
 Numbers from multi-tracer pipeline `results/mt_*/summary.csv`
 (combined z-bins, cross-cal and cross-cal-ext scenarios).
@@ -94,11 +97,16 @@ full survey footprint. This is qualitatively distinct from both
 It provides a model-independent cross-check of HOD-derived
 calibrations.
 
-Two specific novel elements:
+Three specific novel elements:
 1. **Stochastic separation via cross-spectrum**: the zero-shot-noise
    property of P^{AB} is the primary calibration mechanism (not
    FoG separation as might be naively expected).
-2. **Asymmetric kmax across surveys**: exploiting PFS's lower FoG
+2. **Multi-population cross-spectra**: PFS×LRG and PFS×QSO provide
+   guaranteed zero cross-shot (different galaxy populations). These
+   complement the PFS×DESI-ELG cross-spectrum, which has non-zero
+   cross-shot from shared [OII] emitters (f_shared ~ 0.5). The
+   combination is robust to the assumed f_shared (±2pp).
+3. **Asymmetric kmax across surveys**: exploiting PFS's lower FoG
    to extend kmax_PFS beyond kmax_DESI in the overlap, applying
    the Rubira & Conteddu (2025) idea cross-survey for the first time.
 
@@ -135,15 +143,30 @@ quantifies the cost of conservative priors.
 **§2.2 Cross-power constraints on nuisance parameters.** Write
 the auto-power P^{AA}, P^{BB} and cross-power P^{AB} in terms
 of EFT parameters. Key features:
-- P^{AB} has no auto-stochastic term (Pshot, a0, a2 enter only
-  in auto-spectra). This is the **primary calibration mechanism**:
-  measuring P^{AB} alongside P^{AA} and P^{BB} cleanly separates
-  shot noise from signal. The forecast confirms this — Pshot
-  tightens by 2–7× while counterterms barely improve.
-- Cross-counterterms are averaged: (ctr_A + ctr_B) / 2 (standard
-  EFT prescription, not geometric mean of Lorentzian damping).
-- Three spectra at each (k, ℓ) jointly constrain per-tracer
-  nuisance parameters more tightly than either auto alone.
+- Cross-spectra between **different** galaxy populations
+  (PFS-ELG × DESI-LRG, PFS-ELG × DESI-QSO) carry **exactly zero**
+  stochastic contribution — no shared galaxies.
+- Cross-spectra between **similar** populations (PFS-ELG × DESI-ELG)
+  have **non-zero** cross-shot noise from shared galaxies. Both
+  surveys target [OII] emitters; a fraction f_shared (~0.5) of
+  DESI-ELGs also appear in PFS. The cross-shot noise is
+  1/(f_shared × n̄_DESI-ELG).
+- The combination of clean (different-population) and partially
+  contaminated (same-population) cross-spectra robustly separates
+  shot noise from signal.
+- Cross-counterterms are averaged: (ctr_A + ctr_B) / 2.
+
+**Key finding from pair comparison:**
+
+| Calibration source | σ(fσ8) Δ% | σ(Mν) Δ% | σ(Ωm) Δ% |
+|--------------------|-----------|----------|----------|
+| PFS×ELG (f_shared=0, ideal) | −34% | −52% | −22% |
+| PFS×ELG (f_shared=0.5, realistic) | −32% | −52% | −20% |
+| All combined (f_shared=0.5) | −34% | −55% | −25% |
+
+The f_shared correction is mild (±2 percentage points). Adding
+the LRG and QSO cross-spectra (guaranteed zero cross-shot)
+recovers the lost ground and then some.
 
 **§2.2.1 Asymmetric kmax.** PFS ELGs reside in lower-mass halos
 with smaller virial velocities → smaller FoG counterterm c̃_PFS.
@@ -229,19 +252,21 @@ would become active with the bispectrum).
 
 **§5.3 Full-area DESI constraints.** → Fig. 3 (money figure).
 
-| Scenario | kmax | σ(fσ8) | Δ% | σ(Mν) [eV] | Δ% | σ(Ωm) | Δ% |
-|----------|------|--------|------|------------|------|-------|------|
-| broad | 0.20 | 0.0757 | — | 1.075 | — | 0.0499 | — |
-| cross-cal | 0.20 | 0.0587 | −23% | 0.519 | −52% | 0.0380 | −24% |
-| cross-cal-ext | 0.25 | 0.0476 | −37% | 0.475 | −56% | 0.0370 | −26% |
-| oracle | 0.25 | 0.0100 | −87% | 0.123 | −89% | 0.0194 | −61% |
+| Configuration | kmax | σ(fσ8) | Δ% | σ(Mν) [eV] | Δ% | σ(Ωm) | Δ% |
+|---------------|------|--------|------|------------|------|-------|------|
+| broad | 0.20 | 0.076 | — | 1.08 | — | 0.050 | — |
+| PFS×ELG (f_sh=0, ideal) | 0.25 | 0.050 | −34% | 0.51 | −52% | 0.039 | −22% |
+| PFS×ELG (f_sh=0.5) | 0.25 | 0.051 | −32% | 0.51 | −52% | 0.040 | −20% |
+| All combined (f_sh=0.5) | 0.25 | 0.050 | −34% | 0.48 | −55% | 0.038 | −25% |
+| oracle | 0.25 | 0.010 | −87% | 0.12 | −89% | 0.019 | −61% |
 
-Priors calibrated from the full multi-tracer overlap (PFS-ELG ×
-DESI-{ELG, LRG, QSO}, up to 4 tracers, 10 spectra per z-bin).
-Cross-cal matches the Zhang+ 2025 HOD-prior benchmark (23% on σ8).
-Cross-cal-ext exceeds it at 37%. Mν benefits most (52–56%) because
-it is sensitive to the amplitude parameters that stochastic priors
-constrain. Compare to Chudaykin+ 2026 field-level ceiling (50%).
+**Headline (all combined, realistic f_shared=0.5):** σ(fσ8) improves
+by 34%, σ(Mν) by 55%, σ(Ωm) by 25%.
+
+The f_shared correction (0 → 0.5) degrades fσ8 by only 2 percentage
+points. Adding LRG+QSO cross-spectra (guaranteed zero cross-shot)
+recovers this and adds 3pp on Mν. Compare to Zhang+ 2025 HOD-prior
+benchmark (23% on σ8) and Chudaykin+ 2026 field-level ceiling (50%).
 
 **§5.4 Calibration efficiency.** → Fig. 4.
 Efficiency = (σ_broad − σ_xcal-ext) / (σ_broad − σ_oracle).
@@ -297,10 +322,11 @@ Five takeaways:
 2. Cross-survey overlap provides data-driven, model-independent
    calibration — primarily through the zero-stochastic cross-power
    spectrum, which cleanly separates shot noise from signal.
-3. For PFS × DESI (ELG+LRG+QSO): σ(fσ8) improves by 23–37%,
-   σ(Mν) by 52–56%, recovering 40–65% of the gap to perfect
-   nuisance knowledge. The multi-tracer combination (up to 10
-   cross-spectra) provides 3–5 percentage points beyond ELG-only.
+3. For PFS × DESI (ELG+LRG+QSO): σ(fσ8) improves by 32–34%,
+   σ(Mν) by 52–55%. The improvement is robust to the shared-
+   catalogue fraction f_shared (±2pp) because the different-
+   population cross-spectra (PFS×LRG, PFS×QSO) guarantee a clean
+   calibration floor independent of f_shared.
 4. The improvement is robust to FoG modeling assumptions (r_σv
    sensitivity: 34–39%), because the stochastic calibration does
    not depend on FoG. The asymmetric kmax from PFS's lower FoG
