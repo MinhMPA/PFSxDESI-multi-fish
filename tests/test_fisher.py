@@ -60,7 +60,7 @@ class TestAnalyticFisher:
 
         # Gaussian variance for monopole (ℓ=0 only)
         Nmodes = k**2 * dk * V / (2 * np.pi**2)
-        Var_P0 = (P0 + 1.0 / nbar) ** 2 / Nmodes
+        Var_P0 = 2.0 * (P0 + 1.0 / nbar) ** 2 / Nmodes
 
         # Analytic derivatives
         dP_dA = k ** n_fid

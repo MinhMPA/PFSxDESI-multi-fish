@@ -16,14 +16,13 @@ from pfsfog.prior_export import CalibratedPriors
 
 
 class TestScenarioDefinitions:
-    def test_four_scenarios(self):
-        assert len(SCENARIOS) == 4
+    def test_three_scenarios(self):
+        assert len(SCENARIOS) == 3
 
     def test_names(self):
         names = [s.name for s in SCENARIOS]
         assert "broad" in names
         assert "cross-cal" in names
-        assert "cross-cal-ext" in names
         assert "oracle" in names
 
 

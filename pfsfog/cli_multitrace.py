@@ -294,7 +294,11 @@ def run_multitrace_pipeline(cfg: ForecastConfig, verbose: bool = True) -> MultiT
             cov_st = single_tracer_cov(pkmu_func, k_full, nbar_desi, V_full, cfg.dk, ells)
 
             cal = cal_elg.get((zlo, zhi))
-            nuis_prior = nuisance_prior_diag(scenario, cal)
+            if scenario.prior_source == "cross-cal" and cal is None:
+                # No calibrated priors for this z-bin — fall back to broad
+                nuis_prior = broad_priors().prior_fisher_diag()
+            else:
+                nuis_prior = nuisance_prior_diag(scenario, cal)
 
             fr = full_area_fisher_per_zbin(
                 derivs, cov_st, k_full, cfg.dk, nuis_prior,

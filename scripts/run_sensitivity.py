@@ -33,10 +33,10 @@ def sweep_r_sigma_v(base_cfg: ForecastConfig) -> dict:
         )
         res = run_pipeline(cfg, verbose=False)
 
-        xcal_ext = res.scenario_results.get("cross-cal-ext")
+        xcal_ext = res.scenario_results.get("cross-cal")
         if xcal_ext:
             results[r] = xcal_ext.sigmas_combined["fsigma8"]
-            print(f"  σ(fσ8) cross-cal-ext = {results[r]:.4e}")
+            print(f"  σ(fσ8) cross-cal = {results[r]:.4e}")
 
     # Add broad baseline
     broad = res.scenario_results.get("broad")
@@ -73,7 +73,7 @@ def main():
     if bl is not None:
         print(f"\nBroad baseline σ(fσ8) = {bl:.4e}")
         best = min(v for k, v in rsv_results.items() if isinstance(k, float))
-        print(f"Best cross-cal-ext σ(fσ8) = {best:.4e}")
+        print(f"Best cross-cal σ(fσ8) = {best:.4e}")
         print(f"Improvement: {(bl - best) / bl * 100:.1f}%")
 
 

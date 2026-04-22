@@ -78,8 +78,9 @@ def single_tracer_cov(
     C = np.zeros((Nk, Nell, Nell))
     for i, ell_i in enumerate(ells):
         for j, ell_j in enumerate(ells):
-            # ∫ dμ L_ℓ(μ) L_ℓ'(μ) [P_tot]²
-            integrand = Lw[i] * _legendre(ell_j, mu) * Ptot**2  # (Nk, Nmu)
+            # ∫ dμ L_ℓ(μ) L_ℓ'(μ) × 2[P_tot]²
+            # Factor of 2 from Wick contraction: P_AA P_AA + P_AA P_AA = 2P²
+            integrand = Lw[i] * _legendre(ell_j, mu) * 2.0 * Ptot**2  # (Nk, Nmu)
             integral = np.sum(integrand, axis=1)  # (Nk,)
             C[:, i, j] = (
                 (2 * ell_i + 1) * (2 * ell_j + 1)
