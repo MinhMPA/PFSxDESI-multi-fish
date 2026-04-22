@@ -1,8 +1,10 @@
 # LaTeX build artifacts
-*.aux
-*.bbl
-*.blg
-*.log
-*.out
-*.toc
+**.aux
+**.bbl
+**.blg
+**.log
+**.out
+**.toc
 *.pdf
+# MacOS specific files
+**.DS_Store

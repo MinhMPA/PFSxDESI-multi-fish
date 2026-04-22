@@ -304,14 +304,14 @@ def fig5_sensitivity_rsigmav(
     if broad_baseline is not None:
         ax.axhline(broad_baseline, ls="-", color="#4C72B0",
                    lw=1, label="Broad baseline")
-        for pct in (15, 30):
+        for pct in (10, 20):
             ax.axhline(broad_baseline * (1 - pct / 100), ls=":",
                        color="gray", lw=0.8,
                        label=fr"$-{pct}$%")
 
     ax.set_xlabel(r"$r_{\sigma_v} = \sigma_{v,\mathrm{PFS}} / \sigma_{v,\mathrm{DESI}}$")
     ax.set_ylabel(r"$\sigma(f\sigma_8)$ combined")
-    ax.legend(frameon=False, loc="lower left")
+    ax.legend(frameon=False, loc="best")
 
     fig.tight_layout()
     fig.savefig(out_dir / "fig5_sensitivity_rsigmav.pdf", bbox_inches="tight")
