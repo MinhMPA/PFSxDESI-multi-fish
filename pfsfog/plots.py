@@ -32,6 +32,7 @@ def set_style():
         "ytick.major.width": 0.8,
         "xtick.direction": "in",
         "ytick.direction": "in",
+        "axes.unicode_minus": False,
         "text.usetex": False,
     })
 
