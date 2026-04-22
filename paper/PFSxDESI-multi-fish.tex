@@ -835,7 +835,7 @@ improvement (73--99\%).
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=\textwidth]{\figurespath/calibrated_vs_broad.pdf}
+\includegraphics[width=\textwidth]{\figurespath/calibrated_vs_broad.png}
 \caption{Calibrated vs.\ broad priors. Cross-calibrated prior widths
 $\sigma_{\rm cal}$ (colored dots, one per $z$-bin) compared with the
 conservative broad priors $\sigma_{\rm broad}$ (light bars) for all
@@ -873,7 +873,7 @@ cross-calibration \emph{does} constrain---\(\Pshot\) and
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=\textwidth]{\figurespath/full_area_constraints.pdf}
+\includegraphics[width=\textwidth]{\figurespath/full_area_constraints.png}
 \caption{Full-area DESI-ELG constraints ($\kmax=0.20\iMpch$).
 Marginalized $1\sigma$ uncertainties on $f\se$, $\Mnu$, and $\Om$
 from $14{,}000\;\text{deg}^2$, combining four $z$-bins, under three
@@ -933,7 +933,7 @@ to amplitude nuisance parameters.
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.65\textwidth]{\figurespath/calibration_efficiency.pdf}
+\includegraphics[width=0.65\textwidth]{\figurespath/calibration_efficiency.png}
 \caption{Calibration efficiency per $z$-bin, defined as
 $(\sigma_{\rm broad}-\sigma_{\rm xcal})/(\sigma_{\rm broad}-\sigma_{\rm fixed})$.
 An efficiency of unity would mean the cross-calibration fully closes the gap
@@ -974,7 +974,7 @@ asymmetric \(k\)-range extension.
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.65\textwidth]{\figurespath/sensitivity_rsigmav.pdf}
+\includegraphics[width=0.65\textwidth]{\figurespath/sensitivity_rsigmav.png}
 \caption{Sensitivity to the FoG velocity ratio $\rsv$.
 Green: asymmetric $\kmax$ ($\kmax^{\PFS}=\kmax^{\DESI}/\rsv$).
 Red: symmetric $\kmax$ ($\kmax^{\PFS}=\kmax^{\DESI}=0.20\iMpch$).
@@ -1149,9 +1149,11 @@ and \href{https://github.com/f0uriest/interpax}{\code{interpax}}.
 %-------------------------------------------------------------------
 \appendix
 
-\section{Derivative convergence}
-\label{app:derivatives}
+\section{Fisher forecast convergence}
+\label{app:Fisher_convergence}
 
+\subsection{Derivatives}
+\label{app:derivative_convergence}
 All power spectrum derivatives \(\partial P_\ell/\partial\theta\) are
 computed via JAX forward-mode automatic differentiation
 (\texttt{jax.jacfwd}) through the full one-loop
@@ -1166,10 +1168,8 @@ across all \(k\)-bins and multipoles tested (\(\ell=0,2\)). The
 small relative to the total power at \(k\leq 0.25\iMpch\); the
 autodiff result is insensitive to this issue.
 
-
-\section{Fisher code verification}
-\label{app:fisher_verification}
-
+\subsection{}
+\label{app:}
 We verify the Fisher matrix code against four analytic checks:
 
 \begin{enumerate}
@@ -1198,11 +1198,8 @@ We verify the Fisher matrix code against four analytic checks:
   cosmic-variance contribution.
 \end{enumerate}
 
-All 96 unit tests pass in \(\sim\!10\;\text{s}\) on a single CPU core.
-
-
-\section{Co-evolution prior test}
-\label{app:coevolution}
+\section{EFT priors from co-evolution}
+\label{app:coevolution_priors}
 
 In the baseline analysis, the nonlinear biases \(b_2\) and \(b_{G_2}\)
 are assigned independent Gaussian priors (\(\sigma=5\) for
