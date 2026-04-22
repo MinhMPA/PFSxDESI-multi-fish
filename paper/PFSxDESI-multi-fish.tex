@@ -298,18 +298,14 @@ generalize to any pair of overlapping spectroscopic surveys.
 \label{sec:intro}
 %-------------------------------------------------------------------
 
-Full-shape analyses of galaxy clustering in the effective field
-theory of large-scale structure
-(EFTofLSS)~\cite{Baumann:2010tm,Carrasco:2012cv,Senatore:2014eva}
-have become a cornerstone of spectroscopic cosmology. Three
-independent groups applied the one-loop EFT power spectrum to BOSS
-DR12~\cite{Ivanov:2019pdj,dAmico:2019fhj,Chen:2021wdi}, delivering
+The effective field theory of large-scale structure
+(EFTofLSS)~\cite{Baumann:2010tm,Carrasco:2012cv,Carroll:2013oxa,Senatore:2014eva} and full-shape analysis of the galaxy power spectrum~\citep[e.g.,][]{Ivanov:2019pdj,dAmico:2019fhj,Chen:2021wdi,Philcox:2021kcw,DESI:2024jxi,DESI:2024hhd} have become the new standard for cosmological analyses of galaxy clustering.
 percent-level constraints on the growth rate, the Hubble constant,
 and the matter density within \(\Lambda\)CDM, and subsequently
 extending to neutrino masses~\cite{Ivanov:2019hqk}, primordial
 non-Gaussianity~\cite{Cabass:2022wjy}, and the galaxy
 bispectrum~\cite{Philcox:2021kcw}. Most recently, both the DESI
-Collaboration~\cite{DESI:2024fs,DESI:2024cosmo} and independent
+Collaboration~\cite{DESI:2024jxi,DESI:2024hhd} and independent
 reanalyses~\cite{Chudaykin:2025abc} have applied the same framework
 to DESI DR1, probing dark energy, modified gravity, and neutrino
 masses at the full-shape level. The EFT framework parameterises our
@@ -365,13 +361,13 @@ constraints without any simulation input.
 The \(\sim\!1{,}200\;\text{deg}^2\) overlap of the Subaru Prime Focus
 Spectrograph (PFS) ELG survey~\cite{Takada:2014pfs} with three DESI
 tracers---ELG, luminous red galaxies (LRG), and quasars
-(QSO)~\cite{DESI:2016fdr,DESI:2025forecast}---at \(0.8<z<1.6\)
+(QSO)~\cite{DESI:2016fyo,DESI:2025zgx}---at \(0.8<z<1.6\)
 provides a concrete realization. With up to 4 tracers and 10
 cross-spectra per redshift bin, the overlap volume functions as a
 calibration laboratory for the EFT parameters that limit the full
 DESI analysis. PFS's lower finger-of-god (FoG) contamination further
 motivates an asymmetric scale cut
-\(\kmax^{\PFS}>\kmax^{\DESI}\)~\cite{Rubira:2025asym}, extending the
+\(\kmax^{\PFS}>\kmax^{\DESI}\)~\cite{Rubira:2025scu}, extending the
 usable \(k\)-range in the overlap.
 
 This paper is organised as follows. \Cref{sec:method} describes the
@@ -529,8 +525,7 @@ the reduced versions excluding the DESI auto-spectrum rows and columns.
 \subsection{The prior export mechanism}
 \label{sec:prior_export}
 
-From the overlap multi-tracer Fisher~\cite{Tegmark:1997rp}
-\(F_{\rm overlap}\) (\cref{eqn:fisher_asym}), we extract calibrated
+From the overlap multi-tracer Fisher \(F_{\rm overlap}\) (\cref{eqn:fisher_asym}), we extract calibrated
 priors for each DESI nuisance parameter as follows:
 \begin{enumerate}
 \item Regularise: \(F_{\rm reg} = F_{\rm overlap} + F_{\rm broad}\),
@@ -596,9 +591,9 @@ We consider the overlap of PFS-ELG with three DESI tracer samples in
 the shared \(\sim\!1{,}200\;\text{deg}^2\) footprint at \(0.8<z<1.6\).
 
 \paragraph{DESI.}
-The Dark Energy Spectroscopic Instrument~\cite{DESI:2016fdr} covers
+The Dark Energy Spectroscopic Instrument~\cite{DESI:2016fyo} covers
 \(14{,}000\;\text{deg}^2\) with three galaxy samples relevant to this
-analysis. The ELG sample~\cite{DESI:2025forecast} spans
+analysis. The ELG sample~\cite{DESI:2025zgx} spans
 \(0.8<z<1.6\) with peak \(\nbar\sim 10^{-3}\Mpchcubed\) and bias
 \(b_1(z) = 0.84/D(z)\). The LRG sample covers \(0.4<z<1.1\) with
 \(\nbar\sim 5\times 10^{-4}\Mpchcubed\) and \(b_1(z)=1.7/D(z)\)---the
@@ -810,7 +805,7 @@ EFT parameters---as DESI-ELG outside. Since DESI's target selection
 is spatially uniform by construction, this holds to the extent that
 imaging systematics do not induce spatial variation in the ELG
 population; DESI's imaging-systematics pipeline is designed to
-control this~\cite{DESI:2025forecast}. We state this as an explicit
+control this~\cite{DESI:2025zgx}. We state this as an explicit
 assumption and note that a violation would manifest as a detectable
 mismatch between the calibrated and in-situ posteriors.
 
