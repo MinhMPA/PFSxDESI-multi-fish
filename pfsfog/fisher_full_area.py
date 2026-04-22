@@ -19,16 +19,20 @@ from .fisher import FisherResult, add_gaussian_prior
 # Combined param names: cosmo + (nuisance × Nz)
 def full_area_param_names(
     z_bins: list[tuple[float, float]],
+    sample_labels: list[str] | None = None,
 ) -> list[str]:
     """Parameter names for the combined full-area Fisher.
 
-    Cosmo params are shared; nuisance params are per-z-bin.
+    Cosmo params are shared; nuisance params are per-z-bin (or per-sample).
+    If sample_labels is provided, uses those instead of z-bin ranges
+    (avoids collisions when two samples share the same z-range, e.g.
+    LRG3 and ELG1 at z=0.8–1.1).
     """
     names = list(COSMO_NAMES)
-    for zlo, zhi in z_bins:
-        zlabel = f"z{zlo:.1f}_{zhi:.1f}"
+    labels = sample_labels or [f"z{zlo:.1f}_{zhi:.1f}" for zlo, zhi in z_bins]
+    for label in labels:
         for n in NUISANCE_NAMES:
-            names.append(f"{n}_{zlabel}")
+            names.append(f"{n}_{label}")
     return names
 
 
@@ -41,6 +45,7 @@ def full_area_fisher_per_zbin(
     z_bin: tuple[float, float],
     kmax: float,
     ells: tuple[int, ...] = (0, 2, 4),
+    survey_name: str = "DESI full",
 ) -> FisherResult:
     """Single z-bin DESI Fisher + nuisance prior.
 
@@ -107,18 +112,27 @@ def full_area_fisher_per_zbin(
 
     return FisherResult(
         F=F, param_names=param_names,
-        z_bin=z_bin, survey_name="DESI-ELG full", kmax=kmax,
+        z_bin=z_bin, survey_name=survey_name, kmax=kmax,
     )
 
 
 def combine_zbins(
     fisher_per_z: list[FisherResult],
     z_bins: list[tuple[float, float]],
+    sample_labels: list[str] | None = None,
+    survey_name: str = "DESI full combined",
 ) -> FisherResult:
-    """Combine per-z Fisher matrices into a joint Fisher.
+    """Combine per-z (or per-sample) Fisher matrices into a joint Fisher.
 
-    Cosmo params are shared across z-bins (their Fisher contributions
-    add). Per-z nuisance params are independent.
+    Cosmo params are shared across z-bins/samples (their Fisher
+    contributions add). Per-z/sample nuisance params are independent.
+
+    Parameters
+    ----------
+    sample_labels : optional list of unique labels per Fisher entry.
+        When provided, used for parameter naming instead of z-bin ranges.
+        Required when two samples share the same z-range (e.g. LRG3 and
+        ELG1 at z=0.8–1.1).
 
     Returns
     -------
@@ -129,7 +143,7 @@ def combine_zbins(
     Nz = len(z_bins)
     Np = N_COSMO + N_NUIS * Nz
 
-    param_names = full_area_param_names(z_bins)
+    param_names = full_area_param_names(z_bins, sample_labels)
     F = np.zeros((Np, Np))
 
     for iz, fr in enumerate(fisher_per_z):
@@ -150,6 +164,6 @@ def combine_zbins(
     return FisherResult(
         F=F, param_names=param_names,
         z_bin=(z_bins[0][0], z_bins[-1][1]),
-        survey_name="DESI-ELG full combined",
+        survey_name=survey_name,
         kmax=kmax,
     )
