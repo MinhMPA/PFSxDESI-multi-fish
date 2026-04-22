@@ -150,19 +150,49 @@ def desi_elg_fiducials(b1: float, sigma8_z: float) -> EFTFiducials:
 # ---------------------------------------------------------------------------
 
 
-# σ_v values from Zhang et al. (2025, arXiv:2504.10407, Table 1)
-# Used to set the c̃ hierarchy via c̃ ∝ σ_v⁴.
-_SIGMA_V = {
-    "DESI-ELG": 3.11,   # h⁻¹Mpc
-    "DESI-LRG": 6.20,   # h⁻¹Mpc
-    "DESI-QSO": 5.68,   # h⁻¹Mpc
+# ---------------------------------------------------------------------------
+# c̃ fiducial templates
+# ---------------------------------------------------------------------------
+#
+# Two templates based on different σ_v measurements:
+#
+# "zhang": Zhang et al. (2025, arXiv:2504.10407, Table 1).
+#   σ_v from HOD pairwise velocity dispersions.
+#   σ_v^ELG = 3.11, σ_v^LRG = 6.20, σ_v^QSO = 5.68 h⁻¹Mpc.
+#   c̃ ∝ σ_v⁴ with c̃_ELG = 400 (Chudaykin+ 2025 prior mean).
+#
+# "ivanov": Ivanov (2021, arXiv:2106.12580, Eqs. 19, 22).
+#   c̃ and σ_v measured from EFT fits to Outer Rim mocks.
+#   c̃_ELG ≈ 300, c̃_LRG ≈ 734. σ_v^ELG ≈ 5, σ_v^LRG ≈ 6 Mpc/h.
+#   QSO: scaled from σ_v ratio (5.68/5.0)⁴ × 300.
+
+CTILDE_TEMPLATES = {
+    "zhang": {
+        "DESI-ELG": 400.0,
+        "DESI-LRG": 400.0 * (6.20 / 3.11) ** 4,   # ≈ 6320
+        "DESI-QSO": 400.0 * (5.68 / 3.11) ** 4,   # ≈ 4450
+        "source": "Zhang+ 2025 (arXiv:2504.10407, Table 1)",
+    },
+    "ivanov": {
+        "DESI-ELG": 300.0,
+        "DESI-LRG": 734.0,
+        "DESI-QSO": 300.0 * (5.68 / 5.0) ** 4,    # ≈ 506
+        "source": "Ivanov 2021 (arXiv:2106.12580, Eq. 19)",
+    },
 }
 
-# c̃_ELG = 400 is the Chudaykin+ 2025 prior mean.
-# Scale other tracers: c̃_X = c̃_ELG × (σ_v,X / σ_v,ELG)⁴.
-_CTILDE_ELG = 400.0
-_CTILDE_LRG = _CTILDE_ELG * (_SIGMA_V["DESI-LRG"] / _SIGMA_V["DESI-ELG"]) ** 4  # ≈ 6320
-_CTILDE_QSO = _CTILDE_ELG * (_SIGMA_V["DESI-QSO"] / _SIGMA_V["DESI-ELG"]) ** 4  # ≈ 4440
+# Default template
+_CTILDE_TEMPLATE = "zhang"
+
+def get_ctilde(tracer: str, template: str | None = None) -> float:
+    """Get the c̃ fiducial for a DESI tracer."""
+    t = template or _CTILDE_TEMPLATE
+    return CTILDE_TEMPLATES[t][tracer]
+
+# Backward-compatible module-level constants (use default template)
+_CTILDE_ELG = CTILDE_TEMPLATES[_CTILDE_TEMPLATE]["DESI-ELG"]
+_CTILDE_LRG = CTILDE_TEMPLATES[_CTILDE_TEMPLATE]["DESI-LRG"]
+_CTILDE_QSO = CTILDE_TEMPLATES[_CTILDE_TEMPLATE]["DESI-QSO"]
 
 
 def desi_lrg_fiducials(b1: float, sigma8_z: float) -> EFTFiducials:

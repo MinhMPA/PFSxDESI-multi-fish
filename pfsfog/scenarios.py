@@ -28,8 +28,7 @@ class Scenario:
 SCENARIOS = [
     Scenario("broad",          "broad",     0.20),
     Scenario("cross-cal",      "cross-cal", 0.20),
-    Scenario("cross-cal-ext",  "cross-cal", 0.25),
-    Scenario("oracle",         "oracle",    0.25),
+    Scenario("oracle",         "oracle",    0.20),
 ]
 
 

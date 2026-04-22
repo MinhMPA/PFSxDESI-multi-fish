@@ -133,9 +133,14 @@ def multi_tracer_fisher_general(
                                     cross_derivs[key_b][ell]
                                 )
 
-    # Invert covariance and accumulate Fisher
+    # Invert covariance and accumulate Fisher.
+    # Skip k-bins where the covariance is not positive definite
+    # (can happen when cross-shot noise violates Cauchy-Schwarz at high k).
     F = np.zeros((Np, Np))
     for ik in range(Nk):
+        eigvals = np.linalg.eigvalsh(cov_mt[ik])
+        if np.any(eigvals <= 0):
+            continue  # skip ill-conditioned k-bins
         try:
             cov_inv = np.linalg.inv(cov_mt[ik])
         except np.linalg.LinAlgError:

@@ -28,7 +28,7 @@ for f_sh in f_values:
 
     res = run_multitrace_pipeline(cfg, verbose=False)
 
-    xcal = res.scenario_results.get("cross-cal-ext", {})
+    xcal = res.scenario_results.get("cross-cal", {})
     results[f_sh] = {
         "fsigma8": xcal.get("fsigma8", float("nan")),
         "Mnu": xcal.get("Mnu", float("nan")),
