@@ -39,14 +39,14 @@ def set_style():
 SCENARIO_COLORS = {
     "broad": "#4C72B0",
     "cross-cal": "#DD8452",
-    "cross-cal-ext": "#55A868",
+    "cross-cal": "#55A868",
     "oracle": "#C44E52",
 }
 
 SCENARIO_LABELS = {
     "broad": "Broad",
     "cross-cal": "Cross-cal",
-    "cross-cal-ext": "Cross-cal-ext",
+    "cross-cal": "Cross-cal",
     "oracle": "Fixed nuis.",
 }
 
@@ -198,13 +198,8 @@ def fig3_full_area_constraints(scenario_results, out_dir: Path):
         ax.set_ylabel(ylabel)
         ax.set_title(title)
 
-        # HOD benchmark line (dashed)
+        # SBP benchmark lines
         sigma_broad = scenario_results["broad"].sigmas_combined[cp]
-        if cp == "Omegam":
-            hod_imp = HOD_BENCHMARK["Omegam_improvement"]
-            ax.axhline(sigma_broad * (1 - hod_imp), ls="--", color="gray",
-                       lw=1, label=f"SBP, PS ({hod_imp*100:.0f}%)")
-            ax.legend(frameon=False, fontsize=9)
 
         if cp == "fsigma8":
             # Use sigma8 improvement as proxy for fsigma8
@@ -214,6 +209,19 @@ def fig3_full_area_constraints(scenario_results, out_dir: Path):
             fl_imp = FIELD_LEVEL_BENCHMARK["sigma8_improvement"]
             ax.axhline(sigma_broad * (1 - fl_imp), ls=":", color="gray",
                        lw=1, label=f"SBP, FL ({fl_imp*100:.0f}%)")
+
+        if cp == "Omegam":
+            hod_imp = HOD_BENCHMARK["Omegam_improvement"]
+            ax.axhline(sigma_broad * (1 - hod_imp), ls="--", color="gray",
+                       lw=1, label=f"SBP, PS ({hod_imp*100:.0f}%)")
+            fl_imp = FIELD_LEVEL_BENCHMARK["Omegam_improvement"]
+            ax.axhline(sigma_broad * (1 - fl_imp), ls=":", color="gray",
+                       lw=1, label=f"SBP, FL ({fl_imp*100:.0f}%)")
+
+        # Mnu: no field-level SBP line — Chudaykin+ 2026 Table IV
+        # shows SBPs worsen the LCDM Mnu bound (sigma8 shift effect).
+
+        if cp in ("fsigma8", "Omegam"):
             ax.legend(frameon=False, fontsize=9)
 
     # No suptitle — caption provides context
@@ -242,7 +250,7 @@ def fig4_calibration_efficiency(scenario_results, z_bins, out_dir: Path):
         for zb in z_bins:
             sb = scenario_results["broad"].sigmas_per_z[zb][cp]
             so = scenario_results["oracle"].sigmas_per_z[zb][cp]
-            sx = scenario_results["cross-cal-ext"].sigmas_per_z[zb][cp]
+            sx = scenario_results["cross-cal"].sigmas_per_z[zb][cp]
             eff = compute_calibration_efficiency(sx, sb, so)
             effs.append(eff if eff is not None else 0.0)
 
@@ -266,7 +274,7 @@ def fig4_calibration_efficiency(scenario_results, z_bins, out_dir: Path):
 # ---------------------------------------------------------------------------
 
 def fig5_sensitivity_rsigmav(sensitivity_data: dict, out_dir: Path):
-    """σ(fσ8) combined for cross-cal-ext vs r_σv.
+    """σ(fσ8) combined for cross-cal vs r_σv.
 
     Parameters
     ----------

@@ -339,9 +339,12 @@ HOD_BENCHMARK = {
 }
 
 FIELD_LEVEL_BENCHMARK = {
-    "source": "Chudaykin+ 2026 (arXiv:2602.18554)",
+    "source": "Chudaykin+ 2026 (arXiv:2602.18554, Table I)",
     "H0_improvement": 0.40,
     "sigma8_improvement": 0.50,
+    "Omegam_improvement": 0.01,
+    # Mnu: SBPs *worsen* the bound in LCDM (0.073 vs 0.059 eV, Table IV)
+    # due to the downward sigma8 shift; no improvement to report.
 }
 
 
