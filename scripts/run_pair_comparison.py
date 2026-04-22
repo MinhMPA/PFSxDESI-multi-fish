@@ -229,7 +229,7 @@ def run_overlap_calibration(
     return calibrated
 
 
-def run_full_area_with_priors(calibrated, cfg, cosmo, ps, scenario_name="cross-cal-ext"):
+def run_full_area_with_priors(calibrated, cfg, cosmo, ps, scenario_name="cross-cal"):
     """Run the full-area DESI-ELG Fisher with calibrated priors."""
     ells = (0, 2, 4)
     scenario = next(s for s in SCENARIOS if s.name == scenario_name)
@@ -343,7 +343,7 @@ def main():
             print(f"  z=[{zlo},{zhi}]: σ(Pshot)={ps_val:.3f}  σ(c̃)={ct_val:.1f}")
 
         # Full-area forecast
-        sigmas = run_full_area_with_priors(cal, cfg, cosmo, ps, "cross-cal-ext")
+        sigmas = run_full_area_with_priors(cal, cfg, cosmo, ps, "cross-cal")
         row = f"{label:<35s}"
         for cp in COSMO_NAMES:
             s = sigmas.get(cp, float("nan"))

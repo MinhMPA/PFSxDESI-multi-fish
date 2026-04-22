@@ -271,15 +271,17 @@ that calibrates EFT parameters from the multi-tracer analysis of
 overlapping spectroscopic surveys.
 %
 In the \(\sim\!1{,}200\;\text{deg}^2\) PFS--DESI overlap at
-\(0.8<z<1.6\), up to four tracers (PFS-ELG, DESI-ELG, DESI-LRG,
+\(0.6<z<1.6\), up to four tracers (PFS-ELG, DESI-ELG, DESI-LRG,
 DESI-QSO) and ten cross-spectra per redshift bin provide
 model-independent constraints on the DESI nuisance parameters.
 Cross-spectra between different galaxy populations carry zero
 stochastic contribution, cleanly separating shot noise from signal.
 Exporting the calibrated priors to the full
-\(14{,}000\;\text{deg}^2\) DESI footprint improves
-\(\sigma(f\se)\) by 19--25\% and \(\sigma(\Mnu)\) by 55--60\%
-at \(\kmax=0.20\iMpch\).
+\(14{,}000\;\text{deg}^2\) DESI footprint---forecasting all six
+DR2 tracer samples (LRG1--3, ELG1--2,
+QSO)---improves \(\sigma(f\se)\) by 8\% (7--25\% per sample) and
+\(\sigma(\Mnu)\) by 53\% (46--69\% per sample) at
+\(\kmax=0.20\iMpch\).
 A parameter importance decomposition reveals that the dominant driver
 is the calibration of \(b_1\se\)---constrained from a flat prior
 to \(\sigma\approx 0.17\) by the multi-tracer Fisher---which
@@ -335,7 +337,13 @@ al.~\cite{DESI:2025wzd} applied power-spectrum-level priors to
 DESI DR1, improving \(\sigma(\se)\) by \(\sim\!23\%\); Chudaykin,
 Ivanov \& Philcox~\cite{Chudaykin:2026nls} achieved
 \(\sim\!50\%\) with field-level priors. These gains are
-substantial---but the simulation-based priors (SBP) are only as accurate as the HOD model used to produce them~\cite{Akitsu:2024lyt}. Using SBPs, \cite{Ivanov:2024xgb} and \cite{Chudaykin:2026nls} found lower values of \(\sigma_8\) and \(S_8\) parameters in BOSS and DESI, respectively---together suggesting a suppression in the amplitude of structure growth, often referred to as the \(\sigma_8\) or \(S_8\) tension.
+substantial---but the simulation-based priors (SBP) are only as accurate as the HOD model used to produce them~\cite{Akitsu:2024lyt}. Notably, the SBP analyses
+shift \(\se\) downward by \(\sim\!2\sigma\) relative to conservative
+priors~\cite{Chudaykin:2026nls}, deepening the tension with CMB
+measurements of \(S_8\). Whether this shift reflects new physics or
+systematic biases absorbed from the HOD modelling remains an open
+question---one that an independent, data-driven calibration of the
+same parameters could help resolve.
 
 Meanwhile, multi-tracer EFT analyses have shown that jointly fitting
 multiple galaxy populations breaks parameter degeneracies beyond
@@ -878,24 +886,29 @@ carry little information on these $k^2$/$k^4$ contributions.}
 \label{sec:results_full_area}
 
 We now export the calibrated priors to the full
-\(14{,}000\;\text{deg}^2\) DESI footprint.
-\Cref{fig:full_area} and \cref{tab:headline} present the headline
-results. At \(\kmax=0.20\iMpch\), multi-survey priors improve
-\(\sigma(f\se)\) by 19--25\% and \(\sigma(\Mnu)\) by
-55--60\% over the broad baseline. The range reflects the
-uncertainty in the \(\ctilde\) fiducials for the non-ELG tracers
-(\cref{tab:headline}). For context, Zhang et
-al.~\cite{DESI:2025wzd} achieved \(\sim\!23\%\) on
-\(\sigma(\se)\) using power-spectrum-level SBP
-on DESI~DR1 data (dashed line in \cref{fig:full_area}).
-This improvement comes entirely from tighter nuisance priors at the
-same \(\kmax\)---the EFT convergence for DESI-ELG is set by DESI's
-own counterterms, not by the priors.
+\(14{,}000\;\text{deg}^2\) DESI footprint, forecasting all six
+DR2 tracer samples---LRG1--3, ELG1--2, and QSO---each analysed
+with its own auto-spectrum and the calibrated priors from Step~1.
+\Cref{fig:full_area} and \cref{tab:headline} present the
+single-tracer ELG results; the combined six-sample constraints
+are tighter by a factor of \(\sim\!4\) on \(\sigma(f\se)\) and
+improve by 8\% (7--25\% per sample) and 53\% on \(\sigma(\Mnu)\)
+(46--69\% per sample) at \(\kmax=0.20\iMpch\).
+For context, Zhang et al.~\cite{DESI:2025wzd} achieved
+\(\sim\!23\%\) on \(\sigma(\se)\) using power-spectrum-level
+simulation-based priors on DESI~DR1. Multi-survey priors are
+therefore competitive for growth-rate science and substantially
+stronger for neutrino mass constraints---without any simulation
+input.
 
 The remaining gap to the fixed-nuisance limit---a factor of
-\(\sim\!2.4\) on \(\sigma(f\se)\)---is dominated by the counterterms
+\(\sim\!4.6\) on \(\sigma(f\se)\) for the combined
+forecast---is dominated by the counterterms
 (\(c_2\), \(c_4\), \(\ctilde\)) and the \(k\)-dependent stochastic
 terms (\(a_0\), \(a_2\)), which the overlap volume cannot constrain.
+These are precisely the parameters that SBPs tighten most
+effectively, making the two approaches complementary rather than
+competing.
 
 \begin{figure}[t]
 \centering
@@ -1082,6 +1095,25 @@ compensated by increasing \(b_1\) (Fisher correlation
 marginalised \(\sigma(\Mnu)\). The multi-tracer overlap constrains
 \(b_1\se\) to \(\sigma\approx 0.17\), breaking the degeneracy and
 reducing \(\sigma(\Mnu)\) by more than a factor of two.
+\Cref{fig:fisher_contours} visualises this mechanism: the broad-prior
+ellipse in the \(b_1\se\)--\(\Mnu\) plane is elongated along the
+degeneracy direction; the cross-calibrated ellipse collapses it.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{\figurespath/fisher_contours.png}
+\caption{Fisher contours (1\(\sigma\) and 2\(\sigma\)) in the
+\(b_1\se\)--\(\Mnu\), \(b_1\se\)--\(f\se\), and
+\(f\se\)--\(\Mnu\) planes, comparing broad priors (blue)
+with cross-calibrated priors (green). The near-perfect
+\(b_1\)--\(\Mnu\) degeneracy (left panel) is the dominant
+driver of the improvement: calibrating \(b_1\se\) from the
+PFS--DESI overlap collapses the elongated ellipse.
+The right panel shows the resulting marginalized cosmological
+contour. Fiducial: DESI-ELG at \(z=0.9\), combined over
+four \(z\)-bins in 14,000~deg\(^2\).}
+\label{fig:fisher_contours}
+\end{figure}
 
 SBPs achieve the same effect through a different
 route. Chudaykin et al.~\cite{Chudaykin:2026nls} report that
@@ -1113,26 +1145,40 @@ calibration.
 
 \subsection{Complementarity with simulation-based priors}
 
-Multi-survey priors and simulation-based
-priors~\cite{Ivanov:2024hgq,DESI:2025wzd,Chudaykin:2026nls}
-target the same parameters---\(b_1\), \(\Pshot\),
-\(b_{G_2}\)---but through different mechanisms: the former from
-cross-spectra between independent galaxy populations, the latter from
-HOD-calibrated distributions in simulations.
-This makes them synergistic rather than redundant.
-Multi-survey-calibrated values provide a model-independent consistency
-check on the HOD assumptions underlying SBPs---particularly for the
-shot-noise departure, which depends sensitively on sub-Poisson
-corrections from the satellite fraction.
-Conversely, the counterterms and \(k\)-dependent stochastic terms
+Multi-survey priors are not a replacement for simulation-based
+priors---they are a cross-check and a competitive alternative when
+growth-rate or neutrino-mass constraints are the primary science
+target. Both approaches tighten the same parameters---\(b_1\),
+\(\Pshot\), \(b_{G_2}\)---but through fundamentally different
+mechanisms: multi-survey priors from cross-spectra between
+independent galaxy populations, SBPs from HOD-calibrated
+distributions in
+simulations~\cite{Ivanov:2024hgq,DESI:2025wzd,Chudaykin:2026nls}.
+
+This distinction matters in the context of the \(S_8\)
+tension. Chudaykin et al.~\cite{Chudaykin:2026nls} report that
+field-level SBPs shift \(\se\) downward by \(\sim\!2\sigma\)
+relative to conservative priors, deepening the discrepancy with
+CMB measurements. This shift could signal new physics beyond
+\(\Lambda\)CDM---or it could reflect systematic biases absorbed
+from the HOD modelling into the galaxy bias and stochastic
+parameters. Multi-survey priors constrain exactly these parameters
+from data, without HOD input. If a future PFS\(\times\)DESI
+analysis reproduces the SBP-driven \(\se\) shift, the
+new-physics interpretation gains independent support. If it does
+not, the discrepancy points to HOD systematics. Either outcome is
+scientifically valuable.
+
+The counterterms and \(k\)-dependent stochastic terms
 (\(a_0\), \(a_2\))---which the overlap volume cannot
 constrain---are precisely the parameters that SBPs tighten most
-effectively.
-A 19--25\% improvement on \(\sigma(f\se)\) from
-\(\sim\!1{,}200\;\text{deg}^2\) of overlap, comparable to the full
-PS-level SBP pipeline~\cite{DESI:2025wzd}, makes
-a strong case for maximizing the PFS--DESI overlap area in survey
-planning.
+effectively. The optimal strategy is therefore to combine both:
+multi-survey priors for \(b_1\), \(\Pshot\), and \(b_{G_2}\);
+SBPs for the counterterms and scale-dependent stochasticity.
+An 8\% improvement on \(\sigma(f\se)\) from
+\(\sim\!1{,}200\;\text{deg}^2\) of overlap---rising to 7--25\%
+per individual sample---makes a strong case for maximizing the
+PFS--DESI overlap area in survey planning.
 
 The multi-survey prior method generalizes to any pair of overlapping
 spectroscopic surveys with different target
@@ -1172,36 +1218,29 @@ volume. Our main findings are:
 \begin{enumerate}
 \item EFT nuisance marginalization is the dominant systematic cost in
   full-shape analyses: conservative priors degrade \(\sigma(f\se)\) by
-  a factor of \(\sim\!2.4\) and \(\sigma(\Mnu)\) by
-  \(\sim\!6.4\) relative to perfect nuisance
-  knowledge~(\cref{tab:headline}).
+  a factor of \(\sim\!4.6\) and \(\sigma(\Mnu)\) by
+  \(\sim\!10\) relative to perfect nuisance knowledge, across the
+  combined six-sample DESI forecast.
 
 \item The multi-tracer overlap calibrates \(b_1\se\) (from a flat
-  prior to \(\sigma\approx 0.17\)), \(\Pshot\) (to 11--23\% of
-  broad), and \(b_{G_2}\se^2\) (to 13--35\% of broad). A parameter
-  importance decomposition (\cref{tab:importance}) reveals that the
-  \(b_1\se\) calibration is the dominant driver, accounting for
-  \(\sim\!70\%\) of the \(f\se\) gain and \(\sim\!97\%\) of the
-  \(\Mnu\) gain. The underlying physics is the \(b_1\)--\(f\)
-  degeneracy: \(\Mnu\) suppresses small-scale power, which is nearly
-  perfectly compensated by increasing \(b_1\) (Fisher correlation
-  \(-0.994\)). SBPs achieve the same effect through
-  HOD modelling~\cite{Chudaykin:2026nls}.
+  prior to \(\sigma\approx 0.17\)), \(\Pshot\), and \(b_{G_2}\se^2\).
+  The \(b_1\se\) calibration is the dominant driver---it breaks the
+  \(b_1\)--\(f\) degeneracy that limits single-tracer analyses
+  (\cref{tab:importance,fig:fisher_contours}).
 
-\item For PFS\(\,\times\,\)DESI with up to 4 tracers and 10
-  cross-spectra per redshift bin, the full multi-tracer calibration
-  improves \(\sigma(f\se)\) by 19--25\% and \(\sigma(\Mnu)\) by
-  55--60\% over conservative priors---comparable to the PS-level
-  SBP benchmark of Zhang et al.~\cite{DESI:2025wzd} and achieved
-  without any simulation input. If one maintains a flat \(b_1\) prior,
-  the improvement drops to \(\sim\!4\%\) on both \(f\se\) and \(\Mnu\).
+\item Forecasting all six DESI~DR2 tracer samples (LRG1--3,
+  ELG1--2, QSO), multi-survey priors improve the combined
+  \(\sigma(f\se)\) by 8\% (7--25\% per sample) and
+  \(\sigma(\Mnu)\) by 53\% (46--69\% per sample)---achieved
+  without any simulation input.
 
-\item Multi-survey priors are complementary to simulation-based
-  priors: both tighten \(b_1\) and stochastic parameters, but through
-  different mechanisms (cross-survey data vs.\ HOD simulations),
-  providing mutual consistency checks. The counterterms and
-  \(k\)-dependent stochastic terms that the overlap cannot constrain
-  are precisely those that SBPs tighten most. The approach generalizes
+\item Multi-survey priors are not a replacement for SBPs but a
+  model-independent cross-check. Both tighten the same parameters
+  through different mechanisms; multi-survey priors provide the
+  counterterms and stochasticity that SBPs cannot, and vice versa.
+  In the context of the \(S_8\) tension, multi-survey priors offer
+  an independent handle on whether the SBP-driven \(\se\) shift
+  reflects new physics or HOD systematics. The approach generalizes
   to any pair of overlapping spectroscopic surveys---including
   Euclid\(\,\times\,\)DESI, Roman\(\,\times\,\)Spec-S5, and
   DESI-II\(\,\times\,\)MegaMapper.
