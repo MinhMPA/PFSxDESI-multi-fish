@@ -264,11 +264,11 @@
 Marginalizing over \(\sim\!12\) effective-field-theory (EFT) nuisance
 parameters per tracer per redshift bin is the dominant systematic cost
 in full-shape galaxy power spectrum analyses.
-Simulation-based priors can tighten these parameters but rely on
-HOD model assumptions.
+Simulation-based priors (SBP) can tighten these parameters but rely on
+N-body simulations and halo-occupation-distribution (HOD) models.
 We propose \emph{multi-survey priors}: a data-driven alternative
 that calibrates EFT parameters from the multi-tracer analysis of
-overlapping spectroscopic surveys, without simulations or HOD models.
+overlapping spectroscopic surveys.
 %
 In the \(\sim\!1{,}200\;\text{deg}^2\) PFS--DESI overlap at
 \(0.8<z<1.6\), up to four tracers (PFS-ELG, DESI-ELG, DESI-LRG,
@@ -286,8 +286,8 @@ to \(\sigma\approx 0.17\) by the multi-tracer Fisher---which
 accounts for \(\sim\!70\%\) of the \(f\se\) gain and
 \(\sim\!97\%\) of the \(\Mnu\) gain by breaking the
 \(b_1\)--\(f\) degeneracy intrinsic to single-tracer analyses.
-This parallels simulation-based priors, which also tighten \(b_1\)
-through HOD modelling; multi-survey priors provide a
+Multi-survey prior calibration parallels the SBP approach, which also tighten \(b_1\)
+through HOD model assumptions; multi-survey priors provide a
 model-independent consistency check on these assumptions and
 generalize to any pair of overlapping spectroscopic surveys.
 }
@@ -315,8 +315,8 @@ Both the DESI
 Collaboration~\cite{DESI:2024jxi,DESI:2024hhd} and independent
 reanalyses~\cite{Chudaykin:2025aux,Chudaykin:2025lww,Chudaykin:2025vdh,Ivanov:2026dvl}
 have applied this framework to DESI~DR1, constraining dark energy and
-neutrino masses at the full-shape level. The EFT framework
-parameterises our ignorance of small-scale physics through
+neutrino masses at the full-shape level. At next-to-leading (i.e. one-loop) order, the EFT framework
+parameterizes our ignorance of small-scale physics through
 \(\sim\!12\) nuisance parameters per tracer per redshift
 bin~\cite{Chudaykin:2020aoj,Desjacques:2016bnm}---bias coefficients,
 counterterms, and stochastic amplitudes (\cref{tab:eft_params}).
@@ -327,17 +327,15 @@ knowledge~\cite{Chudaykin:2024wlw}.
 
 Tightening the nuisance priors is therefore a direct route to sharper
 cosmological constraints. All existing approaches to informative
-priors are \emph{simulation-based}: HOD mock catalogues are generated
-from N-body simulations, the EFT parameters are measured from the
+priors are \emph{simulation-based}: HOD mock catalogues are first generated
+from N-body simulations, the EFT parameters are then measured from the
 mocks---either at the power-spectrum level or at the field
-level---and the resulting distribution is used as a
-prior~\cite{Ivanov:2024hgq,Zhang:2024thl,Ivanov:2024xgb}. Zhang et
+level---and the resulting marginal distributions of EFT parameters are used as priors in the EFT full-shape analyses~\cite{Ivanov:2024hgq,Ivanov:2024xgb,Zhang:2024thl}. Zhang et
 al.~\cite{DESI:2025wzd} applied power-spectrum-level priors to
 DESI DR1, improving \(\sigma(\se)\) by \(\sim\!23\%\); Chudaykin,
 Ivanov \& Philcox~\cite{Chudaykin:2026nls} achieved
 \(\sim\!50\%\) with field-level priors. These gains are
-substantial---but the priors are only as accurate as the HOD model
-used to produce them.
+substantial---but the simulation-based priors (SBP) are only as accurate as the HOD model used to produce them~\cite{Akitsu:2024lyt}. Using SBPs, \cite{Ivanov:2024xgb} and \cite{Chudaykin:2026nls} found lower values of \(\sigma_8\) and \(S_8\) parameters in BOSS and DESI, respectively---together suggesting a suppression in the amplitude of structure growth, often referred to as the \(\sigma_8\) or \(S_8\) tension.
 
 Meanwhile, multi-tracer EFT analyses have shown that jointly fitting
 multiple galaxy populations breaks parameter degeneracies beyond
@@ -353,7 +351,7 @@ cross-stochasticity between overlapping populations.
 In this paper we demonstrate that EFT nuisance parameters can be
 calibrated directly from observational data, without HOD modelling.
 We propose \emph{multi-survey priors}---a data-driven alternative to
-simulation-based priors that exploits the overlap volume between two
+SBP that exploits the overlap volume between two
 independent spectroscopic surveys. The idea is simple: when PFS and
 DESI observe the same patch of sky, their cross-power spectra---especially
 between \emph{different} galaxy populations such as
@@ -401,7 +399,7 @@ redshift bin, summarised in \cref{tab:eft_params}: three bias parameters
 matrix as explicit rows; the cubic tidal bias \(b_{\Gamma_3}\); five
 counterterms (\(c_0\), \(c_2\), \(c_4\), \(\ctilde\), \(c_1\)) that
 absorb UV sensitivity of the loop integrals; and three stochastic
-amplitudes (\(\Pshot\), \(a_0\), \(a_2\)) that parameterise departures
+amplitudes (\(\Pshot\), \(a_0\), \(a_2\)) that parameterize departures
 from Poisson shot noise.
 
 In a real MCMC analysis, the counterterms and stochastic amplitudes
@@ -417,7 +415,7 @@ results with conservative versus HOD-informed priors: \(\sigma(\se)\)
 improved by \(\sim\!23\%\) and \(\sigma(\Om)\) by \(\sim\!4\%\) simply
 from tightening the nuisance priors. Chudaykin, Ivanov \& Philcox
 \cite{Chudaykin:2026nls} pushed further with field-level
-simulation-based priors, achieving \(\sim\!50\%\) on \(\sigma(\se)\).
+SBP, achieving \(\sim\!50\%\) on \(\sigma(\se)\).
 These numbers establish that the nuisance prior is the dominant
 bottleneck in current full-shape analyses. Tightening these priors
 is therefore a direct route to sharper cosmological constraints---the
@@ -562,8 +560,7 @@ constrains the cosmology with those calibrated priors.
 \subsection{Comparison with simulation-based priors}
 \label{sec:sbp_comparison}
 
-The cross-calibration proposed here is complementary to---not a
-replacement for---simulation-based priors (SBPs).
+The cross-calibration proposed here is complementary to, not a replacement for, SBP.
 
 SBPs~\cite{Ivanov:2024hgq,Zhang:2024thl,Chudaykin:2026nls} are
 tight: they encode the full joint distribution of EFT parameters from
@@ -672,7 +669,7 @@ covariance, and analysis scenarios.
 \subsection{EFT parameterization}
 \label{sec:eft_params}
 
-We follow the EFT parameterisation of Chudaykin, Ivanov \& Philcox
+We follow the EFT parameterization of Chudaykin, Ivanov \& Philcox
 \cite{Chudaykin:2025lww} exactly. The \(\sigma_8\)-scaled bias
 parameters \(b_1\se\), \(b_2\se^2\), and \(b_{G_2}\se^2\) enter the
 Fisher matrix as explicit rows; the remaining nuisance parameters are
@@ -704,7 +701,7 @@ $a_2$          & 0 & 0 & 0 & 0 & $\mathcal{N}(0,1^2)$ & --- \\
 \hline
 \end{tabular}
 \caption{EFT nuisance parameters and fiducial values at $z=0.9$ for all
-four tracers, following the parameterisation of Chudaykin, Ivanov \& Philcox
+four tracers, following the parameterization of Chudaykin, Ivanov \& Philcox
 (2025). Bias fiducials: $b_1$ from the survey-specific bias model
 (\cref{sec:surveys}); $b_2$ from the Lazeyras et al.\ (2016) co-evolution
 relation; $b_{G_2}=-2/7(b_1{-}1)$; $b_{\Gamma_3}=23/42(b_1{-}1)$.
@@ -889,7 +886,7 @@ results. At \(\kmax=0.20\iMpch\), multi-survey priors improve
 uncertainty in the \(\ctilde\) fiducials for the non-ELG tracers
 (\cref{tab:headline}). For context, Zhang et
 al.~\cite{DESI:2025wzd} achieved \(\sim\!23\%\) on
-\(\sigma(\se)\) using power-spectrum-level simulation-based priors
+\(\sigma(\se)\) using power-spectrum-level SBP
 on DESI~DR1 data (dashed line in \cref{fig:full_area}).
 This improvement comes entirely from tighter nuisance priors at the
 same \(\kmax\)---the EFT convergence for DESI-ELG is set by DESI's
@@ -1086,7 +1083,7 @@ marginalised \(\sigma(\Mnu)\). The multi-tracer overlap constrains
 \(b_1\se\) to \(\sigma\approx 0.17\), breaking the degeneracy and
 reducing \(\sigma(\Mnu)\) by more than a factor of two.
 
-Simulation-based priors achieve the same effect through a different
+SBPs achieve the same effect through a different
 route. Chudaykin et al.~\cite{Chudaykin:2026nls} report that
 field-level SBPs shrink the \(b_1\) posterior by 30--40\% for all
 DESI tracers---a comparable tightening, but derived from HOD
@@ -1133,7 +1130,7 @@ constrain---are precisely the parameters that SBPs tighten most
 effectively.
 A 19--25\% improvement on \(\sigma(f\se)\) from
 \(\sim\!1{,}200\;\text{deg}^2\) of overlap, comparable to the full
-PS-level simulation-based prior pipeline~\cite{DESI:2025wzd}, makes
+PS-level SBP pipeline~\cite{DESI:2025wzd}, makes
 a strong case for maximizing the PFS--DESI overlap area in survey
 planning.
 
@@ -1188,7 +1185,7 @@ volume. Our main findings are:
   \(\Mnu\) gain. The underlying physics is the \(b_1\)--\(f\)
   degeneracy: \(\Mnu\) suppresses small-scale power, which is nearly
   perfectly compensated by increasing \(b_1\) (Fisher correlation
-  \(-0.994\)). Simulation-based priors achieve the same effect through
+  \(-0.994\)). SBPs achieve the same effect through
   HOD modelling~\cite{Chudaykin:2026nls}.
 
 \item For PFS\(\,\times\,\)DESI with up to 4 tracers and 10
@@ -1213,8 +1210,8 @@ volume. Our main findings are:
 
 %-------------------------------------------------------------------
 \acknowledgments
-I thank Yosuke Kobayashi and Kazuyuki Akitsu for allowing me early access to their one-loop power spectrum code, \code{ps\_1loop\_jax}.
-I thank Jingjing Shi for providing the PFS survey specifications and a helpful discussion of the overlapped fraction between PFS and DESI ELGs.
+I am grateful to Yosuke Kobayashi and Kazuyuki Akitsu for allowing me early access to their one-loop power spectrum code, \code{ps\_1loop\_jax}.
+I thank Kazuyuki Akitsu for helpful discussions about SBP and Jingjing Shi for providing the PFS survey specifications and a helpful discussion of the overlapped fraction between PFS and DESI ELGs.
 I acknowledge support from the Japan Foundation for Promotion of Astronomy Research Grant and the Japan Society for the Promotion of Science (JSPS) KAKENHI Grant Number 25K23373 and 26H00404.
 
 This study utilized the following open-source libraries:
