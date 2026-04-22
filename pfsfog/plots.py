@@ -198,33 +198,29 @@ def fig3_full_area_constraints(scenario_results, out_dir: Path):
         ax.set_ylabel(ylabel)
         ax.set_title(title)
 
-        # SBP benchmark lines
+        # SBP benchmark lines (dashed = PS-level, dotted = field-level)
         sigma_broad = scenario_results["broad"].sigmas_combined[cp]
 
         if cp == "fsigma8":
-            # Use sigma8 improvement as proxy for fsigma8
             hod_imp = HOD_BENCHMARK["sigma8_improvement"]
             ax.axhline(sigma_broad * (1 - hod_imp), ls="--", color="gray",
-                       lw=1, label=f"SBP, PS ({hod_imp*100:.0f}%)")
+                       lw=1.2, label=fr"SBP, PS ($-{hod_imp*100:.0f}$%)")
             fl_imp = FIELD_LEVEL_BENCHMARK["sigma8_improvement"]
             ax.axhline(sigma_broad * (1 - fl_imp), ls=":", color="gray",
-                       lw=1, label=f"SBP, FL ({fl_imp*100:.0f}%)")
+                       lw=1.2, label=fr"SBP, FL ($-{fl_imp*100:.0f}$%)")
 
         if cp == "Omegam":
             hod_imp = HOD_BENCHMARK["Omegam_improvement"]
-            ax.axhline(sigma_broad * (1 - hod_imp), ls="--", color="gray",
-                       lw=1, label=f"SBP, PS ({hod_imp*100:.0f}%)")
+            ax.axhline(sigma_broad * (1 - hod_imp), ls="--", color="gray", lw=1.2)
             fl_imp = FIELD_LEVEL_BENCHMARK["Omegam_improvement"]
-            ax.axhline(sigma_broad * (1 - fl_imp), ls=":", color="gray",
-                       lw=1, label=f"SBP, FL ({fl_imp*100:.0f}%)")
+            ax.axhline(sigma_broad * (1 - fl_imp), ls=":", color="gray", lw=1.2)
 
-        # Mnu: no field-level SBP line — Chudaykin+ 2026 Table IV
-        # shows SBPs worsen the LCDM Mnu bound (sigma8 shift effect).
+        # Mnu: no SBP line — Chudaykin+ 2026 Table IV shows SBPs
+        # worsen the LCDM Mnu bound (sigma8 shift effect).
 
-        if cp in ("fsigma8", "Omegam"):
-            ax.legend(frameon=False, fontsize=9)
+    # Single legend from the fsigma8 panel (shared line styles)
+    axes[0].legend(frameon=False, loc="upper right")
 
-    # No suptitle — caption provides context
     fig.tight_layout()
     fig.savefig(out_dir / "fig3_full_area_constraints.pdf", bbox_inches="tight")
     plt.close(fig)
