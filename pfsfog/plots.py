@@ -288,10 +288,12 @@ def fig5_sensitivity_rsigmav(sensitivity_data: dict, out_dir: Path):
 
     broad_baseline = sensitivity_data.get("broad_baseline")
     if broad_baseline is not None:
-        ax.axhline(broad_baseline, ls="--", color="#4C72B0",
+        ax.axhline(broad_baseline, ls="-", color="#4C72B0",
                    lw=1, label="Broad baseline")
-        thresh = broad_baseline * 0.9
-        ax.axhline(thresh, ls=":", color="gray", lw=1, label="10% improvement")
+        for pct in (15, 30, 60):
+            ax.axhline(broad_baseline * (1 - pct / 100), ls=":",
+                       color="gray", lw=0.8,
+                       label=fr"$-{pct}$%")
 
     ax.set_xlabel(r"$r_{\sigma_v} = \sigma_{v,\mathrm{PFS}} / \sigma_{v,\mathrm{DESI}}$")
     ax.set_ylabel(r"$\sigma(f\sigma_8)$ combined")
