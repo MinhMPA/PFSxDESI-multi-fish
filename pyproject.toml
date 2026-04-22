@@ -1,0 +1,38 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pfsfog"
+version = "0.1.0"
+description = "Fisher forecast for PFS x DESI multi-tracer EFT prior calibration"
+readme = "pfsfog/README.md"
+requires-python = ">=3.10"
+license = "MIT"
+dependencies = [
+    "numpy",
+    "scipy",
+    "jax>=0.4.26",
+    "jaxlib>=0.4.26",
+    "matplotlib",
+    "pyyaml",
+    "ps_1loop_jax",
+]
+
+[project.optional-dependencies]
+test = [
+    "pytest",
+]
+
+[project.scripts]
+pfsfog = "pfsfog.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["pfsfog*"]
+exclude = ["ps_1loop_jax*", "tests*", "paper*", "scripts*", "notebooks*"]
+
+[tool.setuptools.package-data]
+pfsfog = ["../survey_specs/*.txt"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
