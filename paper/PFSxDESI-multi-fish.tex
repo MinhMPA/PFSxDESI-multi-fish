@@ -956,29 +956,34 @@ less sensitive to amplitude-related nuisance parameters.}
 the cross-cal scenario depends on the assumed FoG velocity ratio
 \(\rsv\). This parameter simultaneously controls the PFS FoG fiducial
 (\(\ctilde^{\PFS}\propto \rsv^4\)) and the asymmetric scale cut
-(\(\kmax^{\PFS}\propto \rsv^{-1}\)).
+(\(\kmax^{\PFS}\propto \rsv^{-1}\)) in the overlap calibration.
 
-The improvement ranges from 34\% at \(\rsv=1\) (identical FoG; the
-gain comes entirely from stochastic separation) to 48\% at
-\(\rsv=0.5\) (maximum FoG leverage via the extended \(k\)-range).
-With the consistent \(\ctilde\propto\sigma_v^4\) scaling, the
-asymmetric \(\kmax\) now provides a substantial bonus: the slope
-steepens because \(\kmax^{\PFS}=\kmax^{\DESI}/\rsv\) extends
-further at low \(\rsv\). At our fiducial \(\rsv=0.75\), the
-improvement is 37\%, with 3 percentage points attributable to the
-FoG-driven \(k\)-range extension beyond the \(\rsv=1\) baseline.
+To disentangle these two channels, we show two curves: one with the
+default asymmetric \(\kmax\)
+(\(\kmax^{\PFS}=\kmax^{\DESI}/\rsv\)), and one with symmetric
+\(\kmax^{\PFS}=\kmax^{\DESI}=0.20\iMpch\). The symmetric curve is
+flat at \(\sim\!17.5\%\) improvement regardless of \(\rsv\),
+demonstrating that the counterterm rescaling alone has no effect on
+cosmological constraints at \(\kmax\leq 0.20\iMpch\). The entire
+\(\rsv\) dependence comes from the asymmetric scale cut, which
+extends the overlap calibration to higher \(k\) and adds up to
+\(\sim\!6\) percentage points at \(\rsv=0.5\). At our fiducial
+\(\rsv=0.75\), the improvement is 19\%, of which 17.5~pp comes from
+the multi-tracer stochastic and bias separation and 1.5~pp from the
+asymmetric \(k\)-range extension.
 
 \begin{figure}[t]
 \centering
 \includegraphics[width=0.65\textwidth]{\figurespath/sensitivity_rsigmav.pdf}
-\caption{Sensitivity to the FoG velocity ratio. Combined $\sigma(f\se)$
-from the cross-cal scenario as a function of
-$\rsv=\sigma_{v,\PFS}/\sigma_{v,\DESI}$.
-Lower $\rsv$ means weaker PFS FoG, hence higher
-$\kmax^{\PFS}=\kmax^{\DESI}/\rsv$, more usable modes, and tighter
-constraints. The improvement ranges from 34\% at $\rsv=1$ (identical
-FoG; stochastic separation alone) to 48\% at $\rsv=0.5$ (maximum FoG
-leverage). At the fiducial $\rsv=0.75$, the improvement is 37\%.}
+\caption{Sensitivity to the FoG velocity ratio $\rsv$.
+Green: asymmetric $\kmax$ ($\kmax^{\PFS}=\kmax^{\DESI}/\rsv$).
+Red: symmetric $\kmax$ ($\kmax^{\PFS}=\kmax^{\DESI}=0.20\iMpch$).
+The flat red curve shows that counterterm rescaling alone has no
+impact---the entire $\rsv$ dependence comes from the asymmetric
+scale cut extending the overlap calibration to higher $k$.
+At the fiducial $\rsv=0.75$, multi-survey priors improve
+$\sigma(f\se)$ by 19\%, of which 17.5~pp is from multi-tracer
+stochastic/bias separation and 1.5~pp from the $k$-range extension.}
 \label{fig:sensitivity}
 \end{figure}
 

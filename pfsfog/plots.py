@@ -269,36 +269,49 @@ def fig4_calibration_efficiency(scenario_results, z_bins, out_dir: Path):
 # Fig 5: Sensitivity to σ_v ratio
 # ---------------------------------------------------------------------------
 
-def fig5_sensitivity_rsigmav(sensitivity_data: dict, out_dir: Path):
+def fig5_sensitivity_rsigmav(
+    sensitivity_data: dict, out_dir: Path,
+    symmetric_data: dict | None = None,
+):
     """σ(fσ8) combined for cross-cal vs r_σv.
 
     Parameters
     ----------
-    sensitivity_data : {r_sigma_v: sigma_fsigma8_combined}
+    sensitivity_data : asymmetric-kmax sweep {r_σv: σ(fσ8)}
+    symmetric_data : optional symmetric-kmax sweep {r_σv: σ(fσ8)}
     """
     set_style()
 
     fig, ax = plt.subplots(figsize=(6, 4))
 
-    # Separate numeric keys from metadata keys
-    r_vals = sorted(k for k in sensitivity_data if isinstance(k, (int, float)))
-    sigma_vals = [sensitivity_data[r] for r in r_vals]
+    def _extract(data):
+        r = sorted(k for k in data if isinstance(k, (int, float)))
+        return r, [data[k] for k in r]
 
-    ax.plot(r_vals, sigma_vals, "o-", color="#55A868", lw=2, ms=8)
+    # Asymmetric kmax curve
+    r_vals, sigma_vals = _extract(sensitivity_data)
+    ax.plot(r_vals, sigma_vals, "o-", color="#55A868", lw=2, ms=7,
+            label=r"Asymmetric $k_{\max}$")
 
+    # Symmetric kmax curve
+    if symmetric_data is not None:
+        r_sym, s_sym = _extract(symmetric_data)
+        ax.plot(r_sym, s_sym, "s--", color="#C44E52", lw=2, ms=7,
+                label=r"Symmetric $k_{\max}$")
+
+    # Broad baseline and reference lines
     broad_baseline = sensitivity_data.get("broad_baseline")
     if broad_baseline is not None:
         ax.axhline(broad_baseline, ls="-", color="#4C72B0",
                    lw=1, label="Broad baseline")
-        for pct in (15, 30, 60):
+        for pct in (15, 30):
             ax.axhline(broad_baseline * (1 - pct / 100), ls=":",
                        color="gray", lw=0.8,
                        label=fr"$-{pct}$%")
 
     ax.set_xlabel(r"$r_{\sigma_v} = \sigma_{v,\mathrm{PFS}} / \sigma_{v,\mathrm{DESI}}$")
     ax.set_ylabel(r"$\sigma(f\sigma_8)$ combined")
-    ax.legend(frameon=False)
-    # No title
+    ax.legend(frameon=False, loc="lower left")
 
     fig.tight_layout()
     fig.savefig(out_dir / "fig5_sensitivity_rsigmav.pdf", bbox_inches="tight")
