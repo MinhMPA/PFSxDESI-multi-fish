@@ -53,20 +53,33 @@ P0_fid = np.asarray(ps.get_pk_ell(k, 0, pk_data, params))
 ell = 0
 all_params = list(COSMO_NAMES) + list(NUISANCE_NAMES)
 
-# Cosmological derivatives (stencil-based)
+# Cosmological derivatives (both autodiff and finite-diff)
+from pfsfog.derivatives import dPell_d_fsigma8, dPell_d_cosmo_stencil, dPell_d_cosmo_autodiff
+from pfsfog.cosmo import make_plin_func, make_growth_rate_func
+
 cosmo_derivs = {}
-from pfsfog.derivatives import dPell_d_fsigma8, dPell_d_cosmo_stencil
 cosmo_derivs["fsigma8"] = np.asarray(dPell_d_fsigma8(ps, k, pk_data, params, s8, ell))
+
+pkdata_fn = make_plin_func("cosmopower")
+f_fn = make_growth_rate_func()
+cosmo_dict = dict(cosmo.params)
+
+# Autodiff and finite-diff for Mnu, Omegam
+cosmo_ad = {}
+cosmo_fd = {}
 for cp in ("Omegam", "Mnu"):
-    cosmo_derivs[cp] = np.asarray(dPell_d_cosmo_stencil(
+    cosmo_derivs[cp] = np.asarray(dPell_d_cosmo_autodiff(
+        ps, k, pkdata_fn, f_fn, cosmo_dict, params, cp, z_eff, s8, ell))
+    cosmo_ad[cp] = cosmo_derivs[cp]
+    cosmo_fd[cp] = np.asarray(dPell_d_cosmo_stencil(
         ps, k, cosmo, params, cp, z_eff, s8, ell))
 
-# Nuisance derivatives (autodiff + stencil)
+# Nuisance derivatives (autodiff + finite-diff)
 nuis_ad = {}
-nuis_st = {}
+nuis_fd = {}
 for pname in NUISANCE_NAMES:
     nuis_ad[pname] = np.asarray(dPell_dtheta_autodiff(ps, k, pk_data, params, pname, s8, ell))
-    nuis_st[pname] = np.asarray(dPell_dtheta_stencil(ps, k, pk_data, params, pname, s8, ell))
+    nuis_fd[pname] = np.asarray(dPell_dtheta_stencil(ps, k, pk_data, params, pname, s8, ell))
 
 # --- colors and labels ---
 PARAM_GROUPS = {
@@ -108,30 +121,42 @@ ax1.set_xlim(k_np[0], k_np[-1])
 ax1.legend(frameon=False, fontsize=8, ncol=2, loc="upper right")
 ax1.set_title("Derivative landscape")
 
-# RIGHT: fractional autodiff-stencil difference for nuisance params
+# RIGHT: fractional autodiff vs finite-diff for ALL params
+# Cosmological params (Mnu, Omegam)
+for cp, label, color in [("Mnu", r"$M_\nu$", "#348ABD"),
+                          ("Omegam", r"$\Omega_m$", "#988ED5")]:
+    ad = cosmo_ad[cp]
+    fd = cosmo_fd[cp]
+    scale = np.maximum(np.abs(ad), np.abs(fd))
+    mask = scale > 1e-10 * np.max(scale)
+    frac = np.full_like(ad, np.nan)
+    frac[mask] = np.abs(ad[mask] - fd[mask]) / scale[mask]
+    ax2.semilogy(k_np, frac, lw=1.5, color=color, label=label, alpha=0.9)
+
+# Nuisance params
 for group_name, (pnames, labels, colors) in PARAM_GROUPS.items():
     if group_name == "Cosmological":
-        continue  # cosmo derivs use stencil only
+        continue
     for pname, label, color in zip(pnames, labels, colors):
         ad = nuis_ad.get(pname)
-        st = nuis_st.get(pname)
-        if ad is None or st is None:
+        fd = nuis_fd.get(pname)
+        if ad is None or fd is None:
             continue
-        scale = np.maximum(np.abs(ad), np.abs(st))
+        scale = np.maximum(np.abs(ad), np.abs(fd))
         mask = scale > 1e-10 * np.max(scale)
         frac = np.full_like(ad, np.nan)
-        frac[mask] = np.abs(ad[mask] - st[mask]) / scale[mask]
-        if np.nanmax(frac) < 1e-15:
+        frac[mask] = np.abs(ad[mask] - fd[mask]) / scale[mask]
+        if np.all(np.isnan(frac)) or np.nanmax(frac) < 1e-15:
             continue
         ax2.semilogy(k_np, frac, lw=1.0, color=color, label=label, alpha=0.8)
 
 ax2.set_xlabel(r"$k$ [$h\,\mathrm{Mpc}^{-1}$]")
-ax2.set_ylabel(r"$|\mathrm{autodiff} - \mathrm{stencil}| \;/\; |\mathrm{max}|$")
+ax2.set_ylabel(r"$|\mathrm{autodiff} - \mathrm{fin.diff.}| \;/\; |\mathrm{max}|$")
 ax2.set_xlim(k_np[0], k_np[-1])
 ax2.set_ylim(1e-12, 1e-6)
 ax2.axhline(1e-9, ls=":", color="gray", lw=0.8, label=r"$10^{-9}$")
 ax2.legend(frameon=False, fontsize=8, ncol=2, loc="upper right")
-ax2.set_title("Autodiff vs.\\ stencil agreement")
+ax2.set_title("Autodiff vs.\\ finite diff.\\ agreement")
 
 fig.tight_layout()
 fig.savefig(OUT / "deriv_autodiff_vs_stencil.pdf", bbox_inches="tight")

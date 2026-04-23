@@ -266,8 +266,9 @@ def _five_point_stencil(func, x0: float, h: float) -> float:
 
 # fσ8: f enters the params dict directly; chain rule gives
 #   ∂P/∂(fσ8) = ∂P/∂f × 1/σ8
-# Ωm, Mν: change P_lin shape → need to recompute P_lin.  For the Fisher
-# forecast, use 5-point stencil through the cosmopower-jax emulator.
+# Ωm, Mν: change P_lin shape → need to recompute P_lin.
+#   Autodiff version: traces through cosmopower-jax emulator + ps_1loop_jax.
+#   Finite-difference version: 5-point stencil (kept for validation).
 
 
 def dPell_d_fsigma8(
@@ -288,6 +289,41 @@ def dPell_d_fsigma8(
 
     dpd_f = jax.jacfwd(_pk_of_f)(fid_f)  # ∂P/∂f
     return dpd_f / sigma8_z  # ∂f/∂(fσ8) = 1/σ8
+
+
+def dPell_d_cosmo_autodiff(
+    ps_model: PowerSpectrum1Loop,
+    k: jnp.ndarray,
+    pkdata_fn,        # from cosmo.make_plin_func() — returns pk_data dict
+    f_fn,             # from cosmo.make_growth_rate_func()
+    cosmo_dict: dict,  # {omega_b, omega_cdm, h, n_s, ln10_10_As, mnu}
+    fiducial_params: dict,
+    cosmo_param: str,
+    z: float,
+    sigma8_z: float,
+    ell: int,
+) -> jnp.ndarray:
+    r"""∂P_ℓ/∂θ_cosmo via JAX autodiff through cosmopower-jax.
+
+    Traces through: cosmo_dict → pkdata_fn → pk_data → ps_model.get_pk_ell.
+    pk_data is on the emulator's native k-grid, matching the stencil version.
+    """
+    def _pk_ell_of_delta(delta):
+        p = {kk: vv for kk, vv in cosmo_dict.items()}
+        if cosmo_param == "Omegam":
+            p["omega_cdm"] = p["omega_cdm"] + delta * p["h"] ** 2
+        elif cosmo_param == "Mnu":
+            p["mnu"] = p["mnu"] + delta
+        else:
+            return jnp.zeros_like(k)
+
+        pk_data = pkdata_fn(z, p)  # on emulator's native k-grid
+        f_new = f_fn(z, p)
+        par = _make_mutable(fiducial_params)
+        par["f"] = f_new
+        return jnp.array(ps_model.get_pk_ell(k, ell, pk_data, par))
+
+    return jax.jacfwd(_pk_ell_of_delta)(0.0)
 
 
 def dPell_d_cosmo_stencil(
@@ -358,8 +394,16 @@ def dPell_d_cosmo_all(
     z: float,
     sigma8_z: float,
     ells: tuple[int, ...] = (0, 2, 4),
+    use_autodiff: bool = True,
 ) -> dict[str, dict[int, jnp.ndarray]]:
-    """Compute derivatives w.r.t. all cosmological parameters."""
+    """Compute derivatives w.r.t. all cosmological parameters.
+
+    Parameters
+    ----------
+    use_autodiff : bool
+        If True, use JAX autodiff through cosmopower-jax for Ωm and Mν.
+        If False, fall back to 5-point finite difference.
+    """
     derivs = {}
 
     derivs["fsigma8"] = {}
@@ -368,13 +412,26 @@ def dPell_d_cosmo_all(
             ps_model, k, pk_data, fiducial_params, sigma8_z, ell,
         )
 
-    for cparam in ("Omegam", "Mnu"):
-        derivs[cparam] = {}
-        for ell in ells:
-            derivs[cparam][ell] = dPell_d_cosmo_stencil(
-                ps_model, k, cosmo, fiducial_params, cparam,
-                z, sigma8_z, ell,
-            )
+    if use_autodiff:
+        from .cosmo import make_plin_func, make_growth_rate_func
+        pkdata_fn = make_plin_func(cosmo.backend)
+        f_fn = make_growth_rate_func()
+        cosmo_dict = dict(cosmo.params)
+        for cparam in ("Omegam", "Mnu"):
+            derivs[cparam] = {}
+            for ell in ells:
+                derivs[cparam][ell] = dPell_d_cosmo_autodiff(
+                    ps_model, k, pkdata_fn, f_fn, cosmo_dict,
+                    fiducial_params, cparam, z, sigma8_z, ell,
+                )
+    else:
+        for cparam in ("Omegam", "Mnu"):
+            derivs[cparam] = {}
+            for ell in ells:
+                derivs[cparam][ell] = dPell_d_cosmo_stencil(
+                    ps_model, k, cosmo, fiducial_params, cparam,
+                    z, sigma8_z, ell,
+                )
 
     return derivs
 

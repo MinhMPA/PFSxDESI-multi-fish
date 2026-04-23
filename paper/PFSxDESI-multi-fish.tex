@@ -783,10 +783,14 @@ and the derivative evaluation.
 
 Derivatives \(\partial P_\ell/\partial\theta\) with respect to all
 nuisance and cosmological parameters are computed via JAX
-forward-mode automatic differentiation (\texttt{jax.jacfwd}) through
-the full one-loop model. This provides exact derivatives without
-step-size tuning; we validate against five-point stencil numerical
-derivatives in \cref{app:derivatives}.
+forward-mode automatic differentiation (\texttt{jax.jacfwd}).
+For nuisance parameters, the autodiff traces through the one-loop
+\texttt{ps\_1loop\_jax} model; for \(\Om\) and \(\Mnu\), it traces
+end-to-end through the \texttt{cosmopower-jax} emulator, the growth
+rate, and the one-loop model. This provides exact derivatives for
+all 15 parameters without step-size tuning; we validate against
+five-point finite-difference numerical derivatives in
+\cref{app:derivatives}.
 
 
 \subsection{Analysis scenarios and benchmarks}
@@ -1284,6 +1288,17 @@ All power spectrum derivatives \(\partial P_\ell/\partial\theta\) are
 computed via JAX forward-mode automatic differentiation
 (\texttt{jax.jacfwd}) through the full one-loop
 \texttt{ps\_1loop\_jax} model, avoiding step-size tuning entirely.
+We validate against a five-point central finite-difference
+approximation,
+\be
+\label{eqn:five_point}
+\frac{\partial f}{\partial \theta}\bigg|_{\theta_0}
+\approx \frac{-f(\theta_0{+}2h) + 8\,f(\theta_0{+}h)
+  - 8\,f(\theta_0{-}h) + f(\theta_0{-}2h)}{12\,h}\,,
+\ee
+which converges as \(\mathcal{O}(h^4)\).  The step sizes \(h\) are
+chosen per parameter (e.g.\ \(h=0.01\) for \(b_1\se\),
+\(h=50\) for \(\ctilde\)) to balance truncation and roundoff error.
 
 \Cref{fig:deriv_validation} summarises the derivative landscape and
 numerical validation. The left panel shows the normalised monopole
@@ -1292,10 +1307,14 @@ parameters---the hierarchy is evident: \(b_1\se\) and \(f\se\)
 dominate at all scales, while the FoG counterterm \(\ctilde\)
 contributes at the \(10^{-4}\) level, confirming its negligible
 Fisher information at \(k\leq 0.25\iMpch\).
-The right panel overlays the fractional autodiff-vs-stencil
-difference for all nuisance parameters: every parameter agrees to
-better than \(10^{-9}\) (machine precision for float64), validating
-the autodiff implementation.
+The right panel overlays the fractional difference between autodiff
+and finite-difference derivatives for all 14 parameters (excluding
+\(f\se\), which has no independent finite-difference check).
+Two tiers are visible: the nuisance parameters agree to machine
+precision (\({<}\,10^{-9}\)), while the cosmological parameters
+\(\Mnu\) and \(\Om\) agree to \({<}\,0.1\%\)---the residual
+reflects the finite-difference truncation error at
+\(\mathcal{O}(h^4)\), not the autodiff.
 
 \begin{figure}[t]
 \centering
@@ -1305,9 +1324,11 @@ the autodiff implementation.
 (3~cosmological, 12~nuisance) at the DESI-ELG fiducials
 (\(z=0.9\)). The derivative hierarchy determines which parameters
 carry Fisher information.
-Right: fractional autodiff-vs-stencil agreement for all nuisance
-parameters, confirming machine-precision consistency
-(\({<}\,10^{-9}\)).}
+Right: fractional autodiff-vs-finite-difference agreement for all
+parameters. Nuisance parameters (lower cluster) agree to machine
+precision (\({<}\,10^{-9}\)); cosmological parameters \(\Mnu\) and
+\(\Om\) (upper cluster) agree to \({<}\,0.1\%\), limited by the
+finite-difference truncation error.}
 \label{fig:deriv_validation}
 \end{figure}
 

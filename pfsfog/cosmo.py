@@ -74,6 +74,69 @@ def _load_sigma8_emulator():
 
 
 # ---------------------------------------------------------------------------
+# Pure-function factories for JAX-traceable P_lin and f(z)
+# ---------------------------------------------------------------------------
+
+
+def make_plin_func(backend: str = "cosmopower"):
+    """Return a pure JAX function: pkdata_fn(z, cosmo_dict) → pk_data dict.
+
+    The emulator is loaded once (outside the JAX trace); the returned
+    closure is fully JAX-traceable w.r.t. all entries of cosmo_dict.
+    Returns ``{"k": k_h, "pk": pk_h}`` on the emulator's native k-grid,
+    matching the format expected by ``ps_1loop_jax.get_pk_ell()``.
+    """
+    if backend != "cosmopower":
+        raise NotImplementedError(f"make_plin_func only supports cosmopower, got {backend}")
+
+    emu = _load_pklin_emulator()
+    k_modes = jnp.array(emu.modes)  # emulator's native k grid in 1/Mpc
+
+    # Baryon-feedback nuisance values (fixed)
+    Ab = _CP_BARYON_DEFAULTS["A_b"]
+    eta = _CP_BARYON_DEFAULTS["eta_b"]
+    logT = _CP_BARYON_DEFAULTS["logT_AGN"]
+
+    def pkdata_fn(z, cosmo_dict):
+        param_vec = jnp.array([[
+            cosmo_dict["omega_b"],
+            cosmo_dict["omega_cdm"],
+            cosmo_dict["ln10_10_As"],
+            cosmo_dict["n_s"],
+            cosmo_dict["h"],
+            z,
+            Ab, eta, logT,
+            cosmo_dict["mnu"],
+        ]])
+        pk_mpc3 = emu.predict(param_vec)
+        h = cosmo_dict["h"]
+        k_h = k_modes / h
+        pk_h = jnp.atleast_1d(pk_mpc3.squeeze()) * h**3
+        return {"k": k_h, "pk": pk_h}
+
+    return pkdata_fn
+
+
+def make_growth_rate_func():
+    """Return a pure JAX function: f_fn(z, cosmo_dict) → f(z).
+
+    Uses the Linder (2005) approximation via ps_1loop_jax.background.
+    """
+    from ps_1loop_jax import background as bg
+
+    def f_fn(z, cosmo_dict):
+        return bg.growth_rate_approx(
+            cosmo_dict["omega_b"],
+            cosmo_dict["omega_cdm"],
+            cosmo_dict["h"],
+            z,
+            cosmo_dict.get("mnu", 0.06),
+        )
+
+    return f_fn
+
+
+# ---------------------------------------------------------------------------
 # FiducialCosmology
 # ---------------------------------------------------------------------------
 

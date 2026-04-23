@@ -17,15 +17,17 @@ from .scenarios import SCENARIOS, compute_calibration_efficiency
 
 def set_style():
     mpl.rcParams.update({
-        "font.family": "serif",
-        "font.serif": ["Computer Modern Roman", "CMU Serif", "DejaVu Serif"],
-        "mathtext.fontset": "cm",
-        "font.size": 14,
+        "font.family": "STIXGeneral",
+        "mathtext.fontset": "stix",
+        # "font.family": "serif",
+        # "font.serif": ["Computer Modern Roman", "CMU Serif"],
+        # "mathtext.fontset": "cm",
+        "font.size": 16,
         "axes.labelsize": 16,
         "axes.titlesize": 16,
-        "xtick.labelsize": 13,
-        "ytick.labelsize": 13,
-        "legend.fontsize": 12,
+        "xtick.labelsize": 14,
+        "ytick.labelsize": 14,
+        "legend.fontsize": 16,
         "figure.dpi": 150,
         "axes.linewidth": 0.8,
         "xtick.major.width": 0.8,
@@ -33,7 +35,8 @@ def set_style():
         "xtick.direction": "in",
         "ytick.direction": "in",
         "axes.unicode_minus": False,
-        "text.usetex": False,
+        # text.usetex: not set here — let the caller decide
+        # (scripts use True for clean minus signs; notebook may override)
     })
 
 
