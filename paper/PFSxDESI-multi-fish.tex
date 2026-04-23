@@ -316,8 +316,11 @@ clustering~\citep[e.g.,][]{Ivanov:2019pdj,dAmico:2019fhj,Chen:2021wdi,Philcox:20
 Both the DESI
 Collaboration~\cite{DESI:2024jxi,DESI:2024hhd} and independent
 reanalyses~\cite{Chudaykin:2025aux,Chudaykin:2025lww,Chudaykin:2025vdh,Ivanov:2026dvl}
-have applied this framework to DESI~DR1, constraining dark energy and
-neutrino masses at the full-shape level. At next-to-leading (i.e. one-loop) order, the EFT framework
+have applied this framework to DESI~DR1, constraining dark energy,
+neutrino masses~\cite{Ivanov:2019hqk}, primordial
+non-Gaussianity~\cite{Cabass:2022wjy}, and dark-sector
+interactions~\cite{He:2023oke,He:2025npy} at the full-shape level.
+At next-to-leading (i.e.\ one-loop) order, the EFT framework
 parameterizes our ignorance of small-scale physics through
 \(\sim\!12\) nuisance parameters per tracer per redshift
 bin~\cite{Chudaykin:2020aoj,Desjacques:2016bnm}---bias coefficients,
@@ -350,7 +353,8 @@ multiple galaxy populations breaks parameter degeneracies beyond
 what single-tracer analyses can
 achieve~\cite{Mergulhao:2021kip,Alarcon:2016bkr}.
 Zhao et al.~\cite{Zhao:2024eboss} demonstrated this on eBOSS DR16
-data, jointly analysing LRGs and ELGs within a single survey and
+data, jointly analysing LRGs and ELGs~\cite{Ivanov:2021elg} within
+a single survey and
 improving \(\sigma(\se)\) by 18--27\% depending on the treatment of
 cross-stochasticity. However, same-survey multi-tracer analyses
 share survey-specific systematics and have non-trivial
@@ -380,8 +384,9 @@ cross-spectra per redshift bin, the overlap volume functions as a
 calibration laboratory for the EFT parameters that limit the full
 DESI analysis. PFS's lower finger-of-god (FoG) contamination further
 motivates an asymmetric scale cut
-\(\kmax^{\PFS}>\kmax^{\DESI}\)~\cite{Rubira:2025scu}, extending the
-usable \(k\)-range in the overlap.
+\(\kmax^{\PFS}>\kmax^{\DESI}\)~\cite{Rubira:2025scu}; data-driven
+FoG cleaning methods~\cite{BaleatoLizancos:2025wdg} offer a
+complementary route to extending the usable \(k\)-range.
 
 This paper is organised as follows. \Cref{sec:method} describes the
 multi-survey prior mechanism. \Cref{sec:surveys} presents the PFS and
@@ -659,7 +664,9 @@ averages from fine-binned $n(z)$ files. $N_t$ is the number of active
 tracers; $N_{\rm spec} = N_t(N_t{+}1)/2$ is the number of auto- and
 cross-spectra. The LRG sample drops out at $z>1.1$. All DESI tracers
 share the same $14{,}000\;\text{deg}^2$ footprint; the overlap with
-PFS covers $\sim\!1{,}200\;\text{deg}^2$.}
+PFS covers $\sim\!1{,}200\;\text{deg}^2$.
+Volumes and distances assume the Planck 2018
+cosmology~\cite{Planck:2018params}.}
 \label{tab:surveys}
 \end{table}
 
@@ -1189,24 +1196,27 @@ spectroscopic surveys with different target
 selections~\cite{Alarcon:2016bkr}:
 Euclid\(\,\times\,\)DESI, Roman\(\,\times\,\)Spec-S5, and
 DESI-II\(\,\times\,\)MegaMapper are natural future applications.
-Adding the tree-level bispectrum would further activate the
-sub-leading counterterm \(c_1\) (which enters the bispectrum \(Z_1\)
-kernel but has zero power-spectrum derivative) and break the
-\(b_1\)--\(b_2\)--\(b_{G_2}\) degeneracies through the \(Z_2\)
-kernel structure; we defer this to future work.
+Joint J-PAS\(\,\times\,\)PFS forecasts have already explored
+similar cross-survey synergies~\cite{Qin:2025nkk}.
+Adding the tree-level
+bispectrum~\cite{Ivanov:2023qzb,Bakx:2025pop} would further
+activate the sub-leading counterterm \(c_1\) (which enters the
+bispectrum \(Z_1\) kernel but has zero power-spectrum derivative)
+and break the \(b_1\)--\(b_2\)--\(b_{G_2}\) degeneracies through
+the \(Z_2\) kernel structure; we defer this to future work.
 
-Three limitations deserve explicit discussion.
-First, the Gaussian Fisher forecast assumes linear parameter
-dependences and provides a lower bound on the information content; an
-MCMC analysis could capture non-Gaussian posterior structure.
-Second, the PFS-ELG EFT fiducials are scaled from DESI rather than
-fitted to PFS mocks, which do not yet exist---validation against
-future PFS simulations will be important.
-Third, we omit the bispectrum, survey window functions, super-sample
-covariance, and non-Gaussian covariance contributions. The latter
-could either tighten or weaken constraints depending on the
-trispectrum sign; a full treatment is needed for a definitive
-assessment.
+The forecast rests on three assumptions that future work should test.
+The Gaussian Fisher approximation captures the leading information
+content but not non-Gaussian posterior structure---an MCMC analysis
+with the full likelihood would sharpen the comparison with SBPs.
+The PFS-ELG EFT fiducials are scaled from DESI rather than fitted
+to PFS mocks, which do not yet exist; validation against future PFS
+simulations will anchor the scaling assumptions.
+Finally, the bispectrum, survey window functions, super-sample
+covariance, and non-Gaussian covariance are omitted here but would
+each modify the information budget---the bispectrum in particular
+would activate \(c_1\) and tighten the bias
+degeneracies~\cite{Ivanov:2023qzb,Bakx:2025pop}.
 
 
 %-------------------------------------------------------------------
@@ -1463,7 +1473,7 @@ from the Lazeyras et al.\ \cite{Lazeyras:2015lgp} co-evolution
 relations, but the relation itself is not enforced as a prior
 constraint.
 
-Mergulh\~{a}o et al.\ \cite{Mergulhao:2021kip} tested
+Mergulh\~{a}o et al.\ \cite{Mergulhao:2021kip,Mergulhao:2023zso} tested
 whether imposing co-evolution relations (fixing \(b_2\) and
 \(b_{G_2}\) as functions of \(b_1\)) improves cosmological
 constraints in a multi-tracer EFT analysis and found the gain to be
