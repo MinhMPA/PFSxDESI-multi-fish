@@ -16,6 +16,7 @@ dependencies = [
     "jaxlib>=0.4.26",
     "matplotlib",
     "pyyaml",
+    "numdifftools",
     "ps_1loop_jax",
 ]
 

@@ -1,7 +1,7 @@
 """Derivatives of power spectrum multipoles w.r.t. EFT parameters.
 
 Primary: JAX autodiff (exact, fast).
-Validation: five-point stencil (numerical, configurable step sizes).
+Validation: adaptive finite difference via numdifftools (optimal step selection).
 """
 
 from __future__ import annotations
@@ -11,33 +11,11 @@ from functools import partial
 import jax
 import jax.numpy as jnp
 import numpy as np
+import numdifftools as nd
 
 from ps_1loop_jax import PowerSpectrum1Loop
 
 from .eft_params import NUISANCE_NAMES
-
-# ---------------------------------------------------------------------------
-# Default step sizes for 5-point stencil (per parameter)
-# ---------------------------------------------------------------------------
-
-DEFAULT_STEPS: dict[str, float] = {
-    "b1_sigma8": 0.01,
-    "b2_sigma8sq": 0.05,
-    "bG2_sigma8sq": 0.05,
-    "bGamma3": 0.01,
-    "c0": 0.5,
-    "c2": 0.5,
-    "c4": 0.5,
-    "c_tilde": 50.0,
-    "c1": 0.1,
-    "Pshot": 0.01,
-    "a0": 0.01,
-    "a2": 0.01,
-    # cosmo
-    "fsigma8": 0.005,
-    "Mnu": 0.01,
-    "Omegam": 0.005,
-}
 
 # ---------------------------------------------------------------------------
 # Mapping: Fisher param name → location in ps_1loop_jax params dict
@@ -252,12 +230,9 @@ def dPcross_dtheta_autodiff(
 # ---------------------------------------------------------------------------
 
 
-def _five_point_stencil(func, x0: float, h: float) -> float:
-    """Scalar five-point central-difference derivative."""
-    return (
-        -func(x0 + 2 * h) + 8 * func(x0 + h)
-        - 8 * func(x0 - h) + func(x0 - 2 * h)
-    ) / (12 * h)
+def _numdiff(func, x0: float) -> float:
+    """Adaptive central-difference derivative via numdifftools."""
+    return nd.Derivative(func, method="central", order=4)(x0)
 
 
 # ---------------------------------------------------------------------------
@@ -335,9 +310,8 @@ def dPell_d_cosmo_stencil(
     z: float,
     sigma8_z: float,
     ell: int,
-    step: float | None = None,
 ) -> jnp.ndarray:
-    """∂P_ℓ/∂θ_cosmo via 5-point stencil through P_lin recomputation.
+    """∂P_ℓ/∂θ_cosmo via adaptive finite difference (numdifftools).
 
     For Ωm: perturb omega_cdm (holding omega_b fixed) → recompute P_lin, f.
     For Mν: perturb mnu → recompute P_lin, f.
@@ -345,25 +319,19 @@ def dPell_d_cosmo_stencil(
     from .cosmo import FiducialCosmology
 
     if cosmo_param == "Omegam":
-        if step is None:
-            step = 0.005
         h = cosmo.params["h"]
 
         def _eval(delta):
             p = dict(cosmo.params)
-            # Ωm = (ωb + ωcdm + mnu/93.14) / h² → perturb ωcdm
             p["omega_cdm"] = p["omega_cdm"] + delta * h**2
             c2 = FiducialCosmology(p, backend=cosmo.backend)
             pd = c2.pk_data(z)
             f_new = float(c2.f(z))
             par = _make_mutable(fiducial_params)
             par["f"] = f_new
-            return jnp.array(ps_model.get_pk_ell(k, ell, pd, par))
+            return np.asarray(ps_model.get_pk_ell(k, ell, pd, par))
 
     elif cosmo_param == "Mnu":
-        if step is None:
-            step = 0.02  # eV
-
         def _eval(delta):
             p = dict(cosmo.params)
             p["mnu"] = p["mnu"] + delta
@@ -372,17 +340,12 @@ def dPell_d_cosmo_stencil(
             f_new = float(c2.f(z))
             par = _make_mutable(fiducial_params)
             par["f"] = f_new
-            return jnp.array(ps_model.get_pk_ell(k, ell, pd, par))
+            return np.asarray(ps_model.get_pk_ell(k, ell, pd, par))
     else:
         return jnp.zeros_like(k)
 
-    # 5-point stencil
-    h_step = step
-    dp = (
-        -_eval(2 * h_step) + 8 * _eval(h_step)
-        - 8 * _eval(-h_step) + _eval(-2 * h_step)
-    ) / (12 * h_step)
-    return dp
+    deriv_func = nd.Derivative(_eval, method="central", order=4)
+    return jnp.array(deriv_func(0.0))
 
 
 def dPell_d_cosmo_all(
@@ -437,7 +400,7 @@ def dPell_d_cosmo_all(
 
 
 # ---------------------------------------------------------------------------
-# Five-point stencil (validation)
+# Adaptive finite difference (validation via numdifftools)
 # ---------------------------------------------------------------------------
 
 
@@ -449,9 +412,8 @@ def dPell_dtheta_stencil(
     param_name: str,
     sigma8_z: float,
     ell: int,
-    step: float | None = None,
 ) -> jnp.ndarray:
-    """∂P_ℓ(k)/∂θ via five-point stencil (for validation)."""
+    """∂P_ℓ(k)/∂θ via adaptive finite difference (numdifftools)."""
     info = _PARAM_MAP.get(param_name)
     if info is None:
         return jnp.zeros_like(k)
@@ -460,19 +422,16 @@ def dPell_dtheta_stencil(
     s8_factor = sigma8_z ** s8_power if s8_power > 0 else 1.0
     fid_val = float(_get_nested(fiducial_params, path))
 
-    if step is None:
-        step = DEFAULT_STEPS.get(param_name, 0.01)
-    # Step in raw-param space
-    h_raw = step / s8_factor
-
     def _eval(val):
         p = _make_mutable(fiducial_params)
-        _set_nested(p, path, val)
-        return ps_model.get_pk_ell(k, ell, pk_data, p)
+        _set_nested(p, path, float(val))
+        return np.asarray(ps_model.get_pk_ell(k, ell, pk_data, p))
 
-    dp = (
-        -_eval(fid_val + 2 * h_raw) + 8 * _eval(fid_val + h_raw)
-        - 8 * _eval(fid_val - h_raw) + _eval(fid_val - 2 * h_raw)
-    ) / (12 * h_raw)
+    # Use a relative step of 1% of the fiducial value, with a floor of 1e-3.
+    # This handles parameters like c_tilde (fid=400) where the derivative
+    # is small relative to the function value.
+    step_hint = max(abs(fid_val) * 0.01, 1e-3)
+    deriv_func = nd.Derivative(_eval, method="central", order=4, step=step_hint)
+    dp = deriv_func(fid_val)
 
-    return dp / s8_factor
+    return jnp.array(dp) / s8_factor

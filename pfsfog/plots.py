@@ -99,7 +99,7 @@ def fig1_overlap_calibration(overlap_results, out_dir: Path):
         ax.set_title(f"$z \\in [{zb[0]:.1f}, {zb[1]:.1f}]$")
         if iz == 0:
             ax.set_ylabel(r"$\sigma\,/\,\sigma_{\rm broad}$")
-            ax.legend(frameon=False, fontsize=10)
+            ax.legend(frameon=False, fontsize=16)
 
     fig.tight_layout()
     fig.savefig(out_dir / "fig1_overlap_calibration.pdf", bbox_inches="tight")
@@ -158,11 +158,11 @@ def fig2_calibrated_vs_broad(overlap_results, out_dir: Path):
                         rotation=45, ha="right")
     ax.set_ylabel(r"Prior width $\sigma$")
     ax.set_yscale("log")
-    ax.legend(frameon=False, fontsize=10, ncol=2)
+    ax.legend(frameon=False, fontsize=16, ncol=2)
     # No title — caption provides context
     # Annotate b1_sigma8 as "flat prior"
     b1_idx = params_to_show.index("b1_sigma8")
-    ax.annotate("flat prior", xy=(b1_idx, 0.5), fontsize=8, ha="center",
+    ax.annotate("flat prior", xy=(b1_idx, 0.5), fontsize=14, ha="center",
                 color="gray", style="italic")
 
     fig.tight_layout()

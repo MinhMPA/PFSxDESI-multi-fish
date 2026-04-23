@@ -43,13 +43,11 @@ def test_autodiff_vs_stencil(setup, param_name, ell):
     """
     ps, pk_data, k, params, s8 = setup
 
-    step = None  # uses DEFAULT_STEPS from derivatives.py
-
     dp_ad = np.asarray(dPell_dtheta_autodiff(
         ps, k, pk_data, params, param_name, s8, ell,
     ))
     dp_st = np.asarray(dPell_dtheta_stencil(
-        ps, k, pk_data, params, param_name, s8, ell, step=step,
+        ps, k, pk_data, params, param_name, s8, ell,
     ))
 
     # Skip bins where both are near zero

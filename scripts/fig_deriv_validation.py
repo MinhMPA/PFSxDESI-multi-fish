@@ -58,15 +58,31 @@ from pfsfog.derivatives import dPell_d_fsigma8, dPell_d_cosmo_stencil, dPell_d_c
 from pfsfog.cosmo import make_plin_func, make_growth_rate_func
 
 cosmo_derivs = {}
+
+# fσ₈: autodiff (primary) + finite-difference (validation)
 cosmo_derivs["fsigma8"] = np.asarray(dPell_d_fsigma8(ps, k, pk_data, params, s8, ell))
+
+# Finite-diff version of fσ₈ for comparison
+from pfsfog.derivatives import _make_mutable
+fid_f = params["f"]
+h_step_f = 0.005
+def _pk_of_fsigma8(delta):
+    p = _make_mutable(params)
+    p["f"] = fid_f + delta * s8
+    return np.asarray(ps.get_pk_ell(k, ell, pk_data, p))
+
+fsigma8_fd = (
+    -_pk_of_fsigma8(2*h_step_f) + 8*_pk_of_fsigma8(h_step_f)
+    - 8*_pk_of_fsigma8(-h_step_f) + _pk_of_fsigma8(-2*h_step_f)
+) / (12 * h_step_f)
 
 pkdata_fn = make_plin_func("cosmopower")
 f_fn = make_growth_rate_func()
 cosmo_dict = dict(cosmo.params)
 
 # Autodiff and finite-diff for Mnu, Omegam
-cosmo_ad = {}
-cosmo_fd = {}
+cosmo_ad = {"fsigma8": cosmo_derivs["fsigma8"]}
+cosmo_fd = {"fsigma8": fsigma8_fd}
 for cp in ("Omegam", "Mnu"):
     cosmo_derivs[cp] = np.asarray(dPell_d_cosmo_autodiff(
         ps, k, pkdata_fn, f_fn, cosmo_dict, params, cp, z_eff, s8, ell))
@@ -122,8 +138,9 @@ ax1.legend(frameon=False, fontsize=8, ncol=2, loc="upper right")
 ax1.set_title("Derivative landscape")
 
 # RIGHT: fractional autodiff vs finite-diff for ALL params
-# Cosmological params (Mnu, Omegam)
-for cp, label, color in [("Mnu", r"$M_\nu$", "#348ABD"),
+# Cosmological params (fsigma8, Mnu, Omegam)
+for cp, label, color in [("fsigma8", r"$f\sigma_8$", "#E24A33"),
+                          ("Mnu", r"$M_\nu$", "#348ABD"),
                           ("Omegam", r"$\Omega_m$", "#988ED5")]:
     ad = cosmo_ad[cp]
     fd = cosmo_fd[cp]

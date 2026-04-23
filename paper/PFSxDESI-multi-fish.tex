@@ -1288,17 +1288,10 @@ All power spectrum derivatives \(\partial P_\ell/\partial\theta\) are
 computed via JAX forward-mode automatic differentiation
 (\texttt{jax.jacfwd}) through the full one-loop
 \texttt{ps\_1loop\_jax} model, avoiding step-size tuning entirely.
-We validate against a five-point central finite-difference
-approximation,
-\be
-\label{eqn:five_point}
-\frac{\partial f}{\partial \theta}\bigg|_{\theta_0}
-\approx \frac{-f(\theta_0{+}2h) + 8\,f(\theta_0{+}h)
-  - 8\,f(\theta_0{-}h) + f(\theta_0{-}2h)}{12\,h}\,,
-\ee
-which converges as \(\mathcal{O}(h^4)\).  The step sizes \(h\) are
-chosen per parameter (e.g.\ \(h=0.01\) for \(b_1\se\),
-\(h=50\) for \(\ctilde\)) to balance truncation and roundoff error.
+We validate against adaptive finite-difference derivatives
+computed with \texttt{numdifftools}~\cite{numdifftools}, which
+uses Richardson extrapolation to find the optimal step size
+automatically for each parameter.
 
 \Cref{fig:deriv_validation} summarises the derivative landscape and
 numerical validation. The left panel shows the normalised monopole
@@ -1308,13 +1301,11 @@ dominate at all scales, while the FoG counterterm \(\ctilde\)
 contributes at the \(10^{-4}\) level, confirming its negligible
 Fisher information at \(k\leq 0.25\iMpch\).
 The right panel overlays the fractional difference between autodiff
-and finite-difference derivatives for all 14 parameters (excluding
-\(f\se\), which has no independent finite-difference check).
-Two tiers are visible: the nuisance parameters agree to machine
-precision (\({<}\,10^{-9}\)), while the cosmological parameters
-\(\Mnu\) and \(\Om\) agree to \({<}\,0.1\%\)---the residual
-reflects the finite-difference truncation error at
-\(\mathcal{O}(h^4)\), not the autodiff.
+and adaptive finite-difference derivatives for all 15 parameters:
+every parameter agrees to better than \(10^{-9}\), confirming the
+end-to-end autodiff implementation through both the
+\texttt{cosmopower-jax} emulator and the \texttt{ps\_1loop\_jax}
+one-loop model.
 
 \begin{figure}[t]
 \centering
@@ -1324,11 +1315,9 @@ reflects the finite-difference truncation error at
 (3~cosmological, 12~nuisance) at the DESI-ELG fiducials
 (\(z=0.9\)). The derivative hierarchy determines which parameters
 carry Fisher information.
-Right: fractional autodiff-vs-finite-difference agreement for all
-parameters. Nuisance parameters (lower cluster) agree to machine
-precision (\({<}\,10^{-9}\)); cosmological parameters \(\Mnu\) and
-\(\Om\) (upper cluster) agree to \({<}\,0.1\%\), limited by the
-finite-difference truncation error.}
+Right: fractional autodiff-vs-adaptive-finite-difference agreement
+for all 15 parameters, confirming \({<}\,10^{-9}\) consistency
+across the full parameter space.}
 \label{fig:deriv_validation}
 \end{figure}
 

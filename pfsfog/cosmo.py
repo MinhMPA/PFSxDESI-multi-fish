@@ -120,12 +120,13 @@ def make_plin_func(backend: str = "cosmopower"):
 def make_growth_rate_func():
     """Return a pure JAX function: f_fn(z, cosmo_dict) → f(z).
 
-    Uses the Linder (2005) approximation via ps_1loop_jax.background.
+    Uses the exact Heath-integral growth rate from ps_1loop_jax.background,
+    consistent with FiducialCosmology.f(). Fully JAX-differentiable.
     """
     from ps_1loop_jax import background as bg
 
     def f_fn(z, cosmo_dict):
-        return bg.growth_rate_approx(
+        return bg.growth_rate(
             cosmo_dict["omega_b"],
             cosmo_dict["omega_cdm"],
             cosmo_dict["h"],

@@ -20,7 +20,7 @@ OUT_DIR = Path(__file__).resolve().parent.parent / "paper" / "figs"
 bA, bB, f, Pm = 1.0, 2.0, 0.8, 1e3  # Pm ~ P(k=0.1) in (Mpc/h)^3
 k, dk, V = 0.1, 0.01, 1e9
 Nmodes = k**2 * dk * V / (2 * np.pi**2)
-mu_gl, w_gl = leggauss(40)
+mu_gl, w_gl = leggauss(100)  # high-order quadrature for smooth curves
 
 
 def _sigma2_st(nbar):
@@ -63,10 +63,36 @@ def _sigma2_mt(nbar):
     return 1.0 / schur
 
 
+def _sigma2_mt_fixed_bB(nbar):
+    """Multi-tracer sigma^2(Pm) with bB fixed, marginalised over bA only."""
+    F = np.zeros((2, 2))
+    for mi, wi in zip(mu_gl, w_gl):
+        sA = bA + f * mi**2
+        sB = bB + f * mi**2
+        PAA = sA**2 * Pm + 1.0 / nbar
+        PBB = sB**2 * Pm + 1.0 / nbar
+        PAB = sA * sB * Pm
+        C3 = np.array([
+            [2 * PAA**2,      2 * PAB**2,         2 * PAA * PAB],
+            [2 * PAB**2,      2 * PBB**2,         2 * PBB * PAB],
+            [2 * PAA * PAB,   2 * PBB * PAB,      PAA * PBB + PAB**2],
+        ])
+        D = np.array([
+            [sA**2,    2 * sA * Pm],
+            [sB**2,    0.0],
+            [sA * sB,  sB * Pm],
+        ])
+        F += wi * D.T @ np.linalg.inv(C3) @ D
+    F *= Nmodes / 2.0
+    schur = F[0, 0] - F[0, 1]**2 / F[1, 1]
+    return 1.0 / schur
+
+
 # --- sweep nbar (cap at 10^3 to stay numerically stable with Pm=1e3) ---
-nbars = np.logspace(-4, 3, 60)
+nbars = np.logspace(-4, 3, 200)  # dense sampling for smooth transition
 s2_st = np.array([_sigma2_st(n) for n in nbars])
 s2_mt = np.array([_sigma2_mt(n) for n in nbars])
+s2_mt_fixB = np.array([_sigma2_mt_fixed_bB(n) for n in nbars])
 cv_floor = 2.0 * Pm**2 / Nmodes
 
 # --- plot (use usetex for clean minus signs) ---
@@ -88,6 +114,8 @@ ax.loglog(nbars, s2_st / Pm**2, "-", color="#4C72B0", lw=2,
           label=r"Single-tracer ($b_A$ marginalised)")
 ax.loglog(nbars, s2_mt / Pm**2, "-", color="#DD8452", lw=2,
           label=r"Multi-tracer ($b_A, b_B$ marginalised)")
+ax.loglog(nbars, s2_mt_fixB / Pm**2, "-.", color="#DD8452", lw=1.5, alpha=0.7,
+          label=r"Multi-tracer ($b_B$ fixed)")
 ax.axhline(cv_floor / Pm**2, ls="--", color="gray", lw=1.2,
            label=r"CV-free floor $2/N_{\rm modes}$")
 
