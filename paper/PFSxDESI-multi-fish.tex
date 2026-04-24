@@ -807,12 +807,55 @@ LRG2 overlaps only one calibration bin $[0.6,0.8]$; the remaining
 samples average priors over 2--4 overlap bins.}
 \label{tab:dr2_samples}
 \end{table}
+\Cref{tab:six_sample} presents the per-sample breakdown.
+ELG samples benefit the most on \(\sigma(f\se)\) (17--25\%),
+reflecting their higher redshift-space distortion parameter
+\(\beta=f/b_1\), which amplifies the \(b_1\)--\(f\) degeneracy
+that multi-survey priors break. LRG samples gain the most on
+\(\sigma(\Mnu)\) (66--69\%), driven by their large \(b_1\)
+(\(>2\)) which tightens the \(b_1\)--\(\Mnu\) degeneracy when
+calibrated. LRG1 (\(z=0.4\text{--}0.6\)) falls below PFS's
+redshift coverage and uses broad priors; it anchors the low-\(z\)
+cosmological constraint without multi-survey improvement.
 For context, Zhang et al.~\cite{DESI:2025wzd} achieved
 \(\sim\!23\%\) on \(\sigma(\se)\) using power-spectrum-level
-simulation-based priors on DESI~DR1. Multi-survey priors are
-therefore competitive for growth-rate science and substantially
-stronger for neutrino mass constraints---without any simulation
-input.
+simulation-based priors on DESI~DR1.
+
+\begin{table}[t]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{l@{\hskip 6pt}cc@{\hskip 4pt}r@{\hskip 10pt}cc@{\hskip 4pt}r@{\hskip 10pt}cc@{\hskip 4pt}r}
+\hline
+  & \multicolumn{3}{c}{$\sigma(f\se)$}
+  & \multicolumn{3}{c}{$\sigma(\Mnu)$ [eV]}
+  & \multicolumn{3}{c}{$\sigma(\Om)$} \\
+\cline{2-4}\cline{5-7}\cline{8-10}
+Sample & broad & xcal & $\Delta\%$
+  & broad & xcal & $\Delta\%$
+  & broad & xcal & $\Delta\%$ \\
+\hline
+LRG1 & 0.074 & 0.074 & $0$   & 2.00 & 2.00 & $0$   & 0.090 & 0.090 & $0$\\
+LRG2 & 0.051 & 0.047 & $-7$  & 1.82 & 0.61 & $-66$ & 0.071 & 0.065 & $-8$\\
+LRG3 & 0.040 & 0.036 & $-10$ & 1.96 & 0.60 & $-69$ & 0.062 & 0.058 & $-6$\\
+ELG1 & 0.144 & 0.108 & $-25$ & 1.97 & 0.87 & $-56$ & 0.093 & 0.070 & $-25$\\
+ELG2 & 0.149 & 0.123 & $-17$ & 2.32 & 1.26 & $-46$ & 0.104 & 0.084 & $-20$\\
+QSO  & 0.082 & 0.072 & $-12$ & 3.22 & 1.41 & $-56$ & 0.172 & 0.130 & $-24$\\
+\hline
+Combined & 0.022 & 0.020 & $-8$ & 0.67 & 0.32 & $-53$ & 0.031 & 0.028 & $-9$\\
+\hline
+\end{tabular}
+\caption{Per-sample and combined constraints from the full-area
+six-sample DESI~DR2 forecast ($\kmax=0.20\iMpch$).
+Multi-survey priors improve the combined $\sigma(f\se)$ by 8\%
+and $\sigma(\Mnu)$ by 53\%. Per-sample improvements range from
+7--25\% on $f\se$ and 46--69\% on $\Mnu$.
+LRG1 uses broad priors (no PFS overlap at $z<0.8$).
+ELGs gain the most on $f\se$ (higher $\beta=f/b_1$);
+LRGs gain the most on $\Mnu$ (larger $b_1$ tightens the
+$b_1$--$\Mnu$ degeneracy).}
+\label{tab:six_sample}
+\end{table}
 
 The remaining gap to the fixed-nuisance limit---a factor of
 \(\sim\!4.6\) on \(\sigma(f\se)\) for the combined
@@ -830,7 +873,9 @@ competing.
 Marginalized $1\sigma$ uncertainties on $f\se$, $\Mnu$, and $\Om$
 from $14{,}000\;\text{deg}^2$, combining four $z$-bins, under three
 scenarios. Multi-survey priors (green) improve $\sigma(f\se)$ by
-$\sim\!19\%$ and $\sigma(\Mnu)$ by $\sim\!55\%$.
+$\sim\!19\%$ and $\sigma(\Mnu)$ by $\sim\!55\%$ for this single
+tracer. The combined six-sample results are in
+\cref{tab:six_sample}.
 Horizontal lines show SBP benchmarks from DESI~DR1 re-analyses:
 power-spectrum-level SBP (dashed; Zhang et al.\ 2025)
 and field-level SBP (dotted; Chudaykin et al.\ 2026).
@@ -1072,6 +1117,17 @@ cross-spectra (PFS\(\times\)LRG, PFS\(\times\)QSO)---whose
 zero cross-shot noise is guaranteed by construction---dominate the
 calibration.
 
+The improvement is also stable under variations of the full-area
+scale cut. Repeating the combined six-sample forecast at
+\(\kmax=0.15\), \(0.20\), and \(0.25\iMpch\), the improvement on
+\(\sigma(f\se)\) varies smoothly from 10\% to 8\% to 6\%, and on
+\(\sigma(\Mnu)\) from 58\% to 53\% to 48\%. The mild decrease
+with increasing \(\kmax\) reflects the growing weight of the
+counterterms and \(k\)-dependent stochastic terms---parameters
+that the overlap cannot constrain---at higher wavenumbers. The
+improvement remains significant across the full range of
+\(\kmax\) values considered.
+
 
 \subsection{Complementarity with simulation-based priors}
 
@@ -1173,10 +1229,10 @@ volume. Our main findings are:
   counterterms and stochasticity that SBPs cannot, and vice versa.
   In the context of the \(S_8\) tension, multi-survey priors offer
   an independent handle on whether the SBP-driven \(\se\) shift
-  reflects new physics or HOD systematics. The approach generalizes
-  to any pair of overlapping spectroscopic surveys---including
-  Euclid\(\,\times\,\)DESI, Roman\(\,\times\,\)Spec-S5, and
-  DESI-II\(\,\times\,\)MegaMapper.
+  reflects new physics or HOD systematics. The approach
+  generalizes to any pair of overlapping spectroscopic
+  surveys, including Euclid$\times$DESI,
+  Roman$\times$Spec-S5, and DESI-II$\times$MegaMapper.
 \end{enumerate}
 
 
