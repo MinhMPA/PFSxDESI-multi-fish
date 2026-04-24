@@ -43,40 +43,12 @@
 \def\bg#1\eg{\begin{gather}#1\end{gather}}
 \newcommand\numberthis{\addtocounter{equation}{1}\tag{\theequation}}
 
-\newcommand{\twofig}[4]{%
- \begin{figure}%
-    \centering
-    \subfloat{{\includegraphics[width=.4\textwidth]{#1} }}%
-    \qquad
-    \subfloat{{\includegraphics[width=.4\textwidth]{#2} }}%
-    \caption{#4}%
-    \label{#3}%
-\end{figure}}
-
-\def\switch#1#2{#2}  %1: old 2: revtex4
-\newlength{\diagramwidth}
-\switch{
-\setlength{\diagramwidth}{3.0em}
-}{
-\setlength{\diagramwidth}{1cm}
-}
 
 
 %%%%%%%%%%%%%%%
 %% Reference %%
 %%%%%%%%%%%%%%%
 
-\newcommand{\refeq}[1]{Eq.~(\ref{eqn:#1})}          
-\newcommand{\refeqs}[2]{Eqs.~(\ref{eqn:#1})--(\ref{eqn:#2})}          
-\newcommand{\refEq}[1]{Equation~(\ref{eqn:#1})}          
-\newcommand{\reffig}[1]{Fig.~\ref{fig:#1}}  
-\newcommand{\reffigs}[2]{Fig.~\ref{fig:#1}--\ref{fig:#2}}  
-\newcommand{\refFig}[1]{Figure~\ref{fig:#1}}          
-\newcommand{\reftab}[1]{Tab.~\ref{tab:#1}}          
-\newcommand{\refsec}[1]{Sec.~\ref{sec:#1}}
-\newcommand{\refapp}[1]{App.~\ref{app:#1}}
-\newcommand{\specialcell}[2][c]{%
-	\begin{tabular}[#1]{@{}c@{}}#2\end{tabular}}
 
 %%%%%%%%%%%%%%
 %% Notation %%
@@ -84,140 +56,22 @@
 
 \newcommand{\code}[1]{{\texttt{#1}}}
 
-\newcommand{\g}{\gamma}
-\newcommand{\s}{\sigma}
-
-\def\freeIC{\textsc{freeIC}}
-\def\fixedIC{\textsc{fixedIC}}
-
-\newcommand{\fsky}{f_{\rm sky}}
-\def\cH{\mathcal{H}}
-\def\FMV{\mathcal{F}_{\textsc{mv}}}
-
-\def\Plin{P_{\rm L}}
-\def\dlin{\delta_{\rm L}}
 \def\knl{k_\text{NL}}
-\def\Pnl{P_{\rm m}}
-
-% VECTOR -> bold face
 
 \renewcommand{\emph}[1]{\textit{#1}}
 
-\newcommand{\vn}{\bm{n}}
-\newcommand{\nhat}{\hat{n}}
-\newcommand{\vnhat}{\bm{\nhat}}
-\newcommand{\vx}{\bm{x}}
-\newcommand{\vy}{\bm{y}}
-\newcommand{\vu}{\bm{u}}
-\newcommand{\vr}{\bm{r}}
-\newcommand{\vk}{\bm{k}}
-\newcommand{\vq}{\bm{q}}
-\newcommand{\vp}{\bm{p}}
-\newcommand{\Deg}{^{\circ}}
-
-\newcommand{\<}{\langle}
-\renewcommand{\>}{\rangle}
-
-\newcommand{\D}{\Delta}
-\newcommand{\dLambda}{\delta^{(1)}_\Lambda}
-\newcommand{\dLambdazero}{\delta^{(1)}_{\Lambda_0}}
-\newcommand{\ddet}{\delta_{\mathrm{det}}}
-\newcommand{\ddetLambda}{\delta_{\mathrm{det},\Lambda}}
-
-\newcommand{\eps}{\epsilon}
 \newcommand{\Om}{\Omega_m}
-\newcommand{\OK}{\Omega_K}
-\newcommand{\OL}{\Omega_\Lambda}
-\def\rhocr{\rho_{\rm cr,0}}
-\newcommand{\rhob}{\bar\rho}
-\newcommand{\hubble}{\mathcal{H}}
 
 \def\Mpch{\,h^{-1}\text{Mpc}}
 \def\iMpch{\,h\,\text{Mpc}^{-1}}
 \def\Mpchcubed{\, h^{-3} \, \text{Mpc}^{3}}
-\def\Msunh{\,h^{-1} M_\odot}
-\def\Plin{P_\text{L}}
 
-\def\shat{\hat{s}}
-\def\epshat{\hat{\eps}}
-\def\shatMV{\hat{s}_{\textsc{mv}}}
-\def\L{\Lambda}
 \def\kmax{k_{\rm max}}
-\def\LL{\mathcal{L}}
-\def\M{\mathcal{M}}
-\def\N{\mathcal{N}}
-\def\O{\mathcal{O}}
-\def\P{\mathcal{P}}
-\def\R{\mathcal{R}}
-\def\G{\mathcal{G}}
-\def\J{\mathcal{J}}
-\def\NGeul{\verb!NGeul!}
 
-\DeclareMathOperator{\Tr}{Tr}
-\DeclareMathOperator{\diag}{diag}
-\newcommand{\resp}[2]{R^{#1}_{\,\,\,#2}}
-\newcommand{\resptwo}[3]{{R_2}^{#1}_{\,\,\,#2,#3}}
 \newcommand{\dd}{\mathrm{d}}
-
-\newcommand{\UnitM}{\mathbb{1}}
-
-% bias parameters
-\newcommand{\bdelta}{b_{\delta}}
-\newcommand{\bdeltatwo}{b_{\delta^2}}
-\newcommand{\blapldelta}{b_{\nabla^2\delta}}
-\newcommand{\btrMoneMone}{b_{\tr [M^{(1)}M^{(1)}]}}
-\newcommand{\bsigmasigma}{b_{\sigma^2}}
-
-
-% functional derivative
-\def\Del{\mathcal{D}}
-% tidal derivativ operator
-\def\DT{\mathfrak{D}}
-
-% window function / mask
-\def\Wi{\mathcal{W}}
-
-% Dirac distribution in nD
-\def\dirac#1{\delta_{\mathrm{D}}^{(#1)}}
-
-% notation for third order operator from conv. time derivative
-\def\otd{\text{td}}
-\def\Otd{O_{\otd}}
-
-% (un)checked boxes
-\def\topen{$\square$}
-\protected\def\tpass{\textcolor{ForestGreen}{$\checkmark$}}
-\def\tfail{\protect\textcolor{red}{$X$}}
-
-% to denote permutations within equations
-% - uses 'etoolbox' package
-% \perm{n} -> ``$n$ perm.''
-% \perm{}  -> ``perm.''
-\newcommand{\perm}[1]{ \expandafter\ifstrempty\expandafter{#1} {\mbox{perm.}} {\mbox{$#1$ perm.}} }
-
-\newcommand{\lcdm}{$\Lambda${\rm CDM}}
-
-\DeclareMathOperator{\tr}{tr}
 \DeclareMathOperator{\Cov}{Cov}
-\let\Re\relax
-\DeclareMathOperator{\Re}{Re}
-\let\Im\relax
-\DeclareMathOperator{\Im}{Im}
-\def\lapl{\nabla^2}
-\newcommand{\levicivita}{}% initialize
-\def\levicivita#1#{\tensor#1{\epsilon}}
 
 \newcommand{\se}{\ensuremath{\sigma_\mathrm{8}}\xspace}
-
-\definecolor{RoyalBlue}{rgb}{0.25,.41,.88}
-\definecolor{ForestGreen}{rgb}{.13,.54,.13}
-\definecolor{DeepPurple}{rgb}{.45,.1,.75}
-
-\newcommand{\hl}[1]{\textcolor{ForestGreen}{#1}}
-\newcommand{\chg}[1]{\textcolor{RoyalBlue}{#1}}
-\newcommand{\mn}[1]{\textcolor{DeepPurple}{[\textbf{MN:}~#1]}}
-\newcommand{\mnedit}[1]{\textcolor{ForestGreen}{#1}}
-\newcommand{\slackcomments}[1]{{\leavevmode\color{blue}[#1]}}
 
 \def\mnras{MNRAS}
 \def\jcap{JCAP}
@@ -245,12 +99,8 @@
 \newcommand{\Mnu}{M_\nu}
 \newcommand{\ctilde}{\tilde{c}}
 \newcommand{\Pshot}{P_{\rm shot}}
-\newcommand{\Bshot}{B_{\rm shot}}
-\newcommand{\Ashot}{A_{\rm shot}}
 \newcommand{\rsv}{r_{\sigma_v}}
 \newcommand{\nbar}{\bar{n}}
-\newcommand{\Vov}{V_{\rm overlap}}
-\newcommand{\Vfull}{V_{\rm full}}
 
 \title{Multi-tracers, multi-surveys: data-driven EFT prior calibration from the PFS--DESI overlap}
 \author[a,b,c]{Nhat-Minh Nguyen (Nguyễn Nhật Minh)\orcidlink{0000-0002-2542-7233}}
@@ -327,7 +177,11 @@ counterterms, and stochastic amplitudes (\cref{tab:eft_params}).
 Marginalizing over these parameters with conservative Gaussian priors
 degrades \(\sigma(f\se)\) by a factor of \(\sim\!2.4\) and
 \(\sigma(\Mnu)\) by \(\sim\!6.4\) relative to perfect nuisance
-knowledge~\cite{Chudaykin:2024wlw}.
+knowledge for a single DESI-ELG sample~\cite{Chudaykin:2024wlw};
+the degradation grows to \(\sim\!4.6\times\) and \(\sim\!10\times\)
+when six DR2 samples are combined (\cref{sec:conclusions}), because
+the correlated nuisance parameters across samples compound the
+information loss.
 
 Tightening the nuisance priors is therefore a direct route to sharper
 cosmological constraints. All existing approaches to informative
@@ -794,10 +648,16 @@ nuisance and cosmological parameters are computed via JAX
 forward-mode automatic differentiation (\texttt{jax.jacfwd}).
 For nuisance parameters, the autodiff traces through the one-loop
 \texttt{ps\_1loop\_jax} model; for \(\Om\) and \(\Mnu\), it traces
-end-to-end through the \texttt{cosmopower-jax} emulator, the growth
-rate, and the one-loop model. This provides exact derivatives for
+end-to-end through the
+\texttt{cosmopower-jax}~\cite{Piras:2023aub}%
+\footnote{\url{https://github.com/dpiras/cosmopower-jax}}
+emulator with the \(\nu\Lambda\)CDM-trained
+networks of Jense et al.~\cite{Jense:2024llt}%
+\footnote{\url{https://github.com/cosmopower-organization/jense_2024_emulators}},
+the growth rate, and the one-loop model.
+This provides exact derivatives for
 all 15 parameters without step-size tuning; we validate against
-five-point finite-difference numerical derivatives in
+adaptive finite-difference numerical derivatives in
 \cref{app:derivatives}.
 
 
@@ -901,11 +761,38 @@ We now export the calibrated priors to the full
 \(14{,}000\;\text{deg}^2\) DESI footprint, forecasting all six
 DR2 tracer samples---LRG1--3, ELG1--2, and QSO---each analysed
 with its own auto-spectrum and the calibrated priors from Step~1.
-\Cref{fig:full_area} and \cref{tab:headline} present the
-single-tracer ELG results; the combined six-sample constraints
+\Cref{tab:dr2_samples} lists the survey properties of each sample;
+\cref{fig:full_area} and \cref{tab:headline} present the
+single-tracer ELG results. The combined six-sample constraints
 are tighter by a factor of \(\sim\!4\) on \(\sigma(f\se)\) and
 improve by 8\% (7--25\% per sample) and 53\% on \(\sigma(\Mnu)\)
 (46--69\% per sample) at \(\kmax=0.20\iMpch\).
+
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{lccccc}
+\hline
+Sample & $z$ range & $z_{\rm eff}$ & $\nbar\;[10^{-4}\,h^3\,\text{Mpc}^{-3}]$ & $b_1$ & $V\;[\text{Gpc}/h]^3$ \\
+\hline
+LRG1 & $[0.4,\,0.6]$ & 0.50 & 5.5 & 2.21 & 3.4 \\
+LRG2 & $[0.6,\,0.8]$ & 0.70 & 5.1 & 2.44 & 5.2 \\
+LRG3 & $[0.8,\,1.1]$ & 0.95 & 1.6 & 2.74 & 10.8 \\
+ELG1 & $[0.8,\,1.1]$ & 0.95 & 7.0 & 1.35 & 10.8 \\
+ELG2 & $[1.1,\,1.6]$ & 1.35 & 2.4 & 1.60 & 23.4 \\
+QSO  & $[0.8,\,2.1]$ & 1.45 & 0.30 & 2.38 & 61.0 \\
+\hline
+\end{tabular}
+\caption{DESI~DR2 tracer samples used in the full-area forecast.
+Number densities $\nbar$ are volume-weighted averages from fine-binned
+$n(z)$ files; biases $b_1$ are evaluated at the effective redshift;
+volumes $V$ assume the full $14{,}000\;\text{deg}^2$ footprint and
+Planck 2018 cosmology.
+LRG1 has no overlap with PFS ($z<0.8$) and uses broad priors.
+LRG2 overlaps only one calibration bin $[0.6,0.8]$; the remaining
+samples average priors over 2--4 overlap bins.}
+\label{tab:dr2_samples}
+\end{table}
 For context, Zhang et al.~\cite{DESI:2025wzd} achieved
 \(\sim\!23\%\) on \(\sigma(\se)\) using power-spectrum-level
 simulation-based priors on DESI~DR1. Multi-survey priors are
@@ -1319,8 +1206,8 @@ The right panel overlays the fractional difference between autodiff
 and adaptive finite-difference derivatives for all 15 parameters:
 every parameter agrees to better than \(10^{-9}\), confirming the
 end-to-end autodiff implementation through both the
-\texttt{cosmopower-jax} emulator and the \texttt{ps\_1loop\_jax}
-one-loop model.
+\texttt{cosmopower-jax} emulator~\cite{Piras:2023aub,Jense:2024llt}
+and the \texttt{ps\_1loop\_jax} one-loop model.
 
 \begin{figure}[t]
 \centering
