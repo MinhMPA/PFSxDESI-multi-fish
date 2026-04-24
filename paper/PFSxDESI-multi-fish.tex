@@ -242,9 +242,9 @@ FoG cleaning methods~\cite{BaleatoLizancos:2025wdg} offer a
 complementary route to extending the usable \(k\)-range.
 
 This paper is organised as follows. \Cref{sec:method} describes the
-multi-survey prior mechanism. \Cref{sec:surveys} presents the PFS and
-DESI survey specifications. \Cref{sec:fisher} details the Fisher
-forecast setup. \Cref{sec:results} presents the calibrated priors,
+multi-survey prior mechanism. \Cref{sec:fisher} details the Fisher
+forecast setup, including the PFS and DESI survey specifications.
+\Cref{sec:results} presents the calibrated priors,
 the full-area DESI constraints, the calibration efficiency, and
 sensitivity tests. We discuss implications in \cref{sec:discussion}
 and conclude in \cref{sec:conclusions}.
@@ -476,9 +476,19 @@ we now apply it to a concrete case: the PFS--DESI overlap.
 
 
 %-------------------------------------------------------------------
-\section{PFS and DESI ELG samples}
-\label{sec:surveys}
+\section{Fisher forecast setup}
+\label{sec:fisher}
 %-------------------------------------------------------------------
+
+To forecast the constraints from the PFS--DESI overlap, we construct
+multi-tracer and single-tracer Fisher matrices using the one-loop
+EFTofLSS. This section describes the survey inputs, the EFT
+parameterization, the covariance and derivative computation, and the
+analysis scenarios.
+
+
+\subsection{Survey specifications}
+\label{sec:surveys}
 
 We consider the overlap of PFS-ELG with three DESI tracer samples in
 the shared \(\sim\!1{,}200\;\text{deg}^2\) footprint at \(0.8<z<1.6\).
@@ -536,17 +546,6 @@ Volumes and distances assume the Planck 2018
 cosmology~\cite{Planck:2018params}.}
 \label{tab:surveys}
 \end{table}
-
-
-%-------------------------------------------------------------------
-\section{Fisher forecast setup}
-\label{sec:fisher}
-%-------------------------------------------------------------------
-
-To forecast the constraints from this overlap, we construct
-multi-tracer and single-tracer Fisher matrices using the one-loop
-EFTofLSS. This section details the parameterization, fiducial values,
-covariance, and analysis scenarios.
 
 \subsection{EFT parameterization}
 \label{sec:eft_params}
