@@ -426,15 +426,13 @@ Strictly, the full-area Fisher in Step~2 includes the
 \(1{,}200\;\text{deg}^2\) overlap used in Step~1, so the
 cosmological information in the overlap is counted twice---once
 implicitly through the calibrated priors, and once explicitly in
-the full-area sum. This double-counting is conservative: it makes
-the forecast marginally optimistic. The effect is small because the
-overlap constitutes only \(\sim\!9\%\) of the full footprint and
-the dominant cosmological information comes from the remaining
-\(\sim\!12{,}800\;\text{deg}^2\). Excluding the overlap from
-Step~2 would reduce the effective volume by 9\%, weakening
-constraints by \(\sim\!4.5\%\) (scaling as \(\sqrt{V}\)), which is
-subdominant to the 8--53\% improvement from the calibrated priors
-themselves.
+the full-area sum. We have verified that this double-counting is
+negligible: repeating the six-sample forecast with the overlap
+excluded from Step~2 (\(12{,}800\;\text{deg}^2\) instead of
+\(14{,}000\;\text{deg}^2\)) changes the improvement on
+\(\sigma(f\se)\) from 8.1\% to 8.3\% and on \(\sigma(\Mnu)\) from
+52.5\% to 53.5\%---a shift of \({<}\,1\) percentage point,
+well within the precision of the forecast.
 
 
 \subsection{Comparison with simulation-based priors}
@@ -1184,8 +1182,11 @@ The Gaussian Fisher approximation captures the leading information
 content but not non-Gaussian posterior structure---an MCMC analysis
 with the full likelihood would sharpen the comparison with SBPs.
 The PFS-ELG EFT fiducials are scaled from DESI rather than fitted
-to PFS mocks, which do not yet exist; validation against future PFS
-simulations will anchor the scaling assumptions.
+to PFS mocks; validation against upcoming mock suites---Uchuu-LRG
+\cite{FernandezGarcia:2025rso}, Uchuu-ELG \cite{Vaisakh:2025inprep},
+and Mucho Uchuu \cite{Ishiyama:inprep} on the DESI side, and PFS
+galaxy mocks \cite{Osato:inprep} on the PFS side---will anchor the
+EFT fiducials and test the transferability assumption directly.
 Finally, the bispectrum, survey window functions, super-sample
 covariance, and non-Gaussian covariance are omitted here but would
 each modify the information budget---the bispectrum in particular
