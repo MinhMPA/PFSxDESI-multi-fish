@@ -422,6 +422,20 @@ priors in the full-area DESI Fisher forecast over
 the overlap calibrates the nuisance parameters, and the full area
 constrains the cosmology with those calibrated priors.
 
+Strictly, the full-area Fisher in Step~2 includes the
+\(1{,}200\;\text{deg}^2\) overlap used in Step~1, so the
+cosmological information in the overlap is counted twice---once
+implicitly through the calibrated priors, and once explicitly in
+the full-area sum. This double-counting is conservative: it makes
+the forecast marginally optimistic. The effect is small because the
+overlap constitutes only \(\sim\!9\%\) of the full footprint and
+the dominant cosmological information comes from the remaining
+\(\sim\!12{,}800\;\text{deg}^2\). Excluding the overlap from
+Step~2 would reduce the effective volume by 9\%, weakening
+constraints by \(\sim\!4.5\%\) (scaling as \(\sqrt{V}\)), which is
+subdominant to the 8--53\% improvement from the calibrated priors
+themselves.
+
 
 \subsection{Comparison with simulation-based priors}
 \label{sec:sbp_comparison}
@@ -1021,13 +1035,30 @@ DESI tracers---a comparable tightening, but derived from HOD
 modelling rather than from data. This parallel validates both
 approaches and makes them natural cross-checks of each other.
 
-If one insists on maintaining a flat \(b_1\) prior---as is standard
-practice in conservative EFT
-analyses~\cite{Ivanov:2019pdj,dAmico:2019fhj}---the improvement from
-multi-survey priors drops to \(\sim\!4\%\) on both \(f\se\) and
-\(\Mnu\) (\cref{tab:importance}, ``All except \(b_1\se\)'' row).
-In this conservative scenario, the remaining gain comes from
-\(\Pshot\), \(b_{G_2}\), and the counterterms acting jointly.
+The dependence on the \(b_1\) prior deserves careful discussion.
+Conservative EFT analyses traditionally adopt a flat prior on
+\(b_1\)~\cite{Ivanov:2019pdj,dAmico:2019fhj}, deliberately
+sacrificing constraining power to avoid prior-driven biases. If one
+maintains this convention, the improvement from multi-survey priors
+drops to \(\sim\!4\%\) on both \(f\se\) and \(\Mnu\)
+(\cref{tab:importance}, ``All except \(b_1\se\)'' row)---a floor
+set by the remaining nuisance calibration (\(\Pshot\),
+\(b_{G_2}\), and the counterterms acting jointly).
+
+The headline improvement of 8--53\% therefore requires adopting an
+informative \(b_1\) prior---but this is precisely what the
+simulation-based prior programme has already begun to do.
+Chudaykin et al.~\cite{Chudaykin:2026nls} report that field-level
+SBPs shrink the \(b_1\) posterior by 30--40\% for all DESI
+tracers; Zhang et al.~\cite{DESI:2025wzd} impose HOD-calibrated
+priors on the full bias vector including \(b_1\). The key
+difference is the source of the prior information: SBPs derive
+\(b_1\) constraints from simulated galaxy--halo connections, while
+multi-survey priors derive them directly from cross-spectra between
+observed galaxy populations. The latter is model-independent by
+construction---it relies on no assumption about the HOD---and thus
+provides a cross-check on whether the SBP-calibrated \(b_1\)
+values are consistent with what the data themselves imply.
 
 
 \subsection{Robustness}
