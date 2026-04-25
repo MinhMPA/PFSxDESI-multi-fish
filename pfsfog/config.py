@@ -40,7 +40,7 @@ class ForecastConfig:
     kmax_cross_overlap: float | None = None  # kmax for P^AB; None → kmax_pfs
 
     # Shared catalogue fraction for PFS-ELG × DESI-ELG cross-shot noise
-    f_shared_elg: float = 0.045  # fraction of DESI-ELGs also in PFS (J. Shi, priv. comm.)
+    f_shared_elg: float = 0.045  # fraction of PFS-ELGs also in DESI (J. Shi, priv. comm.)
 
     # Nonlinear scale for stochasticity
     k_nl: float = 0.7           # h/Mpc

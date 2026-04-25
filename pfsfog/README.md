@@ -89,7 +89,7 @@ pytest tests/ -q   # 96 tests, ~10s
 ## Key conventions
 
 - **EFT parameterisation**: Chudaykin, Ivanov & Philcox (2025, arXiv:2511.20757, Table I).
-- **Cross-shot noise**: Zero for different populations. For PFS x DESI-ELG: `f_shared / nbar_PFS` where f_shared = 0.045 (J. Shi, priv. comm.).
+- **Cross-shot noise**: Zero for different populations. For PFS x DESI-ELG: `f_shared / nbar_DESI` where f_shared = n_shared / nbar_PFS = 0.045 (J. Shi, priv. comm.).
 - **Asymmetric kmax**: `kmax_PFS = kmax_DESI / r_sigma_v`. Default r_sigma_v = 0.75.
 - **Units**: k in h/Mpc, P(k) in (Mpc/h)^3, volumes in (Mpc/h)^3.
 - **Precision**: `jax.config.update('jax_enable_x64', True)` — float64 throughout.
