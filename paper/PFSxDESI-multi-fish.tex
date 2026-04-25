@@ -108,10 +108,10 @@
 \affiliation[b]{Kavli IPMU (WPI), UTIAS, The University of Tokyo, 5-1-5 Kashiwanoha, Kashiwa, Chiba 277-8583, Japan}
 \affiliation[c]{Institute For Interdisciplinary Research in Science and Education, ICISE, Quy Nhon, 55121, Vietnam}
 \emailAdd{nhat.minh.nguyen@ipmu.jp}
-\keywords{Large-scale structure of the universe, Power spectrum, Galaxy surveys, Cosmological parameters from LSS}
+\keywords{galaxy surveys, redshift surveys, galaxy clustering, power spectrum, cosmological parameters from LSS, neutrino masses from cosmology}
 
 \abstract{%
-Marginalizing over \(\sim\!12\) effective-field-theory (EFT) nuisance
+Marginalizing over roughly twelve effective-field-theory (EFT) nuisance
 parameters per tracer per redshift bin is the dominant systematic cost
 in full-shape galaxy power spectrum analyses.
 Simulation-based priors (SBP) can tighten these parameters but rely on
@@ -132,15 +132,15 @@ QSO samples improves \(\sigma(f\se)\) by 8\% (7--25\% per sample) and
 \(\sigma(\Mnu)\) by 53\% (46--69\% per sample) at
 \(\kmax=0.20\iMpch\).
 A parameter importance decomposition reveals that the dominant driver
-is the calibration of \(b_1\se\)---constrained from a flat prior
+is the calibration of the \(b_1\se\) prior---constrained from a flat prior
 to \(\sigma\approx 0.17\) by the multi-tracer Fisher---which
 accounts for \(\sim\!70\%\) of the \(f\se\) gain and
 \(\sim\!97\%\) of the \(\Mnu\) gain by breaking the
-\(b_1\)--\(f\) degeneracy intrinsic to single-tracer analyses.
-Multi-survey prior calibration parallels the SBP approach, which also tighten \(b_1\)
-through HOD model assumptions; multi-survey priors provide a
+\(b_1\sigma_8\)--\(f\se\) degeneracy intrinsic to single-tracer analyses.
+Multi-survey prior calibration parallels the SBP approach, which tightens \(b_1\)
+through HOD assumptions; multi-survey priors provide a
 model-independent consistency check on these assumptions and
-generalize to any pair of overlapping spectroscopic surveys.
+generalize to arbitrary combinations of overlapping spectroscopic surveys.
 }
 
 
@@ -156,22 +156,18 @@ generalize to any pair of overlapping spectroscopic surveys.
 %-------------------------------------------------------------------
 
 Full-shape analyses of the galaxy power
-spectrum---built on the effective field theory of large-scale
+spectrum, built on the effective field theory of large-scale
 structure
-(EFTofLSS)~\cite{Baumann:2010tm,Carrasco:2012cv,Carroll:2013oxa,Senatore:2014eva}---now
-deliver percent-level constraints on cosmological parameters from
-galaxy
-clustering~\citep[e.g.,][]{Ivanov:2019pdj,dAmico:2019fhj,Chen:2021wdi,Philcox:2021kcw}.
-Both the DESI
-Collaboration~\cite{DESI:2024jxi,DESI:2024hhd} and independent
-reanalyses~\cite{Chudaykin:2025aux,Chudaykin:2025lww,Chudaykin:2025vdh,Ivanov:2026dvl}
-have applied this framework to DESI~DR1, constraining dark energy,
-neutrino masses~\cite{Ivanov:2019hqk}, primordial
-non-Gaussianity~\cite{Cabass:2022wjy}, and dark-sector
-interactions~\cite{He:2023oke,He:2025npy} at the full-shape level.
+(EFTofLSS)~\cite{Baumann:2010tm,Carrasco:2012cv,Carroll:2013oxa,Senatore:2014eva}, have now become the new standard in analyses of galaxy clustering in spectroscopic surveys.
+From their first applications on the Sloan Digital Sky Survey BOSS galaxy samples~\citep[e.g.,][]{dAmico:2019fhj,Ivanov:2019pdj}, full-shape EFT analyses have have improved LSS constraints on, for example, neutrino masses~\cite{Colas:2019ret,Ivanov:2019hqk,Chudaykin:2025lww}, primordial
+non-Gaussianity~\cite{Cabass:2022wjy,DAmico:2022gki,Chudaykin:2025vdh}, early dark energy~\cite{Ivanov:2020ril,DAmico:2020ods,Smith:2020rxx}, clustering dark energy~\cite{DAmico:2020tty}, interacting dark energy~\cite{Tsedrik:2025cwc}, ultra-light axions~\cite{Rogers:2023ezo} and dark-sector
+interactions~\cite{He:2023oke,He:2025npy}.
+More recently, the DESI collaboration~\cite{DESI:2024jxi,DESI:2024hhd,DESI:2025wzd} and independent
+reanalyses~\cite{Chudaykin:2025aux,Chudaykin:2025lww,Chudaykin:2025vdh,Ivanov:2026dvl,Chudaykin:2026nls} applied this framework to DESI~DR1 data, both reported robust evidences for dynamical dark energy and normal-ordering neutrino mass hierarchy.
+
 At next-to-leading (i.e.\ one-loop) order, the EFT framework
 parameterizes our ignorance of small-scale physics through
-\(\sim\!12\) nuisance parameters per tracer per redshift
+roughly twelve nuisance parameters per tracer per redshift
 bin~\cite{Chudaykin:2020aoj,Desjacques:2016bnm}---bias coefficients,
 counterterms, and stochastic amplitudes (\cref{tab:eft_params}).
 Marginalizing over these parameters with conservative Gaussian priors
@@ -179,9 +175,9 @@ degrades \(\sigma(f\se)\) by a factor of \(\sim\!2.4\) and
 \(\sigma(\Mnu)\) by \(\sim\!6.4\) relative to perfect nuisance
 knowledge for a single DESI-ELG sample~\cite{Chudaykin:2024wlw};
 the degradation grows to \(\sim\!4.6\times\) and \(\sim\!10\times\)
-when six DR2 samples are combined (\cref{sec:conclusions}), because
-the correlated nuisance parameters across samples compound the
-information loss.
+when six DR2 samples are combined (\cref{sec:conclusions}), illustrating
+the increasing cost of nuisance-parameter marginalization in joint
+multi-sample (not multi-tracer) analyses.
 
 Tightening the nuisance priors is therefore a direct route to sharper
 cosmological constraints. All existing approaches to informative
@@ -201,28 +197,14 @@ systematic biases absorbed from the HOD modelling remains an open
 question---one that an independent, data-driven calibration of the
 same parameters could help resolve.
 
-Meanwhile, multi-tracer EFT analyses have shown that jointly fitting
-multiple galaxy populations breaks parameter degeneracies beyond
-what single-tracer analyses can
-achieve~\cite{Mergulhao:2021kip,Alarcon:2016bkr}.
-Zhao et al.~\cite{Zhao:2024eboss} demonstrated this on eBOSS DR16
-data, jointly analysing LRGs and ELGs~\cite{Ivanov:2021elg} within
-a single survey and
-improving \(\sigma(\se)\) by 18--27\% depending on the treatment of
-cross-stochasticity. However, same-survey multi-tracer analyses
-share survey-specific systematics and have non-trivial
-cross-stochasticity between overlapping populations.
+Meanwhile, multi-tracer Fisher forecasts have shown that jointly fitting multiple galaxy populations can break parameter degeneracies beyond what single-tracer analyses can achieve~\cite{Alarcon:2016bkr,Mergulhao:2021kip,Mergulhao:2023zso,Qin:2025nkk}.
+Zhao et al.~\cite{Zhao:2024eboss} demonstrated this with eBOSS DR16 data by jointly analysing LRGs and ELGs within a single survey, improving \(\sigma(\se)\) by 18--27\% depending on the treatment of stochastic terms in the LRG--ELG cross spectrum. This demonstrates the statistical value of multi-tracer information, but not the calibration of survey-independent EFT priors: same-survey analyses share observational systematics, and even for disjoint tracer catalogues with no shared-object shot noise, residual cross-stochasticity remains a modelling assumption.
 
 In this paper we demonstrate that EFT nuisance parameters can be
 calibrated directly from observational data, without HOD modelling.
 We propose \emph{multi-survey priors}---a data-driven alternative to
 SBP that exploits the overlap volume between two
-independent spectroscopic surveys. The idea is simple: when PFS and
-DESI observe the same patch of sky, their cross-power spectra---especially
-between different galaxy populations such as
-PFS-ELG\(\,\times\,\)DESI-LRG---carry zero stochastic contribution
-by construction, since the two catalogues share no galaxies. A
-multi-tracer Fisher analysis of the auto- and cross-spectra in the
+independent spectroscopic surveys. The idea is simple: when PFS and DESI observe the same patch of sky, cross-spectra between disjoint galaxy catalogues contain no shared-object shot-noise contribution by construction. A multi-tracer Fisher analysis of the auto- and cross-spectra in the
 overlap isolates the stochastic nuisance parameters
 model-independently. The calibrated priors are then exported to DESI's
 full \(14{,}000\;\text{deg}^2\) footprint, tightening cosmological
@@ -232,16 +214,9 @@ The \(\sim\!1{,}200\;\text{deg}^2\) overlap of the Subaru Prime Focus
 Spectrograph (PFS) ELG survey~\cite{Takada:2014pfs} with three DESI
 tracers---ELG, luminous red galaxies (LRG), and quasars
 (QSO)~\cite{DESI:2016fyo,DESI:2025zgx}---at \(0.8<z<1.6\)
-provides a concrete realization. With up to 4 tracers and 10
-cross-spectra per redshift bin, the overlap volume functions as a
-calibration laboratory for the EFT parameters that limit the full
-DESI analysis. PFS's lower finger-of-god (FoG) contamination further
-motivates an asymmetric scale cut
-\(\kmax^{\PFS}>\kmax^{\DESI}\)~\cite{Rubira:2025scu}; data-driven
-FoG cleaning methods~\cite{BaleatoLizancos:2025wdg} offer a
-complementary route to extending the usable \(k\)-range.
+provides a concrete realization. With up to four tracers and ten cross-spectra per redshift bin, the overlap volume functions as a calibration laboratory for the EFT parameters that limit the full DESI analysis.The weaker finger-of-god (FoG) contamination expected in PFS samples motivates an asymmetric scale cut, \(\kmax^{\PFS}>\kmax^{\DESI}\)~\cite{Rubira:2025scu}\footnote{Data-driven FoG cleaning methods~\citep[e.g.,][]{BaleatoLizancos:2025wdg} offer a complementary route to extending the usable \(k\)-range.}.
 
-This paper is organised as follows. \Cref{sec:method} describes the
+This paper is organized as follows. \Cref{sec:method} describes the
 multi-survey prior mechanism. \Cref{sec:fisher} details the Fisher
 forecast setup, including the PFS and DESI survey specifications.
 \Cref{sec:results} presents the calibrated priors,
@@ -259,7 +234,7 @@ and conclude in \cref{sec:conclusions}.
 \label{sec:marg_cost}
 
 The one-loop EFTofLSS model for the galaxy power spectrum multipoles
-\(P_\ell(k)\) involves \(\sim\!12\) nuisance parameters per tracer per
+\(P_\ell(k)\) involves roughly twelve nuisance parameters per tracer per
 redshift bin, summarised in \cref{tab:eft_params}: three bias parameters
 (\(b_1\se\), \(b_2\se^2\), \(b_{G_2}\se^2\)) that enter the Fisher
 matrix as explicit rows; the cubic tidal bias \(b_{\Gamma_3}\); five
@@ -382,7 +357,7 @@ For our fiducial \(\rsv=0.75\), this gives
 We implement this by splitting the Fisher matrix sum into two
 \(k\)-ranges~\cite{Rubira:2025scu}. At
 \(k \leq \kmax^{\DESI}\), all \(N_t(N_t{+}1)/2\) spectra contribute
-(up to 10 for 4 tracers). At
+(up to ten spectra for four tracers). At
 \(\kmax^{\DESI} < k \leq \kmax^{\PFS}\), the DESI auto-spectra are
 excluded and only the PFS auto and the PFS\(\times\)DESI cross-spectra
 remain. The total Fisher matrix is
@@ -631,7 +606,7 @@ The observables are power spectrum multipoles
 \(P_\ell(k)\) for \(\ell\in\{0,2,4\}\)~\cite{Ivanov:2019pdj,dAmico:2019fhj},
 computed for each auto- and cross-spectrum pair. At each wavenumber \(k\), the observable vector
 has \(3 N_{\rm spec}\) elements (\(N_{\rm spec}=N_t(N_t{+}1)/2\);
-up to 30 for 4 tracers).
+up to 30 for four tracers).
 
 The Gaussian covariance at each \(k\) is
 \be
@@ -1047,7 +1022,7 @@ suppresses small-scale power, an effect nearly perfectly
 compensated by increasing \(b_1\) (Fisher correlation
 \(-0.994\)). With broad priors, \(b_1\se\) carries a flat
 (uninformative) prior, so this degeneracy fully propagates into the
-marginalised \(\sigma(\Mnu)\). The multi-tracer overlap constrains
+marginalized \(\sigma(\Mnu)\). The multi-tracer overlap constrains
 \(b_1\se\) to \(\sigma\approx 0.17\), breaking the degeneracy and
 reducing \(\sigma(\Mnu)\) by more than a factor of two.
 \Cref{fig:fisher_contours} visualises this mechanism: the broad-prior
@@ -1373,7 +1348,7 @@ We verify the assembled Fisher matrix against four checks:
   (in the positive-semidefinite sense) for every parameter tested.
 
 \item \textbf{Scenario ordering.}
-  The marginalised constraints obey
+  The marginalized constraints obey
   \(\sigma_{\rm fixed}\leq\sigma_{\rm xcal}
   \leq\sigma_{\rm broad}\)
   for all cosmological parameters and redshift bins.
@@ -1381,7 +1356,7 @@ We verify the assembled Fisher matrix against four checks:
 \item \textbf{Cosmic-variance-free limit.}
   In the linear-bias Kaiser model with two tracers of different
   bias (\(b_A=1\), \(b_B=2\), \(f=0.8\)) and no counterterms, the
-  multi-tracer Fisher for \(P_m\) (marginalised over both biases
+  multi-tracer Fisher for \(P_m\) (marginalized over both biases
   via a Schur complement) recovers the cosmic-variance-free
   floor~\cite{McDonald:2009cvfree}:
   \be
@@ -1404,9 +1379,9 @@ We verify the assembled Fisher matrix against four checks:
 \centering
 \includegraphics[width=0.65\textwidth]{\figurespath/ms09_convergence.png}
 \caption{The cosmic-variance-free limit.
-Blue: single-tracer \(\sigma^2(P_m)/P_m^2\) (marginalised over
+Blue: single-tracer \(\sigma^2(P_m)/P_m^2\) (marginalized over
 \(b_A\)) as a function of \(\nbar\).
-Orange: multi-tracer result (marginalised over \(b_A\) and \(b_B\)).
+Orange: multi-tracer result (marginalized over \(b_A\) and \(b_B\)).
 Dashed grey: the cosmic-variance-free floor \(2/N_{\rm modes}\).
 The single-tracer error saturates due to the \(b\)--\(f\) degeneracy;
 the multi-tracer error converges to the floor, confirming the
@@ -1419,8 +1394,8 @@ Parameters: \(b_A=1\), \(b_B=2\), \(f=0.8\), \(P_m=10^3\;(\Mpch)^3\),
 
 \Cref{fig:fisher_info} shows the Fisher information density
 \(\dd F_{ii}/\dd k\) for each cosmological parameter, comparing the
-conditional (nuisance-fixed) and marginalised (broad-prior) cases.
-For \(\Mnu\), marginalisation over nuisance parameters destroys
+conditional (nuisance-fixed) and marginalized (broad-prior) cases.
+For \(\Mnu\), marginalization over nuisance parameters destroys
 \(\sim\!3\) orders of magnitude of information across all \(k\),
 directly visualising why nuisance priors are the dominant bottleneck
 for neutrino mass constraints. For \(f\se\) and \(\Om\), the
@@ -1434,9 +1409,9 @@ information loss is less dramatic but still substantial at
 \(f\se\), \(\Mnu\), and \(\Om\) at \(z=0.9\) in the DESI-ELG
 full-area analysis.
 Blue: conditional (all nuisance parameters fixed).
-Orange: marginalised over nuisance parameters with broad priors.
+Orange: marginalized over nuisance parameters with broad priors.
 The gap quantifies the information lost to nuisance
-marginalisation at each scale.
+marginalization at each scale.
 For \(\Mnu\), the loss exceeds three orders of magnitude---this is
 the cost that multi-survey priors aim to recover.}
 \label{fig:fisher_info}
