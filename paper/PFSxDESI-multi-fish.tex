@@ -129,7 +129,7 @@ stochastic contribution, cleanly separating shot noise from signal.
 Exporting the calibrated priors to the full
 \(14{,}000\;\text{deg}^2\) DESI footprint of the DESI LRG1--3, ELG1--2 and
 QSO samples improves \(\sigma(f\se)\) by 8\% (7--25\% per sample) and
-\(\sigma(\Mnu)\) by 53\% (46--69\% per sample) at
+\(\sigma(\Mnu)\) by 54\% (46--71\% per sample) at
 \(\kmax=0.20\iMpch\).
 A parameter importance decomposition reveals that the dominant driver
 is the calibration of the \(b_1\se\) prior---constrained from a flat prior
@@ -301,21 +301,28 @@ model-independent measurement of the deterministic signal, free of
 any shot-noise contamination.
 
 For similar populations---PFS-ELG\(\,\times\,\)DESI-ELG---a
-fraction \(f_{\rm shared}\) of DESI-ELGs also appear in the PFS
-catalogue (both surveys target [OII] emitters, and PFS goes
-\(\sim\!1\;\text{mag}\) deeper in [OII] flux). The cross-shot noise is
+fraction of galaxies appear in both catalogues (both surveys target
+[OII] emitters, and PFS goes \(\sim\!1\;\text{mag}\) deeper in
+[OII] flux). The cross-shot noise depends on both number densities:
 \be
 \label{eqn:cross_shot}
 P_{\rm shot}^{\PFS\times\DESI\text{-ELG}}
-= \frac{f_{\rm shared}}{\nbar_{\PFS}}\,.
+= \frac{n_{\rm shared}}{\nbar_{\PFS}\,\nbar_{\DESI\text{-ELG}}}
+= \frac{f_{\rm shared}}{\nbar_{\DESI\text{-ELG}}}\,,
 \ee
+where \(n_{\rm shared}\) is the number density of galaxies
+appearing in both catalogues and
+\(f_{\rm shared}\equiv n_{\rm shared}/\nbar_{\PFS}\) is
+the fraction of PFS-ELGs shared with DESI.
 This interpolates smoothly between zero (\(f_{\rm shared}=0\),
-fully independent) and \(1/\nbar_{\PFS}\) (\(f_{\rm shared}=1\),
-all DESI-ELGs also in PFS). We adopt a fiducial
-\(f_{\rm shared}=0.045\) (J.~Shi, private communication) and verify in
-\cref{sec:results_sensitivity} that the impact on cosmological constraints is
-negligible (\(\sigma(f\se)\) varies by \({<}\,\pm 1\) percentage point
-across \(f_{\rm shared}\in[0,1]\)).
+fully independent catalogues) and \(1/\nbar_{\DESI\text{-ELG}}\)
+(\(f_{\rm shared}=1\), all PFS-ELGs also in DESI).
+We adopt a fiducial \(f_{\rm shared}=0.045\)
+(J.~Shi, private communication) and verify in
+\cref{sec:results_sensitivity} that the impact on cosmological
+constraints is negligible (\(\sigma(f\se)\) varies by
+\({<}\,\pm 1\) percentage point across
+\(f_{\rm shared}\in[0,1]\)).
 
 The key observation is that jointly fitting the auto-spectra
 \(P_\ell^{XX}\), \(P_\ell^{YY}\) and the cross-spectrum
@@ -403,8 +410,8 @@ the full-area sum. We have verified that this double-counting is
 negligible: repeating the six-sample forecast with the overlap
 excluded from Step~2 (\(12{,}800\;\text{deg}^2\) instead of
 \(14{,}000\;\text{deg}^2\)) changes the improvement on
-\(\sigma(f\se)\) from 8.1\% to 8.3\% and on \(\sigma(\Mnu)\) from
-52.5\% to 53.5\%---a shift of \({<}\,1\) percentage point,
+\(\sigma(f\se)\) from 8.2\% to 8.5\% and on \(\sigma(\Mnu)\) from
+53.7\% to 54.6\%---a shift of \({<}\,1\) percentage point,
 well within the precision of the forecast.
 
 
@@ -761,8 +768,8 @@ with its own auto-spectrum and the calibrated priors from Step~1.
 \cref{fig:full_area} and \cref{tab:headline} present the
 single-tracer ELG results. The combined six-sample constraints
 are tighter by a factor of \(\sim\!4\) on \(\sigma(f\se)\) and
-improve by 8\% (7--25\% per sample) and 53\% on \(\sigma(\Mnu)\)
-(46--69\% per sample) at \(\kmax=0.20\iMpch\).
+improve by 8\% (7--25\% per sample) and 54\% on \(\sigma(\Mnu)\)
+(46--71\% per sample) at \(\kmax=0.20\iMpch\).
 
 \begin{table}[t]
 \centering
@@ -819,19 +826,19 @@ Sample & broad & xcal & $\Delta\%$
 \hline
 LRG1 & 0.074 & 0.074 & $0$   & 2.00 & 2.00 & $0$   & 0.090 & 0.090 & $0$\\
 LRG2 & 0.051 & 0.047 & $-7$  & 1.82 & 0.61 & $-66$ & 0.071 & 0.065 & $-8$\\
-LRG3 & 0.040 & 0.036 & $-10$ & 1.96 & 0.60 & $-69$ & 0.062 & 0.058 & $-6$\\
-ELG1 & 0.144 & 0.108 & $-25$ & 1.97 & 0.87 & $-56$ & 0.093 & 0.070 & $-25$\\
+LRG3 & 0.040 & 0.036 & $-10$ & 1.96 & 0.57 & $-71$ & 0.062 & 0.058 & $-6$\\
+ELG1 & 0.144 & 0.108 & $-25$ & 1.97 & 0.85 & $-57$ & 0.093 & 0.070 & $-25$\\
 ELG2 & 0.149 & 0.123 & $-17$ & 2.32 & 1.26 & $-46$ & 0.104 & 0.084 & $-20$\\
-QSO  & 0.082 & 0.072 & $-12$ & 3.22 & 1.41 & $-56$ & 0.172 & 0.130 & $-24$\\
+QSO  & 0.082 & 0.072 & $-12$ & 3.22 & 1.38 & $-57$ & 0.172 & 0.130 & $-25$\\
 \hline
-Combined & 0.022 & 0.020 & $-8$ & 0.67 & 0.32 & $-53$ & 0.031 & 0.028 & $-9$\\
+Combined & 0.022 & 0.020 & $-8$ & 0.67 & 0.31 & $-54$ & 0.031 & 0.028 & $-9$\\
 \hline
 \end{tabular}
 \caption{Per-sample and combined constraints from the full-area
 six-sample DESI~DR2 forecast ($\kmax=0.20\iMpch$).
 Multi-survey priors improve the combined $\sigma(f\se)$ by 8\%
-and $\sigma(\Mnu)$ by 53\%. Per-sample improvements range from
-7--25\% on $f\se$ and 46--69\% on $\Mnu$.
+and $\sigma(\Mnu)$ by 54\%. Per-sample improvements range from
+7--25\% on $f\se$ and 46--71\% on $\Mnu$.
 LRG1 uses broad priors (below PFS's redshift range, $z<0.6$).
 ELGs gain the most on $f\se$ (higher $\beta=f/b_1$);
 LRGs gain the most on $\Mnu$ (larger $b_1$ tightens the
@@ -982,8 +989,9 @@ noise is guaranteed by construction---dominate the calibration.
 %-------------------------------------------------------------------
 
 The results in the previous section demonstrate that multi-survey
-priors improve cosmological constraints by 19--25\% on \(f\se\)
-and 55--60\% on \(\Mnu\). We now examine which calibrated
+priors improve cosmological constraints by 19\% on \(f\se\)
+and 55\% on \(\Mnu\) for the single-ELG case, and by 8\% and
+54\% for the combined six-sample forecast. We now examine which calibrated
 parameters are responsible for this improvement, assess its
 robustness, and discuss the complementarity with simulation-based
 approaches.
@@ -1072,7 +1080,7 @@ drops to \(\sim\!4\%\) on both \(f\se\) and \(\Mnu\)
 set by the remaining nuisance calibration (\(\Pshot\),
 \(b_{G_2}\), and the counterterms acting jointly).
 
-The headline improvement of 8--53\% therefore requires adopting an
+The headline improvement of 8--54\% therefore requires adopting an
 informative \(b_1\) prior---but this is precisely what the
 simulation-based prior programme has already begun to do.
 Chudaykin et al.~\cite{Chudaykin:2026nls} report that field-level
@@ -1102,8 +1110,8 @@ calibration.
 The improvement is also stable under variations of the full-area
 scale cut. Repeating the combined six-sample forecast at
 \(\kmax=0.15\), \(0.20\), and \(0.25\iMpch\), the improvement on
-\(\sigma(f\se)\) varies smoothly from 10\% to 8\% to 6\%, and on
-\(\sigma(\Mnu)\) from 58\% to 53\% to 48\%. The mild decrease
+\(\sigma(f\se)\) varies smoothly from 11\% to 8\% to 6\%, and on
+\(\sigma(\Mnu)\) from 59\% to 54\% to 49\%. The mild decrease
 with increasing \(\kmax\) reflects the growing weight of the
 counterterms and \(k\)-dependent stochastic terms---parameters
 that the overlap cannot constrain---at higher wavenumbers. The
@@ -1205,7 +1213,7 @@ volume. Our main findings are:
 \item Forecasting all six DESI~DR2 tracer samples (LRG1--3,
   ELG1--2, QSO), multi-survey priors improve the combined
   \(\sigma(f\se)\) by 8\% (7--25\% per sample) and
-  \(\sigma(\Mnu)\) by 53\% (46--69\% per sample)---achieved
+  \(\sigma(\Mnu)\) by 54\% (46--71\% per sample)---achieved
   without any simulation input.
 
 \item Multi-survey priors are not a replacement for SBPs but a

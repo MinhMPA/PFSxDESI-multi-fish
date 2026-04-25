@@ -145,11 +145,11 @@ def run_multitrace_pipeline(cfg: ForecastConfig, verbose: bool = True) -> MultiT
                     ps, pk_data, cross_params)
 
         # Cross-shot noise for PFS-ELG × DESI-ELG (shared catalogue).
-        # P^{AB}_shot = f_shared / n_bar_PFS.
-        # Limits: f=0 → 0 (independent); f=1 → 1/n_PFS (fully shared).
+        # f_shared = n_shared / n_PFS, so P^{AB}_shot = f_shared / n_DESI.
+        # Limits: f=0 → 0 (independent); f=1 → 1/n_DESI (all PFS-ELGs in DESI).
         cross_shot = None
         if cfg.f_shared_elg > 0 and "PFS-ELG" in active and "DESI-ELG" in active:
-            cross_shot = {("DESI-ELG", "PFS-ELG"): cfg.f_shared_elg / nbars["PFS-ELG"]}
+            cross_shot = {("DESI-ELG", "PFS-ELG"): cfg.f_shared_elg / nbars["DESI-ELG"]}
 
         # Multi-tracer covariance
         cov = multi_tracer_cov_general(

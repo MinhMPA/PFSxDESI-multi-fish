@@ -134,7 +134,7 @@ def run_overlap_step1(cfg, cosmo, ps, verbose=True):
         # Cross-shot noise
         cross_shot = None
         if cfg.f_shared_elg > 0 and "PFS-ELG" in active and "DESI-ELG" in active:
-            cross_shot = {("DESI-ELG", "PFS-ELG"): cfg.f_shared_elg / nbars["PFS-ELG"]}
+            cross_shot = {("DESI-ELG", "PFS-ELG"): cfg.f_shared_elg / nbars["DESI-ELG"]}
 
         cov = multi_tracer_cov_general(
             tracer_names, pkmu_funcs, nbars, k, V_ov, cfg.dk, ells,
