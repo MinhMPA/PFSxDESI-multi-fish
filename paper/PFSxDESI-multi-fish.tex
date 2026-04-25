@@ -43,39 +43,23 @@
 \def\bg#1\eg{\begin{gather}#1\end{gather}}
 \newcommand\numberthis{\addtocounter{equation}{1}\tag{\theequation}}
 
-
-
-%%%%%%%%%%%%%%%
-%% Reference %%
-%%%%%%%%%%%%%%%
-
-
 %%%%%%%%%%%%%%
 %% Notation %%
 %%%%%%%%%%%%%%
 
 \newcommand{\code}[1]{{\texttt{#1}}}
-
 \def\knl{k_\text{NL}}
-
 \renewcommand{\emph}[1]{\textit{#1}}
-
 \newcommand{\Om}{\Omega_m}
-
 \def\Mpch{\,h^{-1}\text{Mpc}}
 \def\iMpch{\,h\,\text{Mpc}^{-1}}
 \def\Mpchcubed{\, h^{-3} \, \text{Mpc}^{3}}
-
 \def\kmax{k_{\rm max}}
-
 \newcommand{\dd}{\mathrm{d}}
 \DeclareMathOperator{\Cov}{Cov}
-
 \newcommand{\se}{\ensuremath{\sigma_\mathrm{8}}\xspace}
-
-\def\mnras{MNRAS}
-\def\jcap{JCAP}
-\def\physrep{Phys.~Rep.}
+\newcommand{\N}{\mathcal{N}}
+\newcommand{\G}{\mathcal{G}}
 
 % Use arabic numbering instead of Roman (to avoid mixing with chain label)
 \makeatletter
@@ -236,7 +220,7 @@ and conclude in \cref{sec:conclusions}.
 The one-loop EFTofLSS model for the galaxy power spectrum multipoles
 \(P_\ell(k)\) involves roughly twelve nuisance parameters per tracer per
 redshift bin, summarised in \cref{tab:eft_params}: three bias parameters
-(\(b_1\se\), \(b_2\se^2\), \(b_{G_2}\se^2\)) that enter the Fisher
+(\(b_1\se\), \(b_2\se^2\), \(b_{\G_2}\se^2\)) that enter the Fisher
 matrix as explicit rows; the cubic tidal bias \(b_{\Gamma_3}\); five
 counterterms (\(c_0\), \(c_2\), \(c_4\), \(\ctilde\), \(c_1\)) that
 absorb UV sensitivity of the loop integrals; and three stochastic
@@ -328,17 +312,15 @@ The key observation is that jointly fitting the auto-spectra
 \(P_\ell^{XX}\), \(P_\ell^{YY}\) and the cross-spectrum
 \(P_\ell^{XY}\) at each \(k\) over-determines the system: the
 deterministic signal is shared (up to bias ratios), while the
-stochastic terms enter only the auto-spectra (or are quantifiably
-reduced in the cross). The multi-tracer combination therefore
+stochastic terms enter only the auto spectrum (or are quantifiably
+suppressed in the cross spectrum). The multi-tracer combination therefore
 isolates the constant shot-noise departure \(\Pshot\)---which
 enters the monopole as a \(k\)-independent offset---far more tightly
 than any single tracer can. The \(k\)-dependent stochastic terms
 \(a_0\) and \(a_2\), by contrast, are degenerate with the leading
 counterterms \(c_0\) and \(c_2\) (both scale as \(k^2\)) and
-benefit less from the cross-spectrum~\cite{Zhao:2024eboss}. The
-one-loop bias structure additionally constrains \(b_{G_2}\) through
-its distinct \(\mu\)-dependence in the loop
-integrals~\cite{Mergulhao:2021kip}.
+benefit less from the cross spectrum~\cite{Zhao:2024eboss}. The
+one-loop bias structure additionally constrains \(b_{\G_2}\) through its distinct \(\mu\)-dependence in the loop integrals~\cite{Mergulhao:2021kip}.
 
 
 \subsection{Asymmetric scale cuts}
@@ -542,7 +524,7 @@ cosmology~\cite{Planck:2018params}.}
 
 We follow the EFT parameterization of Chudaykin, Ivanov \& Philcox
 \cite{Chudaykin:2025lww} exactly. The \(\sigma_8\)-scaled bias
-parameters \(b_1\se\), \(b_2\se^2\), and \(b_{G_2}\se^2\) enter the
+parameters \(b_1\se\), \(b_2\se^2\), and \(b_{\G_2}\se^2\) enter the
 Fisher matrix as explicit rows; the remaining nuisance parameters are
 analytically marginalized in a real MCMC but included as explicit
 Fisher parameters with their Gaussian priors, which is mathematically
@@ -558,24 +540,24 @@ DESI-ELG.
 Parameter & PFS-ELG & DESI-ELG & DESI-LRG & DESI-QSO & Prior & Units \\
 \hline
 $b_1\se$       & 0.65 & 0.68 & 1.38 & 0.97 & flat $[0,3]$ & --- \\
-$b_2\se^2$     & $-0.21$ & $-0.21$ & 0.40 & $-0.07$ & $\mathcal{N}(0,5^2)$ & --- \\
-$b_{G_2}\se^2$ & $-0.02$ & $-0.02$ & $-0.13$ & $-0.07$ & $\mathcal{N}(0,5^2)$ & --- \\
-$b_{\Gamma_3}$ & 0.14 & 0.18 & 0.92 & 0.49 & $\mathcal{N}(\mu,1^2)$ & --- \\
-$c_0$          & 0 & 0 & 0 & 0 & $\mathcal{N}(0,30^2)$ & $[\Mpch]^2$ \\
-$c_2$          & 29 & 30 & 62 & 44 & $\mathcal{N}(\mu,30^2)$ & $[\Mpch]^2$ \\
-$c_4$          & 0 & 0 & 0 & 0 & $\mathcal{N}(0,30^2)$ & $[\Mpch]^2$ \\
-$\ctilde$      & 127 & 400 & 6320 & 4450 & $\mathcal{N}(\mu,400^2)$ & $[\Mpch]^4$ \\
-$c_1$          & 0 & 0 & 0 & 0 & $\mathcal{N}(0,5^2)$ & $[\Mpch]^2$ \\
-$\Pshot$       & 0 & 0 & 0 & 0 & $\mathcal{N}(0,1^2)$ & --- \\
-$a_0$          & 0 & 0 & 0 & 0 & $\mathcal{N}(0,1^2)$ & --- \\
-$a_2$          & 0 & 0 & 0 & 0 & $\mathcal{N}(0,1^2)$ & --- \\
+$b_2\se^2$     & $-0.21$ & $-0.21$ & 0.40 & $-0.07$ & $\N(0,5^2)$ & --- \\
+$b_{\G_2}\se^2$ & $-0.02$ & $-0.02$ & $-0.13$ & $-0.07$ & $\N(0,5^2)$ & --- \\
+$b_{\Gamma_3}$ & 0.14 & 0.18 & 0.92 & 0.49 & $\N(\mu,1^2)$ & --- \\
+$c_0$          & 0 & 0 & 0 & 0 & $\N(0,30^2)$ & $[\Mpch]^2$ \\
+$c_2$          & 29 & 30 & 62 & 44 & $\N(\mu,30^2)$ & $[\Mpch]^2$ \\
+$c_4$          & 0 & 0 & 0 & 0 & $\N(0,30^2)$ & $[\Mpch]^2$ \\
+$\ctilde$      & 127 & 400 & 6320 & 4450 & $\N(\mu,400^2)$ & $[\Mpch]^4$ \\
+$c_1$          & 0 & 0 & 0 & 0 & $\N(0,5^2)$ & $[\Mpch]^2$ \\
+$\Pshot$       & 0 & 0 & 0 & 0 & $\N(0,1^2)$ & --- \\
+$a_0$          & 0 & 0 & 0 & 0 & $\N(0,1^2)$ & --- \\
+$a_2$          & 0 & 0 & 0 & 0 & $\N(0,1^2)$ & --- \\
 \hline
 \end{tabular}
 \caption{EFT nuisance parameters and fiducial values at $z=0.9$ for all
 four tracers, following the parameterization of Chudaykin, Ivanov \& Philcox
 (2025). Bias fiducials: $b_1$ from the survey-specific bias model
 (\cref{sec:surveys}); $b_2$ from the Lazeyras et al.\ (2016) co-evolution
-relation; $b_{G_2}=-2/7(b_1{-}1)$; $b_{\Gamma_3}=23/42(b_1{-}1)$.
+relation; $b_{\G_2}=-2/7(b_1{-}1)$; $b_{\Gamma_3}=23/42(b_1{-}1)$.
 PFS counterterms: $\ctilde^{\PFS}=\ctilde^{\DESI\text{-ELG}}\times\rsv^4$
 with $\rsv=0.75$; $c_2$ scales with $b_1$ ratio.
 LRG and QSO counterterms are set via $\ctilde \propto \sigma_v^4$
@@ -601,7 +583,7 @@ the squared virial velocity:
 and test the range \(\rsv\in[0.5,\,1.0]\) in \cref{sec:results_sensitivity}.
 The leading counterterms (\(c_0\), \(c_2\), \(c_4\)) scale with the
 bias ratio \(b_1^{\PFS}/b_1^{\DESI}\); the nonlinear biases \(b_2\)
-and \(b_{G_2}\) are set from the Lazeyras et al.\
+and \(b_{\G_2}\) are set from the Lazeyras et al.\
 \cite{Lazeyras:2015lgp} co-evolution relations.
 
 For the DESI-LRG and DESI-QSO samples, we set \(\ctilde\) using the
@@ -722,7 +704,7 @@ The shot-noise departure \(\Pshot\) tightens
 by nearly an order of magnitude (from \(\sigma=1\) to
 \(\sigma\approx 0.1\text{--}0.4\)), reflecting the clean separation
 enabled by the zero-stochastic cross-spectrum. The tidal bias
-\(b_{G_2}\se^2\) tightens by \(3\text{--}6\times\) (from \(\sigma=5\)
+\(b_{\G_2}\se^2\) tightens by \(3\text{--}6\times\) (from \(\sigma=5\)
 to \(\sigma\approx 0.8\text{--}1.8\)), driven by its distinct
 \(\mu\)-dependence in the one-loop power spectrum.
 As we show in \cref{sec:discussion}, the \(b_1\se\) calibration
@@ -1015,8 +997,8 @@ Calibrated parameters & \(\Delta\sigma(f\se)\) & \(\Delta\sigma(\Mnu)\) & \(\Del
 None (broad)                     & ---       & ---       & ---       \\
 \(b_1\se\) only                  & \(-14\%\) & \(-54\%\) & \(-13\%\) \\
 \(\Pshot\) only                  & \(-0.4\%\) & \(-2\%\) & \(-2\%\)  \\
-\(b_{G_2}\se^2\) only            & \(-1\%\)  & \(-0.5\%\) & \(-5\%\) \\
-\(b_1\se + \Pshot + b_{G_2}\se^2\) & \(-17\%\) & \(-55\%\) & \(-19\%\) \\
+\(b_{\G_2}\se^2\) only            & \(-1\%\)  & \(-0.5\%\) & \(-5\%\) \\
+\(b_1\se + \Pshot + b_{\G_2}\se^2\) & \(-17\%\) & \(-55\%\) & \(-19\%\) \\
 All except \(b_1\se\)            & \(-4\%\)  & \(-4\%\)  & \(-9\%\)  \\
 All (= cross-cal)                & \(-19\%\) & \(-55\%\) & \(-20\%\) \\
 \hline
@@ -1078,7 +1060,7 @@ maintains this convention, the improvement from multi-survey priors
 drops to \(\sim\!4\%\) on both \(f\se\) and \(\Mnu\)
 (\cref{tab:importance}, ``All except \(b_1\se\)'' row)---a floor
 set by the remaining nuisance calibration (\(\Pshot\),
-\(b_{G_2}\), and the counterterms acting jointly).
+\(b_{\G_2}\), and the counterterms acting jointly).
 
 The headline improvement of 8--54\% therefore requires adopting an
 informative \(b_1\) prior---but this is precisely what the
@@ -1125,7 +1107,7 @@ Multi-survey priors are not a replacement for simulation-based
 priors---they are a cross-check and a competitive alternative when
 growth-rate or neutrino-mass constraints are the primary science
 target. Both approaches tighten the same parameters---\(b_1\),
-\(\Pshot\), \(b_{G_2}\)---but through fundamentally different
+\(\Pshot\), \(b_{\G_2}\)---but through fundamentally different
 mechanisms: multi-survey priors from cross-spectra between
 independent galaxy populations, SBPs from HOD-calibrated
 distributions in
@@ -1149,7 +1131,7 @@ The counterterms and \(k\)-dependent stochastic terms
 (\(a_0\), \(a_2\))---which the overlap volume cannot
 constrain---are precisely the parameters that SBPs tighten most
 effectively. The optimal strategy is therefore to combine both:
-multi-survey priors for \(b_1\), \(\Pshot\), and \(b_{G_2}\);
+multi-survey priors for \(b_1\), \(\Pshot\), and \(b_{\G_2}\);
 SBPs for the counterterms and scale-dependent stochasticity.
 An 8\% improvement on \(\sigma(f\se)\) from
 \(\sim\!1{,}200\;\text{deg}^2\) of overlap---rising to 7--25\%
@@ -1167,7 +1149,7 @@ Adding the tree-level
 bispectrum~\cite{Ivanov:2023qzb,Bakx:2025pop} would further
 activate the sub-leading counterterm \(c_1\) (which enters the
 bispectrum \(Z_1\) kernel but has zero power-spectrum derivative)
-and break the \(b_1\)--\(b_2\)--\(b_{G_2}\) degeneracies through
+and break the \(b_1\)--\(b_2\)--\(b_{\G_2}\) degeneracies through
 the \(Z_2\) kernel structure; we defer this to future work.
 
 The forecast rests on three assumptions that future work should test.
@@ -1205,7 +1187,7 @@ volume. Our main findings are:
   combined six-sample DESI forecast.
 
 \item The multi-tracer overlap calibrates \(b_1\se\) (from a flat
-  prior to \(\sigma\approx 0.17\)), \(\Pshot\), and \(b_{G_2}\se^2\).
+  prior to \(\sigma\approx 0.17\)), \(\Pshot\), and \(b_{\G_2}\se^2\).
   The \(b_1\se\) calibration is the dominant driver---it breaks the
   \(b_1\)--\(f\) degeneracy that limits single-tracer analyses
   (\cref{tab:importance,fig:fisher_contours}).
@@ -1438,26 +1420,26 @@ the cost that multi-survey priors aim to recover.}
 \section{EFT priors from co-evolution}
 \label{app:coevolution_priors}
 
-In the baseline analysis, the nonlinear biases \(b_2\) and \(b_{G_2}\)
+In the baseline analysis, the nonlinear biases \(b_2\) and \(b_{\G_2}\)
 are assigned independent Gaussian priors (\(\sigma=5\) for
-\(b_2\se^2\) and \(b_{G_2}\se^2\)). Their fiducial values are set
+\(b_2\se^2\) and \(b_{\G_2}\se^2\)). Their fiducial values are set
 from the Lazeyras et al.\ \cite{Lazeyras:2015lgp} co-evolution
 relations, but the relation itself is not enforced as a prior
 constraint.
 
 Mergulh\~{a}o et al.\ \cite{Mergulhao:2021kip,Mergulhao:2023zso} tested
 whether imposing co-evolution relations (fixing \(b_2\) and
-\(b_{G_2}\) as functions of \(b_1\)) improves cosmological
+\(b_{\G_2}\) as functions of \(b_1\)) improves cosmological
 constraints in a multi-tracer EFT analysis and found the gain to be
 limited at the power-spectrum level (their Appendix~B).
 
 We confirm this finding in our setup. Fixing \(b_2\se^2\) and
-\(b_{G_2}\se^2\) to their co-evolution values (reducing the nuisance space by 2 parameters per tracer) yields the following changes relative to the free-bias baseline with broad priors:
+\(b_{\G_2}\se^2\) to their co-evolution values (reducing the nuisance space by 2 parameters per tracer) yields the following changes relative to the free-bias baseline with broad priors:
 
 \begin{center}
 \begin{tabular}{lccc}
 \hline
-Parameter & Free \(b_2,b_{G_2}\) & Fixed \(b_2,b_{G_2}\) & Change \\
+Parameter & Free \(b_2,b_{\G_2}\) & Fixed \(b_2,b_{\G_2}\) & Change \\
 \hline
 \(\sigma(f\se)\) & 0.0757 & 0.0731 & \(-3.5\%\) \\
 \(\sigma(\Mnu)\) [eV] & 1.075 & 1.056 & \(-1.8\%\) \\
@@ -1469,7 +1451,7 @@ Parameter & Free \(b_2,b_{G_2}\) & Fixed \(b_2,b_{G_2}\) & Change \\
 The improvement on \(\sigma(f\se)\) and \(\sigma(\Mnu)\) is marginal
 (\({<}\,4\%\)), confirming that the one-loop power spectrum provides
 sufficient \(k\)-dependent information to constrain \(b_2\) and
-\(b_{G_2}\) without theoretical priors from gravitational evolution.
+\(b_{\G_2}\) without theoretical priors from gravitational evolution.
 The more notable \(13.8\%\) improvement on \(\sigma(\Om)\) reflects
 the \(\Om\)-sensitivity of the \(b_2\) loop integrals, but this is
 small compared to the 19--25\% gain from the cross-calibration.
