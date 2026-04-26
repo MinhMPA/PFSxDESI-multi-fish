@@ -103,7 +103,7 @@ PARAM_GROUPS = {
                      [r"$f\sigma_8$", r"$M_\nu$", r"$\Omega_m$"],
                      ["#E24A33", "#348ABD", "#988ED5"]),
     "Bias": (["b1_sigma8", "b2_sigma8sq", "bG2_sigma8sq", "bGamma3"],
-             [r"$b_1\sigma_8$", r"$b_2\sigma_8^2$", r"$b_{G_2}\sigma_8^2$", r"$b_{\Gamma_3}$"],
+             [r"$b_1\sigma_8$", r"$b_2\sigma_8^2$", r"$b_{\mathcal{G}_2}\sigma_8^2$", r"$b_{\Gamma_3}$"],
              ["#2ca02c", "#98df8a", "#006400", "#90EE90"]),
     "Counterterm": (["c0", "c2", "c4", "c_tilde", "c1"],
                     [r"$c_0$", r"$c_2$", r"$c_4$", r"$\tilde{c}$", r"$c_1$"],
