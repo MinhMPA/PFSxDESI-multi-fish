@@ -362,17 +362,15 @@ the reduced versions excluding the DESI auto-spectrum rows and columns.
 \subsection{Prior export mechanism}
 \label{sec:prior_export}
 
-From the overlap multi-tracer Fisher \(F_{\rm overlap}\) (\cref{eqn:fisher_asym}), we extract calibrated
-priors for each DESI nuisance parameter as follows:
+From the overlap multi-tracer Fisher \(F_{\rm overlap}\) (\cref{eqn:fisher_asym}), we extract calibrated priors for each DESI nuisance parameter in three steps:
 \begin{enumerate}
-\item Regularize: \(F_{\rm reg} = F_{\rm overlap} + F_{\rm broad}\),
+\item Regularize the Fisher matrix: \(F_{\rm reg} = F_{\rm overlap} + F_{\rm broad}\),
   where \(F_{\rm broad}\) is diagonal with entries \(1/\sigma_{\rm broad}^2\)
   for each nuisance parameter (from \cref{tab:eft_params}) and weak
   cosmological priors (\(\sigma(f\se)_{\rm prior}=10\),
   \(\sigma(\Om)_{\rm prior}=1\), \(\sigma(\Mnu)_{\rm prior}=5\;\text{eV}\)).
-\item Invert: \(C = F_{\rm reg}^{-1}\).
-\item Extract: \(\sigma_{\rm cal}(\theta_i) = \sqrt{C_{ii}}\) for each
-  DESI nuisance parameter index \(i\).
+\item Invert the Fisher matrix: \(C = F_{\rm reg}^{-1}\).
+\item Extract diagonal elements: \(\sigma_{\rm cal}(\theta_i) = \sqrt{C_{ii}}\) for each DESI nuisance parameter \(\theta_i\).
 \end{enumerate}
 
 The calibrated \(\sigma_{\rm cal}\) values are then used as Gaussian
