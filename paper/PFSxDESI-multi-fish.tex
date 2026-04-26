@@ -181,7 +181,7 @@ systematic biases absorbed from the HOD modelling remains an open
 question---one that an independent, data-driven calibration of the
 same parameters could help resolve.
 
-Meanwhile, multi-tracer Fisher forecasts have shown that jointly fitting multiple galaxy populations can break parameter degeneracies beyond what single-tracer analyses can achieve~\cite{Alarcon:2016bkr,Mergulhao:2021kip,Mergulhao:2023zso,Qin:2025nkk}.
+Meanwhile, multi-tracer Fisher forecasts have shown that jointly fitting multiple galaxy populations can break parameter degeneracies beyond what single-tracer analyses can achieve~\cite{Alarcon:2016bkr,Mergulhao:2021kip,Mergulhao:2023zso,Rubira:2025scu,Qin:2025nkk}.
 Zhao et al.~\cite{Zhao:2024eboss} demonstrated this with eBOSS DR16 data by jointly analysing LRGs and ELGs within a single survey, improving \(\sigma(\se)\) by 18--27\% depending on the treatment of stochastic terms in the LRG--ELG cross spectrum. This demonstrates the statistical value of multi-tracer information, but not the calibration of survey-independent EFT priors: same-survey analyses share observational systematics, and even for disjoint tracer catalogues with no shared-object shot noise, residual cross-stochasticity remains a modelling assumption.
 
 In this paper we demonstrate that EFT nuisance parameters can be
@@ -254,7 +254,7 @@ The multi-tracer analysis of overlapping surveys provides exactly
 this---it isolates bias and stochastic parameters from the
 cross-spectrum between independent galaxy populations.
 The approach exploits the different stochastic
-properties of distinct galaxy populations~\cite{Seljak:2008xr,Mergulhao:2021kip}.
+properties of distinct galaxy populations~\citep[e.g.,][]{Seljak:2008xr,McDonald:2009cvfree,,Mergulhao:2021kip,Mergulhao:2023zso,Rubira:2025scu}.
 The auto-power spectrum of tracer \(X\) at multipole \(\ell\) can be written schematically as
 \be
 \label{eqn:auto}
@@ -322,7 +322,7 @@ than any single tracer can. The \(k\)-dependent stochastic terms
 \(a_0\) and \(a_2\), by contrast, are degenerate with the leading
 counterterms \(c_0\) and \(c_2\) (both scale as \(k^2\)) and
 benefit less from the cross spectrum~\cite{Zhao:2024eboss}. The
-one-loop bias structure additionally constrains \(b_{\G_2}\) through its distinct \(\mu\)-dependence in the loop integrals~\cite{Mergulhao:2021kip}.
+one-loop bias structure additionally constrains \(b_{\G_2}\) through its distinct \(\mu\)-dependence in the loop integrals~\cite{Mergulhao:2021kip,,Mergulhao:2023zso}.
 
 
 \subsection{Asymmetric scale cuts}
@@ -1329,8 +1329,8 @@ populations.
 At each wavenumber, the observable vector has
 \(N_{\rm obs}=N_{\rm spec}\times N_\ell\) elements, where
 \(N_{\rm spec}=N_t(N_t{+}1)/2\) is the number of auto- and
-cross-spectrum pairs and \(N_\ell=3\) for
-\(\ell\in\{0,2,4\}\). The covariance is therefore an
+cross-spectrum pairs and \(N_\ell=3\) for the monopole, quadrupole and hexadecapole
+\(\ell=0,2,4\), respectively. The covariance is therefore an
 \(N_{\rm obs}\times N_{\rm obs}\) matrix at each \(k\). The
 \(\mu\)-integrals are evaluated with 20-point Gauss--Legendre
 quadrature.
