@@ -268,8 +268,7 @@ where the first term is the deterministic (signal) contribution from
 tree-level and one-loop perturbation theory---parameterized by the
 bias coefficients \(b_1, b_2, b_{G_2}\) that encode the galaxy--matter
 connection and the counterterms \(c_0, c_2, \ctilde\) that absorb
-unresolved small-scale physics---and the second is the
-stochastic contribution: Poisson shot noise (\(1/\nbar\)) plus
+unresolved small-scale physics---and the second is the stochastic contribution---Poisson shot noise (\(1/\nbar\)) plus
 EFT corrections (\(\Pshot\), \(a_0\), \(a_2\)) that capture
 departures from Poissonian discreteness.
 
@@ -329,11 +328,10 @@ one-loop bias structure additionally constrains \(b_{\G_2}\) through its distinc
 \subsection{Asymmetric scale cuts}
 \label{sec:asymmetric_kmax}
 
-PFS-ELGs reside in host halos of relatively lower mass than those of DESI-ELGs or DESI-LRGs~\cite{PFS-CO-target:inprep} and consequently have lower virial velocity dispersions. In the EFT framework, this translates into a smaller FoG counterterm, \(\ctilde^{\PFS} = \ctilde^{\DESI\text{-ELG}} \times \rsv^4\), where
+PFS-ELGs reside in host halos of relatively lower mass than those of DESI-ELGs or DESI-LRGs~\cite{PFS-CO-target:inprep} and consequently have lower virial velocity dispersion, $\sigma_v$. In the EFT framework, this translates into a smaller FoG counterterm, \(\ctilde^{\PFS} = \ctilde^{\DESI\text{-ELG}} \times \rsv^4\), where
 \(\rsv \equiv \sigma_{v,\PFS}/\sigma_{v,\DESI}\).
 
-A smaller \(\ctilde\) means the one-loop EFT expansion converges to
-higher \(k\). Since \(\kmax \propto \ctilde^{-1/4} \propto \rsv^{-1}\),
+A smaller \(\ctilde\) indicates a larger perturbative range of validity, allowing the one-loop EFT model to remain valid up to a higher \(k\). Since \(\kmax \propto \ctilde^{-1/4} \propto \rsv^{-1}\),
 \be
 \label{eqn:kmax_asym}
 \kmax^{\PFS} = \kmax^{\DESI} \times \rsv^{-1}\,.
@@ -347,7 +345,7 @@ We implement this by splitting the Fisher matrix sum into two
 (up to ten spectra for four tracers). At
 \(\kmax^{\DESI} < k \leq \kmax^{\PFS}\), the DESI auto-spectra are
 excluded and only the PFS auto and the PFS\(\times\)DESI cross-spectra
-remain. The total Fisher matrix is
+remain. The total Fisher matrix is given by
 \be
 \label{eqn:fisher_asym}
 F_{\rm overlap}
