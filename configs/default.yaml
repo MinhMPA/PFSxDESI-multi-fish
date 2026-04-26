@@ -3,6 +3,8 @@ kmin: 0.01
 kmax: 0.20
 dk: 0.005
 
+# Overlap z-bins for the single-ELG pipeline (cli.py).
+# The multi-sample pipeline (run_desi_multisample.py) extends to [0.6, 0.8].
 z_bins:
   - [0.8, 1.0]
   - [1.0, 1.2]
@@ -14,6 +16,10 @@ desi_area_deg2: 14000.0
 overlap_area_deg2: 1200.0
 
 r_sigma_v: 0.75
+
+# Shared ELG fraction: f_shared = n_shared / nbar_PFS (J. Shi, priv. comm.)
+# Cross-shot noise: P_shot^{cross} = f_shared / nbar_DESI
+f_shared_elg: 0.045
 
 cosmo_backend: cosmopower
 oneloop_backend: ps_1loop_jax

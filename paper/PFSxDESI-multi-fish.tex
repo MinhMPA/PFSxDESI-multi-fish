@@ -1332,11 +1332,46 @@ At each wavenumber, the observable vector has
 cross-spectrum pairs and \(N_\ell=3\) for the monopole, quadrupole and hexadecapole
 \(\ell=0,2,4\), respectively. The covariance is therefore an
 \(N_{\rm obs}\times N_{\rm obs}\) matrix at each \(k\). The
-\(\mu\)-integrals are evaluated with 20-point Gauss--Legendre
-quadrature.
-The covariance matrix at every \(k\) passes exact symmetry
-(\(\|C{-}C^T\|{<}10^{-12}\)), positive-definiteness, and
+\(\mu\)-integrals are evaluated with 20-point Gauss--Legendre (GL)
+quadrature. An equivalent approach is the analytic Wigner~3\(j\)
+decomposition of Rubira \&
+Conteddu~\cite{Rubira:2025scu} (their Eq.~2.20), which first
+decomposes \(P_{\rm tot}(k,\mu)\) into multipoles \(P_\ell\) and
+then evaluates the products of Legendre polynomials via
+\(L_{\ell_1}L_{\ell_2}=\sum_{\ell_3}(2\ell_3{+}1)
+\bigl(\begin{smallmatrix}\ell_1 & \ell_2 & \ell_3 \\
+0 & 0 & 0\end{smallmatrix}\bigr)^{\!2} L_{\ell_3}\).
+The two methods differ when the one-loop power spectrum has
+\(\mu\)-dependence beyond \(\ell=4\): the GL quadrature integrates
+the full \(P_{\rm tot}(k,\mu)\) directly, while the Wigner~3\(j\)
+formula truncates at the maximum multipole included in the
+decomposition. \Cref{fig:cov_validation} shows the convergence: at
+\(\ell_{\max}=4\) the analytic formula agrees with GL to
+\(\sim\!10^{-6}\); including the \(\ell=6\) and \(\ell=8\)
+contributions from the one-loop integrals brings the agreement to
+\(\sim\!10^{-9}\) and \(\sim\!10^{-11}\), respectively. The GL
+quadrature is therefore equivalent to
+\(\ell_{\max}\to\infty\) automatically.
+The covariance matrix at every \(k\) additionally passes exact
+symmetry (\(\|C{-}C^T\|{<}10^{-12}\)), positive-definiteness, and
 \(\Cov\propto 1/V\) scaling checks.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{\figurespath/cov_gl_vs_wigner3j.png}
+\caption{Validation of the Gaussian covariance.
+Left: selected covariance elements as a function of \(k\), computed
+via 20-point Gauss--Legendre quadrature using the full one-loop EFT
+\(P_{\rm tot}(k,\mu)\) for PFS-ELG and DESI-ELG at \(z=0.9\).
+Right: fractional difference between the GL result and the analytic
+Wigner~3\(j\) formula of Rubira \&
+Conteddu~\cite{Rubira:2025scu} (Eq.~2.20) at
+\(\ell_{\max}=4\), \(6\), and \(8\). Each step in
+\(\ell_{\max}\) gains \(\sim\!3\) orders of magnitude, confirming
+that the one-loop model has non-negligible \(\ell>4\) content and
+that the GL quadrature captures it automatically.}
+\label{fig:cov_validation}
+\end{figure}
 
 
 %---------------------------------------------------------------

@@ -2,7 +2,7 @@
 
 Fisher forecast for **multi-survey priors** — data-driven calibration of EFT nuisance parameters from the multi-tracer analysis of the PFS--DESI overlap volume, exported to DESI's full 14,000 deg² footprint.
 
-**Paper**: N.-M. Nguyen, *"Multi-tracers, multi-surveys: data-driven EFT prior calibration from the PFS--DESI overlap"* (in preparation for JCAP).
+**Paper**: N.-M. Nguyen, *"Multi-tracers, multi-surveys: data-driven EFT prior calibration from the PFS--DESI overlap"*.
 
 ## Key results
 
@@ -36,7 +36,8 @@ pip install jax[cpu]>=0.4.26    # or jax[cuda12] for GPU
 ### 2. One-loop power spectrum (`ps_1loop_jax`)
 
 `ps_1loop_jax` (Kobayashi & Akitsu, in prep.) is required but not included in this repo.
-It will be publicly available at https://github.com/archaeo-pteryx/ps_1loop_jax.
+It is not yet publicly available; once released, install it from
+https://github.com/archaeo-pteryx/ps_1loop_jax:
 
 ```bash
 git clone https://github.com/archaeo-pteryx/ps_1loop_jax.git
@@ -45,14 +46,21 @@ cd ps_1loop_jax && pip install -e . && cd ..
 
 ### 3. cosmopower-jax emulator
 
-The pipeline uses cosmopower-jax with the Jense et al. (2024) nuLCDM trained networks.
-Clone and install cosmopower-jax, then set the network path in `pfsfog/cosmo.py` (line 44):
+The pipeline uses [cosmopower-jax](https://github.com/dpiras/cosmopower-jax)
+with the [Jense et al. (2024) nuLCDM trained networks](https://github.com/cosmopower-organization/jense_2024_emulators).
 
-```python
-_JENSE_DIR = Path("~/cosmopower-jax-for-pfs/cosmology/jense2024")
+```bash
+pip install cosmopower-jax
+git clone https://github.com/cosmopower-organization/jense_2024_emulators.git
 ```
 
-The emulator expects two `.npz` files under `jense_2023_camb_mnu/networks/`:
+Then update the network path in `pfsfog/cosmo.py` to point to your local copy:
+
+```python
+_JENSE_DIR = Path("/path/to/jense_2024_emulators/jense_2023_camb_mnu")
+```
+
+The emulator expects two `.npz` files under `networks/`:
 - `jense_2023_camb_mnu_Pk_lin.npz` (linear P(k) emulator)
 - `jense_2023_camb_mnu_sigma8.npz` (sigma8 emulator)
 
@@ -65,7 +73,7 @@ pip install -e .     # installs pfsfog + remaining deps (numpy, scipy, matplotli
 ### 5. Verify
 
 ```bash
-pytest tests/ -q     # 96 tests, ~10s
+pytest tests/ -q     # 120 tests, ~10s
 ```
 
 ## Usage
