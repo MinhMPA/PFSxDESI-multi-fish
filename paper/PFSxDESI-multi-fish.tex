@@ -188,9 +188,11 @@ In this paper we demonstrate that EFT nuisance parameters can be
 calibrated directly from observational data, without HOD modeling.
 We propose \emph{multi-survey priors}---a data-driven alternative to
 SBP that exploits the overlap volume between two
-independent spectroscopic surveys. The idea is simple: when PFS and DESI observe the same patch of sky, cross-spectra between disjoint galaxy catalogs contain no shared-object shot-noise contribution by construction. A multi-tracer Fisher analysis of the auto- and cross-spectra in the
-overlap isolates the stochastic nuisance parameters
-model-independently. The calibrated priors are then exported to DESI's
+independent spectroscopic surveys. When PFS and DESI observe the same
+patch of sky, cross-spectra between disjoint galaxy populations
+contain no shared-object shot noise by construction; a multi-tracer
+Fisher analysis of these auto- and cross-spectra isolates the
+stochastic nuisance parameters model-independently. The calibrated priors are then exported to DESI's
 full \(14{,}000\;\text{deg}^2\) footprint, tightening cosmological
 constraints without any simulation input.
 
@@ -234,17 +236,13 @@ propagate directly into the marginalized posterior on cosmological
 parameters---broader nuisance priors mean weaker cosmological
 constraints, regardless of the sampler used.
 
-The cost of this marginalization is substantial. Zhang et al.\
-\cite{DESI:2025wzd} quantified it by comparing DESI DR1 full-shape
-results with conservative versus HOD-informed priors: \(\sigma(\se)\)
-improved by \(\sim\!23\%\) and \(\sigma(\Om)\) by \(\sim\!4\%\) simply
-from tightening the nuisance priors. Chudaykin, Ivanov \& Philcox
-\cite{Chudaykin:2026nls} pushed further with field-level
-SBP, achieving \(\sim\!50\%\) on \(\sigma(\se)\).
-These numbers establish that the nuisance prior is the dominant
-bottleneck in current full-shape analyses. Tightening these priors
-is therefore a direct route to sharper cosmological constraints---the
-question is how to do so without relying on simulation assumptions.
+The cost is substantial: as noted in the Introduction,
+tightening nuisance priors from conservative to HOD-informed
+improves \(\sigma(\se)\) by 23--50\% depending on whether
+power-spectrum-level or field-level SBPs are
+used~\cite{DESI:2025wzd,Chudaykin:2026nls}. The nuisance prior
+is the dominant bottleneck---the question is how to tighten it
+without relying on simulation assumptions.
 
 
 \subsection{Cross-power constraints on nuisance parameters}
@@ -409,39 +407,22 @@ well within the precision of the forecast.
 \subsection{Comparison with simulation-based priors}
 \label{sec:sbp_comparison}
 
-The cross-calibration proposed here is complementary to, not a replacement for, SBP.
-
-SBPs~\cite{Ivanov:2024hgq,Zhang:2024thl,Chudaykin:2026nls} are
-tight: they encode the full joint distribution of EFT parameters from
-HOD mocks, capturing correlations that a diagonal Gaussian prior
-cannot. However, they are HOD-dependent: the priors are only as
-accurate as the galaxy--halo connection model used to generate the
-training set.
-
-Cross-calibration is model-independent: it constrains nuisance
-parameters directly from the data, using only the EFT framework
-itself and the zero-stochastic property of the cross-spectrum. However,
-it is volume-limited: the calibration precision scales with the overlap
-volume, which is \(\sim\!10\times\) smaller than the full DESI
-footprint.
-
-The two approaches can and should be combined. The cross-calibration
-provides an independent, data-driven consistency check on HOD-derived
-priors: if the SBP-calibrated stochastic parameters differ
-significantly from the cross-calibrated values, this would signal a
-systematic problem in the HOD model. Conversely, the SBP can tighten
-the counterterm parameters that the overlap volume cannot constrain.
-
-The fair comparison for our work is Zhang et al.\
-\cite{DESI:2025wzd} (\(\sim\!23\%\) improvement on \(\sigma(\se)\)),
-since both analyses operate at the power-spectrum level. The field-level
-SBP of Chudaykin et al.\ \cite{Chudaykin:2026nls}
-(\(\sim\!50\%\) on \(\sigma(\se)\)) represents the ceiling---it breaks
-degeneracies inaccessible to two-point statistics and is not directly
-comparable.
-
-Having established the multi-survey prior framework in general terms,
-we now apply it to a concrete case: the PFS--DESI overlap.
+SBPs~\cite{Ivanov:2024hgq,Zhang:2024thl,Chudaykin:2026nls} encode
+the full joint distribution of EFT parameters from HOD mocks and
+achieve tighter constraints than diagonal Gaussian priors, but their
+accuracy is bounded by the fidelity of the galaxy--halo connection
+model. Cross-calibration trades this model dependence for a volume
+limitation: the overlap constrains \(b_1\), \(\Pshot\), and
+\(b_{\G_2}\) model-independently, while SBPs tighten the counterterms
+and \(k\)-dependent stochasticity that the overlap volume cannot
+reach. The two are complementary---and because they constrain the
+same parameters through independent mechanisms, they serve as
+mutual consistency checks (\cref{sec:discussion}).
+The power-spectrum-level SBP of Zhang et al.~\cite{DESI:2025wzd}
+(\(\sim\!23\%\) on \(\sigma(\se)\)) is the fair comparison for our
+work; the field-level SBP of Chudaykin et
+al.~\cite{Chudaykin:2026nls} (\(\sim\!50\%\)) breaks degeneracies
+inaccessible to two-point statistics.
 
 
 %-------------------------------------------------------------------
@@ -733,7 +714,7 @@ marginally---from \(\sigma=30\) to \(\sigma\approx 22\text{--}30\).
 \centering
 \includegraphics[width=\textwidth]{\figurespath/calibrated_vs_broad.png}
 \caption{Calibrated vs.\ broad priors. Cross-calibrated prior widths
-$\sigma_{\rm cal}$ (coloured dots, one per $z$-bin) compared with the
+$\sigma_{\rm cal}$ (colored dots, one per $z$-bin) compared with the
 conservative broad priors $\sigma_{\rm broad}$ (light bars) for all
 DESI-ELG nuisance parameters.
 The linear bias $b_1\se$ transitions from a flat prior to
@@ -979,13 +960,9 @@ noise is guaranteed by construction---dominate the calibration.
 \label{sec:discussion}
 %-------------------------------------------------------------------
 
-The results in the previous section demonstrate that multi-survey
-priors improve cosmological constraints by 19\% on \(f\se\)
-and 55\% on \(\Mnu\) for the single-ELG case, and by 8\% and
-54\% for the combined six-sample forecast. We now examine which calibrated
-parameters are responsible for this improvement, assess its
-robustness, and discuss the complementarity with simulation-based
-approaches.
+We now examine which calibrated parameters drive the improvement,
+assess robustness, and discuss the implications for neutrino mass
+measurements and the \(S_8\) tension.
 
 \subsection{Which parameters drive the improvement?}
 
@@ -1073,7 +1050,7 @@ set by the remaining nuisance calibration (\(\Pshot\),
 
 The headline improvement of 8--54\% therefore requires adopting an
 informative \(b_1\) prior---but this is precisely what the
-simulation-based prior programme has already begun to do.
+simulation-based prior program has already begun to do.
 Chudaykin et al.~\cite{Chudaykin:2026nls} report that field-level
 SBPs shrink the \(b_1\) posterior by 30--40\% for all DESI
 tracers; Zhang et al.~\cite{DESI:2025wzd} impose HOD-calibrated
@@ -1089,17 +1066,9 @@ values are consistent with what the data themselves imply.
 
 \subsection{Robustness}
 
-The results are insensitive to
-the shared-catalog fraction \(f_{\rm shared}\) between PFS-ELG
-and DESI-ELG: sweeping \(f_{\rm shared}\) from 0 to~1, the
-improvement on \(\sigma(f\se)\) varies by less than
-\(\pm 1\) percentage point, because the different-population
-cross-spectra (PFS\(\times\)LRG, PFS\(\times\)QSO)---whose
-zero cross-shot noise is guaranteed by construction---dominate the
-calibration.
-
-The improvement is also stable under variations of the full-area
-scale cut. Repeating the combined six-sample forecast at
+Beyond the \(f_{\rm shared}\) insensitivity shown in
+\cref{sec:results_sensitivity}, the improvement is stable under
+variations of the full-area scale cut. Repeating the combined six-sample forecast at
 \(\kmax=0.15\), \(0.20\), and \(0.25\iMpch\), the improvement on
 \(\sigma(f\se)\) varies smoothly from 11\% to 8\% to 6\%, and on
 \(\sigma(\Mnu)\) from 59\% to 54\% to 49\%. The mild decrease
@@ -1110,78 +1079,59 @@ improvement remains significant across the full range of
 \(\kmax\) values considered.
 
 
-\subsection{Complementarity with simulation-based priors}
+\subsection{Complementarity with simulation-based priors and
+implications for \(\Mnu\)}
 
-Multi-survey priors are not a replacement for simulation-based
-priors---they are a cross-check and a competitive alternative when
-growth-rate or neutrino-mass constraints are the primary science
-target. Both approaches tighten the same parameters---\(b_1\),
-\(\Pshot\), \(b_{\G_2}\)---but through fundamentally different
-mechanisms: multi-survey priors from cross-spectra between
-independent galaxy populations, SBPs from HOD-calibrated
-distributions in
-simulations~\cite{Ivanov:2024hgq,DESI:2025wzd,Chudaykin:2026nls}.
+As established in \cref{sec:sbp_comparison}, multi-survey priors
+and SBPs constrain the same parameters through independent
+mechanisms. This independence makes them a direct cross-check on
+the \(S_8\) tension: Chudaykin et
+al.~\cite{Chudaykin:2026nls} report that field-level SBPs shift
+\(\se\) downward by \(\sim\!2\sigma\) relative to conservative
+priors, and whether this shift originates in the HOD modeling or
+in new physics is currently unresolved. A future
+PFS\(\times\)DESI multi-tracer analysis that reproduces this
+shift without HOD input would strengthen the new-physics
+interpretation; a null result would point to systematic biases in
+the galaxy--halo connection.
 
-This distinction matters in the context of the \(S_8\)
-tension. Chudaykin et al.~\cite{Chudaykin:2026nls} report that
-field-level SBPs shift \(\se\) downward by \(\sim\!2\sigma\)
-relative to conservative priors, deepening the discrepancy with
-CMB measurements. This shift could signal new physics beyond
-\(\Lambda\)CDM---or it could reflect systematic biases absorbed
-from the HOD modeling into the galaxy bias and stochastic
-parameters. Multi-survey priors constrain exactly these parameters
-from data, without HOD input. If a future PFS\(\times\)DESI
-analysis reproduces the SBP-driven \(\se\) shift, the
-new-physics interpretation gains independent support. If it does
-not, the discrepancy points to HOD systematics. Either outcome is
-scientifically valuable.
+The optimal strategy combines both approaches: multi-survey
+priors for \(b_1\), \(\Pshot\), and \(b_{\G_2}\); SBPs for the
+counterterms and \(k\)-dependent stochasticity that the overlap
+volume cannot reach. The 54\% improvement on \(\sigma(\Mnu)\) is
+particularly consequential: DESI~DR1 combined with CMB data
+already prefers the normal neutrino mass hierarchy over the
+inverted hierarchy~\cite{DESI:2024hhd,Chudaykin:2025lww}, and
+tightening \(\sigma(\Mnu)\) from galaxy clustering sharpens this
+determination at every stage of DESI data releases.
 
-The counterterms and \(k\)-dependent stochastic terms
-(\(a_0\), \(a_2\))---which the overlap volume cannot
-constrain---are precisely the parameters that SBPs tighten most
-effectively. The optimal strategy is therefore to combine both:
-multi-survey priors for \(b_1\), \(\Pshot\), and \(b_{\G_2}\);
-SBPs for the counterterms and scale-dependent stochasticity.
-An 8\% improvement on \(\sigma(f\se)\) from
-\(\sim\!1{,}200\;\text{deg}^2\) of overlap---rising to 7--25\%
-per individual sample---and a 54\% improvement on
-\(\sigma(\Mnu)\) make a strong case for maximizing the PFS--DESI
-overlap area in survey planning. The neutrino mass gain is
-particularly timely: DESI~DR1 combined with CMB data already
-prefers the normal mass hierarchy over the inverted
-hierarchy~\cite{DESI:2024hhd,Chudaykin:2025lww}, and any
-reduction in \(\sigma(\Mnu)\) from galaxy clustering directly
-sharpens this determination.
+The method generalizes to any pair of overlapping spectroscopic
+surveys with different target
+selections~\cite{Alarcon:2016bkr}---Euclid\(\,\times\,\)DESI,
+Roman\(\,\times\,\)Spec-S5, and
+DESI-II\(\,\times\,\)MegaMapper---and joint
+J-PAS\(\,\times\,\)PFS forecasts have already explored similar
+synergies~\cite{Qin:2025nkk}. Adding the tree-level
+bispectrum~\cite{Ivanov:2023qzb,Bakx:2025pop} would activate
+the sub-leading counterterm \(c_1\) and break the
+\(b_1\)--\(b_2\)--\(b_{\G_2}\) degeneracies through the \(Z_2\)
+kernel structure.
 
-The multi-survey prior method generalizes to any pair of overlapping
-spectroscopic surveys with different target
-selections~\cite{Alarcon:2016bkr}:
-Euclid\(\,\times\,\)DESI, Roman\(\,\times\,\)Spec-S5, and
-DESI-II\(\,\times\,\)MegaMapper are natural future applications.
-Joint J-PAS\(\,\times\,\)PFS forecasts have already explored
-similar cross-survey synergies~\cite{Qin:2025nkk}.
-Adding the tree-level
-bispectrum~\cite{Ivanov:2023qzb,Bakx:2025pop} would further
-activate the sub-leading counterterm \(c_1\) (which enters the
-bispectrum \(Z_1\) kernel but has zero power-spectrum derivative)
-and break the \(b_1\)--\(b_2\)--\(b_{\G_2}\) degeneracies through
-the \(Z_2\) kernel structure; we defer this to future work.
-
-The forecast rests on three assumptions that future work should test.
-The Gaussian Fisher approximation captures the leading information
-content but not non-Gaussian posterior structure---an MCMC analysis
-with the full likelihood would sharpen the comparison with SBPs.
-The PFS-ELG EFT fiducials are scaled from DESI rather than fitted
-to PFS mocks; validation against upcoming mock suites---Uchuu-LRG
-\cite{FernandezGarcia:2025rso}, Uchuu-ELG \cite{Vaisakh:inprep},
-and Mucho Uchuu \cite{Ishiyama:inprep} on the DESI side, and PFS
-galaxy mocks \cite{PFS-CO-mock:inprep} on the PFS side---will anchor the
-EFT fiducials and test the transferability assumption directly.
+The forecast rests on three assumptions that future work should
+test. The Gaussian Fisher approximation captures the leading
+information content but not non-Gaussian posterior structure;
+an MCMC analysis with the full likelihood would sharpen the
+comparison with SBPs. The PFS-ELG EFT fiducials are scaled from
+DESI rather than fitted to PFS mocks; validation against upcoming
+mock suites---Uchuu-LRG~\cite{FernandezGarcia:2025rso},
+Uchuu-ELG~\cite{Vaisakh:inprep}, and Mucho
+Uchuu~\cite{Ishiyama:inprep} on the DESI side, and PFS galaxy
+mocks~\cite{PFS-CO-mock:inprep} on the PFS side---will anchor
+the EFT fiducials and test the transferability assumption.
 Finally, the bispectrum, survey window functions, super-sample
-covariance, and non-Gaussian covariance are omitted here but would
-each modify the information budget---the bispectrum in particular
-would activate \(c_1\) and tighten the bias
-degeneracies~\cite{Ivanov:2023qzb,Bakx:2025pop}.
+covariance, and non-Gaussian covariance are omitted but would
+each modify the information
+budget~\cite{Ivanov:2023qzb,Bakx:2025pop}.
 
 
 %-------------------------------------------------------------------
