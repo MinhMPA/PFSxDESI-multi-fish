@@ -143,7 +143,7 @@ Full-shape analyses of the galaxy power
 spectrum, built on the effective field theory of large-scale
 structure
 (EFTofLSS)~\cite{Baumann:2010tm,Carrasco:2012cv,Carroll:2013oxa,Senatore:2014eva}, have now become the new standard in analyses of galaxy clustering in spectroscopic surveys.
-From their first applications on the Sloan Digital Sky Survey BOSS galaxy samples~\citep[e.g.,][]{dAmico:2019fhj,Ivanov:2019pdj}, full-shape EFT analyses have have improved LSS constraints on, for example, neutrino masses~\cite{Colas:2019ret,Ivanov:2019hqk,Chudaykin:2025lww}, primordial
+From their first applications on the Sloan Digital Sky Survey BOSS galaxy samples~\citep[e.g.,][]{dAmico:2019fhj,Ivanov:2019pdj}, full-shape EFT analyses have improved LSS constraints on, for example, neutrino masses~\cite{Colas:2019ret,Ivanov:2019hqk,Chudaykin:2025lww}, primordial
 non-Gaussianity~\cite{Cabass:2022wjy,DAmico:2022gki,Chudaykin:2025vdh}, early dark energy~\cite{Ivanov:2020ril,DAmico:2020ods,Smith:2020rxx}, clustering dark energy~\cite{DAmico:2020tty}, interacting dark energy~\cite{Tsedrik:2025cwc}, ultra-light axions~\cite{Rogers:2023ezo} and dark-sector
 interactions~\cite{He:2023oke,He:2025npy}.
 More recently, the DESI collaboration~\cite{DESI:2024jxi,DESI:2024hhd,DESI:2025wzd} and independent
@@ -165,7 +165,7 @@ multi-sample (not multi-tracer) analyses.
 
 Tightening the nuisance priors is therefore a direct route to sharper
 cosmological constraints. All existing approaches to informative
-priors are simulation-based: HOD mock catalogues are first generated
+priors are simulation-based: HOD mock catalogs are first generated
 from N-body simulations, the EFT parameters are then measured from the
 mocks---either at the power-spectrum level or at the field
 level---and the resulting marginal distributions of EFT parameters are used as priors in the EFT full-shape analyses~\cite{Ivanov:2024hgq,Ivanov:2024xgb,Zhang:2024thl}. Zhang et
@@ -177,18 +177,18 @@ substantial---but the simulation-based priors (SBP) are only as accurate as the 
 shift \(\se\) downward by \(\sim\!2\sigma\) relative to conservative
 priors~\cite{Chudaykin:2026nls}, deepening the tension with CMB
 measurements of \(S_8\). Whether this shift reflects new physics or
-systematic biases absorbed from the HOD modelling remains an open
+systematic biases absorbed from the HOD modeling remains an open
 question---one that an independent, data-driven calibration of the
 same parameters could help resolve.
 
 Meanwhile, multi-tracer Fisher forecasts have shown that jointly fitting multiple galaxy populations can break parameter degeneracies beyond what single-tracer analyses can achieve~\cite{Alarcon:2016bkr,Mergulhao:2021kip,Mergulhao:2023zso,Rubira:2025scu,Qin:2025nkk}.
-Zhao et al.~\cite{Zhao:2024eboss} demonstrated this with eBOSS DR16 data by jointly analysing LRGs and ELGs within a single survey, improving \(\sigma(\se)\) by 18--27\% depending on the treatment of stochastic terms in the LRG--ELG cross spectrum. This demonstrates the statistical value of multi-tracer information, but not the calibration of survey-independent EFT priors: same-survey analyses share observational systematics, and even for disjoint tracer catalogues with no shared-object shot noise, residual cross-stochasticity remains a modelling assumption.
+Zhao et al.~\cite{Zhao:2024eboss} demonstrated this with eBOSS DR16 data by jointly analyzing LRGs and ELGs within a single survey, improving \(\sigma(\se)\) by 18--27\% depending on the treatment of stochastic terms in the LRG--ELG cross spectrum. This demonstrates the statistical value of multi-tracer information, but not the calibration of survey-independent EFT priors: same-survey analyses share observational systematics, and even for disjoint tracer catalogs with no shared-object shot noise, residual cross-stochasticity remains a modeling assumption.
 
 In this paper we demonstrate that EFT nuisance parameters can be
-calibrated directly from observational data, without HOD modelling.
+calibrated directly from observational data, without HOD modeling.
 We propose \emph{multi-survey priors}---a data-driven alternative to
 SBP that exploits the overlap volume between two
-independent spectroscopic surveys. The idea is simple: when PFS and DESI observe the same patch of sky, cross-spectra between disjoint galaxy catalogues contain no shared-object shot-noise contribution by construction. A multi-tracer Fisher analysis of the auto- and cross-spectra in the
+independent spectroscopic surveys. The idea is simple: when PFS and DESI observe the same patch of sky, cross-spectra between disjoint galaxy catalogs contain no shared-object shot-noise contribution by construction. A multi-tracer Fisher analysis of the auto- and cross-spectra in the
 overlap isolates the stochastic nuisance parameters
 model-independently. The calibrated priors are then exported to DESI's
 full \(14{,}000\;\text{deg}^2\) footprint, tightening cosmological
@@ -198,7 +198,7 @@ The \(\sim\!1{,}200\;\text{deg}^2\) overlap of the Subaru Prime Focus
 Spectrograph (PFS) ELG survey~\cite{Takada:2014pfs} with three DESI
 tracers---ELG, luminous red galaxies (LRG), and quasars
 (QSO)~\cite{DESI:2016fyo,DESI:2025zgx}---at \(0.6<z<1.6\)
-provides a concrete realization. With up to four tracers and ten cross-spectra per redshift bin, the overlap volume functions as a calibration laboratory for the EFT parameters that limit the full DESI analysis.The weaker finger-of-god (FoG) contamination expected in PFS samples motivates an asymmetric scale cut, \(\kmax^{\PFS}>\kmax^{\DESI}\)~\cite{Rubira:2025scu}\footnote{Data-driven FoG cleaning methods~\citep[e.g.,][]{BaleatoLizancos:2025wdg} offer a complementary route to extending the usable \(k\)-range.}.
+provides a concrete realization. With up to four tracers and ten cross-spectra per redshift bin, the overlap volume functions as a calibration laboratory for the EFT parameters that limit the full DESI analysis. The weaker finger-of-god (FoG) contamination expected in PFS samples motivates an asymmetric scale cut, \(\kmax^{\PFS}>\kmax^{\DESI}\)~\cite{Rubira:2025scu}\footnote{Data-driven FoG cleaning methods~\citep[e.g.,][]{BaleatoLizancos:2025wdg} offer a complementary route to extending the usable \(k\)-range.}.
 
 This paper is organized as follows. \Cref{sec:method} describes the
 multi-survey prior mechanism. \Cref{sec:fisher} details the Fisher
@@ -280,15 +280,15 @@ P_\ell^{XY}(k)
 + P_{\rm shot}^{XY}\,,
 \ee
 where the cross-stochastic term \(P_{\rm shot}^{XY}\) depends on
-whether the two catalogues share galaxies. For different galaxy populations---PFS-ELG\(\,\times\,\)%
-DESI-LRG or PFS-ELG\(\,\times\,\)DESI-QSO---the catalogues have zero
+whether the two catalogs share galaxies. For different galaxy populations---PFS-ELG\(\,\times\,\)%
+DESI-LRG or PFS-ELG\(\,\times\,\)DESI-QSO---the catalogs have zero
 overlap and the cross-stochastic vanishes exactly:
 \(\delta_{XY}^{\rm shared}=0\). These cross-spectra provide a clean,
 model-independent measurement of the deterministic signal, free of
 any shot-noise contamination.
 
 For similar populations---PFS-ELG\(\,\times\,\)DESI-ELG---a
-fraction of galaxies appear in both catalogues (both surveys target
+fraction of galaxies appear in both catalogs (both surveys target
 [OII] emitters, and PFS goes \(\sim\!1\;\text{mag}\) deeper in
 [OII] flux). The cross-shot noise depends on both number densities:
 \be
@@ -298,11 +298,11 @@ P_{\rm shot}^{\PFS\times\DESI\text{-ELG}}
 = \frac{f_{\rm shared}}{\nbar_{\DESI\text{-ELG}}}\,,
 \ee
 where \(n_{\rm shared}\) is the number density of galaxies
-appearing in both catalogues and
+appearing in both catalogs and
 \(f_{\rm shared}\equiv n_{\rm shared}/\nbar_{\PFS}\) is
 the fraction of PFS-ELGs shared with DESI.
 This interpolates smoothly between zero (\(f_{\rm shared}=0\),
-fully independent catalogues) and \(1/\nbar_{\DESI\text{-ELG}}\)
+fully independent catalogs) and \(1/\nbar_{\DESI\text{-ELG}}\)
 (\(f_{\rm shared}=1\), all PFS-ELGs also in DESI).
 We adopt a fiducial \(f_{\rm shared}=0.045\), following the observing strategy of the PFS Cosmology Survey~\cite{PFS-CO-target:inprep}, and verify in
 \cref{sec:results_sensitivity} that the impact on cosmological
@@ -966,7 +966,7 @@ stochastic/bias separation and 1.5~pp from the $k$-range extension.}
 
 
 We have also verified that the results are insensitive to the
-shared-catalogue fraction \(f_{\rm shared}\) between PFS-ELG and
+shared-catalog fraction \(f_{\rm shared}\) between PFS-ELG and
 DESI-ELG: sweeping \(f_{\rm shared}\) from 0 to~1, the improvement
 on \(\sigma(f\se)\) varies by less than \(\pm 1\) percentage point,
 because the different-population cross-spectra
@@ -1058,7 +1058,7 @@ SBPs achieve the same effect through a different
 route. Chudaykin et al.~\cite{Chudaykin:2026nls} report that
 field-level SBPs shrink the \(b_1\) posterior by 30--40\% for all
 DESI tracers---a comparable tightening, but derived from HOD
-modelling rather than from data. This parallel validates both
+modeling rather than from data. This parallel validates both
 approaches and makes them natural cross-checks of each other.
 
 The dependence on the \(b_1\) prior deserves careful discussion.
@@ -1090,7 +1090,7 @@ values are consistent with what the data themselves imply.
 \subsection{Robustness}
 
 The results are insensitive to
-the shared-catalogue fraction \(f_{\rm shared}\) between PFS-ELG
+the shared-catalog fraction \(f_{\rm shared}\) between PFS-ELG
 and DESI-ELG: sweeping \(f_{\rm shared}\) from 0 to~1, the
 improvement on \(\sigma(f\se)\) varies by less than
 \(\pm 1\) percentage point, because the different-population
@@ -1128,7 +1128,7 @@ field-level SBPs shift \(\se\) downward by \(\sim\!2\sigma\)
 relative to conservative priors, deepening the discrepancy with
 CMB measurements. This shift could signal new physics beyond
 \(\Lambda\)CDM---or it could reflect systematic biases absorbed
-from the HOD modelling into the galaxy bias and stochastic
+from the HOD modeling into the galaxy bias and stochastic
 parameters. Multi-survey priors constrain exactly these parameters
 from data, without HOD input. If a future PFS\(\times\)DESI
 analysis reproduces the SBP-driven \(\se\) shift, the
@@ -1346,7 +1346,7 @@ populations.
 At each wavenumber, the observable vector has
 \(N_{\rm obs}=N_{\rm spec}\times N_\ell\) elements, where
 \(N_{\rm spec}=N_t(N_t{+}1)/2\) is the number of auto- and
-cross-spectrum pairs and \(N_\ell=3\) for the monopole, quadrupole and hexadecapole
+cross-spectrum pairs and \(N_\ell=3\) for the monopole, quadrupole, and hexadecapole
 \(\ell=0,2,4\), respectively. The covariance is therefore an
 \(N_{\rm obs}\times N_{\rm obs}\) matrix at each \(k\). The
 \(\mu\)-integrals are evaluated with 20-point Gauss--Legendre (GL)

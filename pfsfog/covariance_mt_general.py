@@ -93,7 +93,7 @@ def multi_tracer_cov_general(
         p = Pkmu.get(key, np.zeros((Nk, len(mu))))
         if X == Y:
             return p + 1.0 / nbar[X]
-        # Non-zero cross-shot for partially shared catalogues
+        # Non-zero cross-shot for partially shared catalogs
         cs_key = (X, Y) if X <= Y else (Y, X)
         cs = _cross_shot.get(cs_key, 0.0)
         return p + cs

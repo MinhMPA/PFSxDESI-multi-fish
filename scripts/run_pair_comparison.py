@@ -41,7 +41,7 @@ from pfsfog.scenarios import SCENARIOS, nuisance_prior_diag, compute_improvement
 
 
 def compute_cross_shot_noise(nbar_pfs, nbar_desi_elg, f_shared):
-    """Cross-shot noise for partially shared ELG catalogues.
+    """Cross-shot noise for partially shared ELG catalogs.
 
     P^{AB}_shot = f_shared / n_bar_PFS.
     Limits: f_shared=0 → 0 (independent); f_shared=1 → 1/n_PFS (fully shared).
@@ -67,7 +67,7 @@ def run_overlap_calibration(
     cfg : ForecastConfig
     cosmo : FiducialCosmology
     ps : PowerSpectrum1Loop
-    cross_shot_pairs : {(nameA, nameB): 1/n_shared} for partially shared catalogues
+    cross_shot_pairs : {(nameA, nameB): 1/n_shared} for partially shared catalogs
     label : label for printing
 
     Returns

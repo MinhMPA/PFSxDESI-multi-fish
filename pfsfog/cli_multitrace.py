@@ -144,7 +144,7 @@ def run_multitrace_pipeline(cfg: ForecastConfig, verbose: bool = True) -> MultiT
                 pkmu_funcs[(a, b)] = make_ps1loop_pkmu_cross_func(
                     ps, pk_data, cross_params)
 
-        # Cross-shot noise for PFS-ELG × DESI-ELG (shared catalogue).
+        # Cross-shot noise for PFS-ELG × DESI-ELG (shared catalog).
         # f_shared = n_shared / n_PFS, so P^{AB}_shot = f_shared / n_DESI.
         # Limits: f=0 → 0 (independent); f=1 → 1/n_DESI (all PFS-ELGs in DESI).
         cross_shot = None

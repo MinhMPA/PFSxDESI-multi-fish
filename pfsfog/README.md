@@ -61,7 +61,7 @@ pytest tests/ -q   # 96 tests, ~10s
 | Module | Purpose |
 |--------|---------|
 | `covariance.py` | Gaussian multipole covariance via 20-point Gauss-Legendre. Single-tracer (3x3 for ell=0,2,4). |
-| `covariance_mt_general.py` | N-tracer generalisation. Supports cross-shot noise for partially shared catalogues (f_shared). |
+| `covariance_mt_general.py` | N-tracer generalization. Supports cross-shot noise for partially shared catalogs (f_shared). |
 
 ### Fisher matrices
 

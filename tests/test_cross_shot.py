@@ -1,6 +1,6 @@
 """Test that the cross-shot noise uses the correct formula.
 
-The cross-shot noise for partially overlapping catalogues is:
+The cross-shot noise for partially overlapping catalogs is:
     P_shot^{cross} = f_shared / nbar_DESI
 where f_shared = n_shared / nbar_PFS.
 

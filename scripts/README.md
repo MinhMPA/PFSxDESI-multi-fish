@@ -12,7 +12,7 @@ All scripts should be run from the repo root: `python scripts/<name>.py`
 | `run_parameter_importance.py` | Which nuisance params drive the improvement | ~3 min |
 | `run_sensitivity.py` | r_sigma_v sweep (asymmetric vs symmetric kmax) | ~5 min |
 | `run_kmax_nbar_sweeps.py` | kmax and nbar sensitivity sweeps | ~10 min |
-| `run_fshared_sweep.py` | Shared-catalogue fraction sensitivity | ~5 min |
+| `run_fshared_sweep.py` | Shared-catalog fraction sensitivity | ~5 min |
 | `run_coevolution_test.py` | Co-evolution relation test (Appendix B) | ~1 min |
 
 ## Figure generation
