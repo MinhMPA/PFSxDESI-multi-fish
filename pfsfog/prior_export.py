@@ -1,9 +1,9 @@
 """Export calibrated priors from the overlap multi-tracer Fisher.
 
 Steps:
-1. Add broad Gaussian priors to regularise F_MT.
+1. Add broad Gaussian priors to regularize F_MT.
 2. Invert → covariance.
-3. Extract marginalised σ for each DESI nuisance parameter.
+3. Extract marginalized σ for each DESI nuisance parameter.
 4. Package as CalibratedPriors.
 """
 
@@ -66,7 +66,7 @@ def export_calibrated_priors(
     -------
     CalibratedPriors
     """
-    # Step 1: regularise with broad priors
+    # Step 1: regularize with broad priors
     prior_diag = _build_broad_prior_diag()
     F_reg = add_gaussian_prior(fisher_mt.F, prior_diag)
 

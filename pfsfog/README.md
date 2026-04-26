@@ -69,7 +69,7 @@ pytest tests/ -q   # 96 tests, ~10s
 |--------|---------|
 | `fisher.py` | `FisherResult` dataclass with `marginalized_sigma`. Fisher assembly + `add_gaussian_prior`. |
 | `fisher_mt_general.py` | N-tracer Fisher. Parameter vector: 3 cosmo + 12 nuisance per tracer. |
-| `prior_export.py` | Regularise overlap Fisher -> extract calibrated sigma for each DESI nuisance param. |
+| `prior_export.py` | Regularize overlap Fisher -> extract calibrated sigma for each DESI nuisance param. |
 | `fisher_full_area.py` | Single-tracer DESI Fisher with imported priors. `combine_zbins` (or `combine_samples`) sums cosmo blocks. Supports sample-label disambiguation for DR2 samples. |
 
 ### Scenarios and output
@@ -88,7 +88,7 @@ pytest tests/ -q   # 96 tests, ~10s
 
 ## Key conventions
 
-- **EFT parameterisation**: Chudaykin, Ivanov & Philcox (2025, arXiv:2511.20757, Table I).
+- **EFT parameterization**: Chudaykin, Ivanov & Philcox (2025, arXiv:2511.20757, Table I).
 - **Cross-shot noise**: Zero for different populations. For PFS x DESI-ELG: `f_shared / nbar_DESI` where f_shared = n_shared / nbar_PFS = 0.045 (J. Shi, priv. comm.).
 - **Asymmetric kmax**: `kmax_PFS = kmax_DESI / r_sigma_v`. Default r_sigma_v = 0.75.
 - **Units**: k in h/Mpc, P(k) in (Mpc/h)^3, volumes in (Mpc/h)^3.

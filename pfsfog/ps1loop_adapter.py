@@ -1,6 +1,6 @@
 """Adapter between Fisher parameter vectors and theory backends.
 
-Maps the σ8-scaled EFT parameterisation (Chudaykin+ 2025) to the
+Maps the σ8-scaled EFT parameterization (Chudaykin+ 2025) to the
 ``params`` dict expected by ``ps_1loop_jax.PowerSpectrum1Loop`` and
 to the flat arguments of ``clax.ept.pk_gg_l0/l2/l4``.
 """

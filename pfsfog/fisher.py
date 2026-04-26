@@ -25,7 +25,7 @@ class FisherResult:
         return self.param_names.index(name)
 
     def marginalized_sigma(self, name: str) -> float:
-        """σ from (F⁻¹)_{ii}^{1/2}, marginalised over all other params."""
+        """σ from (F⁻¹)_{ii}^{1/2}, marginalized over all other params."""
         Finv = np.linalg.inv(self.F)
         i = self._idx(name)
         return float(np.sqrt(Finv[i, i]))

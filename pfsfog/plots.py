@@ -62,7 +62,7 @@ SCENARIO_LABELS = {
 def fig1_overlap_calibration(overlap_results, out_dir: Path):
     """Per-z-bin bar chart: σ / σ_broad for DESI-only, PFS-only, MT.
 
-    Normalised by broad prior width so all parameters are comparable.
+    Normalized by broad prior width so all parameters are comparable.
     """
     set_style()
     bp = broad_priors().sigma_dict()

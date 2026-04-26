@@ -1,6 +1,6 @@
 """EFT parameter fiducials and priors.
 
-Parameterisation follows Chudaykin, Ivanov & Philcox (2025,
+Parameterization follows Chudaykin, Ivanov & Philcox (2025,
 arXiv:2511.20757, Table I).
 """
 
@@ -349,7 +349,7 @@ FIELD_LEVEL_BENCHMARK = {
 
 
 # ---------------------------------------------------------------------------
-# Cosmological parameter priors (weak, for Fisher regularisation)
+# Cosmological parameter priors (weak, for Fisher regularization)
 # ---------------------------------------------------------------------------
 
 COSMO_PRIOR_SIGMA = {

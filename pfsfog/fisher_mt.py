@@ -112,7 +112,7 @@ def multi_tracer_fisher(
     # Note: cosmo derivatives (columns 0,1,2) would appear in ALL
     # observables (AA, BB, AB). These are left at zero for now since
     # the overlap Fisher is used for nuisance calibration, not cosmo
-    # constraints. The cosmo params are regularised by broad priors.
+    # constraints. The cosmo params are regularized by broad priors.
 
     # Invert covariance at each k
     cov_inv = np.zeros_like(cov_mt)

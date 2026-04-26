@@ -24,7 +24,7 @@ mu_gl, w_gl = leggauss(100)  # high-order quadrature for smooth curves
 
 
 def _sigma2_st(nbar):
-    """Single-tracer sigma^2(Pm), marginalised over bA via Schur complement."""
+    """Single-tracer sigma^2(Pm), marginalized over bA via Schur complement."""
     F = np.zeros((2, 2))
     for mi, wi in zip(mu_gl, w_gl):
         sA = bA + f * mi**2
@@ -37,7 +37,7 @@ def _sigma2_st(nbar):
 
 
 def _sigma2_mt(nbar):
-    """Multi-tracer sigma^2(Pm), marginalised over bA and bB."""
+    """Multi-tracer sigma^2(Pm), marginalized over bA and bB."""
     F = np.zeros((3, 3))
     for mi, wi in zip(mu_gl, w_gl):
         sA = bA + f * mi**2
@@ -64,7 +64,7 @@ def _sigma2_mt(nbar):
 
 
 def _sigma2_mt_fixed_bB(nbar):
-    """Multi-tracer sigma^2(Pm) with bB fixed, marginalised over bA only."""
+    """Multi-tracer sigma^2(Pm) with bB fixed, marginalized over bA only."""
     F = np.zeros((2, 2))
     for mi, wi in zip(mu_gl, w_gl):
         sA = bA + f * mi**2
@@ -111,9 +111,9 @@ plt.rcParams.update({
 fig, ax = plt.subplots(figsize=(6, 4.5))
 
 ax.loglog(nbars, s2_st / Pm**2, "-", color="#4C72B0", lw=2,
-          label=r"Single-tracer ($b_A$ marginalised)")
+          label=r"Single-tracer ($b_A$ marginalized)")
 ax.loglog(nbars, s2_mt / Pm**2, "-", color="#DD8452", lw=2,
-          label=r"Multi-tracer ($b_A, b_B$ marginalised)")
+          label=r"Multi-tracer ($b_A, b_B$ marginalized)")
 ax.loglog(nbars, s2_mt_fixB / Pm**2, "-.", color="#DD8452", lw=1.5, alpha=0.7,
           label=r"Multi-tracer ($b_B$ fixed)")
 ax.axhline(cv_floor / Pm**2, ls="--", color="gray", lw=1.2,

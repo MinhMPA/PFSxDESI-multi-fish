@@ -210,7 +210,7 @@ class FiducialCosmology:
         return chi_mpc * self._h  # Mpc → Mpc/h
 
     def D(self, z: float) -> float:
-        """Linear growth factor D(z), normalised to D(0)=1."""
+        """Linear growth factor D(z), normalized to D(0)=1."""
         d_z = bg.growth_factor(
             self._omega_b, self._omega_cdm, self._h, z, self._mnu,
         )

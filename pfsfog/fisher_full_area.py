@@ -106,7 +106,7 @@ def full_area_fisher_per_zbin(
     prior_full[N_COSMO:] = nuisance_prior_diag
     F = add_gaussian_prior(F, prior_full)
 
-    # Add weak cosmo prior for regularisation
+    # Add weak cosmo prior for regularization
     for i, cn in enumerate(COSMO_NAMES):
         F[i, i] += 1.0 / COSMO_PRIOR_SIGMA[cn] ** 2
 
