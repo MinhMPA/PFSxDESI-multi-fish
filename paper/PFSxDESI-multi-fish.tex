@@ -1288,43 +1288,55 @@ across the full parameter space.}
 \subsection{Covariance matrix}
 \label{app:covariance}
 
-The Gaussian multipole covariance for \(N\) tracers is
+The Gaussian multipole covariance for \(N_t\) tracers
+follows from Wick-contracting two power spectrum
+estimators:
 \be
 \label{eqn:cov_wick}
-\mathrm{Cov}\!\bigl[P_\ell^{XY},\, P_{\ell'}^{WZ}\bigr]\!(k)
-= \frac{(2\ell{+}1)(2\ell'{+}1)}{2\,N_{\rm modes}}
-  \!\int_{-1}^{1}\!\dd\mu\; L_\ell L_{\ell'}
+\Cov\!\bigl[P_\ell^{XY},\, P_{\ell'}^{WZ}\bigr]\!(k)
+= \frac{(2\ell{+}1)(2\ell'{+}1)}{2\,N_{\rm modes}(k)}
+  \!\int_{-1}^{1}\!\dd\mu\; L_\ell(\mu)\, L_{\ell'}(\mu)\,
   \bigl[
     P_{\rm tot}^{XW}\! P_{\rm tot}^{YZ}
   + P_{\rm tot}^{XZ}\! P_{\rm tot}^{YW}
   \bigr],
 \ee
-where \(N_{\rm modes}=k^2\Delta k\,V/(2\pi^2)\) and
-\(P_{\rm tot}^{XY}=P^{XY}+\delta_{XY}/\nbar_X
-+P_{\rm shot}^{XY}\).
-Three implementation details deserve comment:
-\begin{enumerate}
-\item \textbf{Factor of 2.}
-  For a single tracer (\(X{=}Y{=}W{=}Z\)), both Wick pairings
-  give the same contribution, producing
-  \(2\,[P_{\rm tot}^{XX}]^2\) inside the integral---the
-  familiar \(2/N_{\rm modes}\) scaling of the power-spectrum
-  variance.
+where \(N_{\rm modes}(k)=k^2\Delta k\,V/(2\pi^2)\) is the number
+of Fourier modes in a shell of width \(\Delta k\), and
+\(L_\ell(\mu)\) are the Legendre polynomials. The two terms inside
+the brackets are the two Wick pairings of the four galaxy fields;
+for a single tracer (\(X{=}Y{=}W{=}Z\)) they are identical,
+recovering the familiar factor-of-two scaling of the power-spectrum
+variance.
 
-\item \textbf{Cross-shot noise.}
-  For partially overlapping catalogues
-  (PFS-ELG\(\times\)DESI-ELG), the total cross-power includes
-  the non-zero cross-shot noise from
-  \cref{eqn:cross_shot}. For non-overlapping pairs
-  (PFS-ELG\(\times\)DESI-LRG) the cross-shot vanishes
-  identically.
+The total power \(P_{\rm tot}^{XY}(k,\mu)\) entering the covariance
+includes both the deterministic signal and all noise contributions:
+\be
+\label{eqn:ptot}
+P_{\rm tot}^{XY}(k,\mu) =
+  P^{XY}(k,\mu)
+  + \frac{\delta_{XY}^{\rm K}}{\nbar_X}
+  + P_{\rm shot}^{XY}\,,
+\ee
+where \(P^{XY}(k,\mu)\) is the one-loop signal evaluated at the
+fiducial parameters, \(\delta_{XY}^{\rm K}/\nbar_X\) is the Poisson
+auto-shot noise (present only for auto-spectra), and
+\(P_{\rm shot}^{XY}\) is the cross-shot noise from
+\cref{eqn:cross_shot}---non-zero only for PFS-ELG\(\times\)DESI-ELG,
+and identically zero for cross-spectra between different galaxy
+populations.
 
-\item \textbf{Numerical checks.}
-  The covariance matrix at every \(k\) passes three diagnostics:
-  exact symmetry (\(\|C-C^T\|<10^{-12}\)),
-  positive definiteness (all eigenvalues \(>0\)), and the
-  expected volume scaling (\(\mathrm{Cov}\propto 1/V\)).
-\end{enumerate}
+At each wavenumber, the observable vector has
+\(N_{\rm obs}=N_{\rm spec}\times N_\ell\) elements, where
+\(N_{\rm spec}=N_t(N_t{+}1)/2\) is the number of auto- and
+cross-spectrum pairs and \(N_\ell=3\) for
+\(\ell\in\{0,2,4\}\). The covariance is therefore an
+\(N_{\rm obs}\times N_{\rm obs}\) matrix at each \(k\). The
+\(\mu\)-integrals are evaluated with 20-point Gauss--Legendre
+quadrature.
+The covariance matrix at every \(k\) passes exact symmetry
+(\(\|C{-}C^T\|{<}10^{-12}\)), positive-definiteness, and
+\(\Cov\propto 1/V\) scaling checks.
 
 
 %---------------------------------------------------------------
