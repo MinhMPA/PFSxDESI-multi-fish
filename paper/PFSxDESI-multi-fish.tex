@@ -75,7 +75,7 @@
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% EFT cross-cal macros    %%
+%% EFT calibrated macros    %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newcommand{\PFS}{\text{PFS}}
 \newcommand{\DESI}{\text{DESI}}
@@ -650,7 +650,7 @@ comes entirely from tighter nuisance priors, not from extending the
 \begin{itemize}
 \item \textbf{Broad}: conservative Gaussian priors from
   \cref{tab:eft_params}. Baseline.
-\item \textbf{Cross-cal}: multi-survey priors from the overlap
+\item \textbf{Calibrated}: multi-survey priors from the overlap
   Fisher (\cref{sec:prior_export}).
 \item \textbf{Fixed nuisance}: nuisance parameters fixed to
   fiducial values. Theoretical ceiling.
@@ -683,7 +683,7 @@ mismatch between the calibrated and in-situ posteriors.
 \subsection{Calibrated priors}
 \label{sec:results_priors}
 
-\Cref{fig:calibrated_vs_broad} compares the cross-calibrated prior
+\Cref{fig:calibrated_vs_broad} compares the calibrated prior
 widths with the conservative broad
 priors~\cite{Chudaykin:2025lww,DESI:2024jxi} for all DESI-ELG
 nuisance parameters. Three parameters show significant tightening.
@@ -715,7 +715,7 @@ marginally---from \(\sigma=30\) to \(\sigma\approx 22\text{--}30\).
 \centering
 \includegraphics[width=\textwidth]{\figurespath/calibrated_vs_broad.png}
 \caption{Calibrated versus broad priors for all six DESI~DR2 samples.
-Markers show the averaged cross-calibrated prior width
+Markers show the averaged calibrated prior width
 $\sigma_{\rm cal}$ per sample; light bars show the conservative broad
 prior $\sigma_{\rm broad}$.
 LRG1 (gray triangles) lies below PFS's redshift range and receives no
@@ -793,9 +793,9 @@ simulation-based priors on DESI~DR1.
   & \multicolumn{3}{c}{$\sigma(\Mnu)$ [eV]}
   & \multicolumn{3}{c}{$\sigma(\Om)$} \\
 \cline{2-4}\cline{5-7}\cline{8-10}
-Sample & broad & xcal & $\Delta\%$
-  & broad & xcal & $\Delta\%$
-  & broad & xcal & $\Delta\%$ \\
+Sample & broad & cal & $\Delta\%$
+  & broad & cal & $\Delta\%$
+  & broad & cal & $\Delta\%$ \\
 \hline
 LRG1 & 0.074 & 0.074 & $0$   & 2.00 & 2.00 & $0$   & 0.090 & 0.090 & $0$\\
 LRG2 & 0.051 & 0.047 & $-7$  & 1.82 & 0.61 & $-66$ & 0.071 & 0.065 & $-8$\\
@@ -856,8 +856,8 @@ Scenario & $\ctilde$ template & $\sigma(f\se)$ & $\Delta\%$ & $\sigma(\Mnu)$ [eV
 \hline
 Broad          & ---     & 0.094 & ---   & 1.33  & ---   & 0.064 & ---   \\
 \hline
-Cross-cal      & Zhang+  & 0.076 & $-19$ & 0.60  & $-55$ & 0.052 & $-20$ \\
-Cross-cal      & Ivanov  & 0.082 & $-25$ & 0.58  & $-60$ & 0.049 & $-25$ \\
+Calibrated      & Zhang+  & 0.076 & $-19$ & 0.60  & $-55$ & 0.052 & $-20$ \\
+Calibrated      & Ivanov  & 0.082 & $-25$ & 0.58  & $-60$ & 0.049 & $-25$ \\
 \hline
 Fixed nuisance & ---     & 0.039 & $-59$ & 0.21  & $-84$ & 0.033 & $-48$ \\
 \hline
@@ -894,7 +894,7 @@ to amplitude nuisance parameters.
 \centering
 \includegraphics[width=0.65\textwidth]{\figurespath/calibration_efficiency.png}
 \caption{Calibration efficiency per $z$-bin, defined as
-$(\sigma_{\rm broad}-\sigma_{\rm xcal})/(\sigma_{\rm broad}-\sigma_{\rm fixed})$.
+$(\sigma_{\rm broad}-\sigma_{\rm cal})/(\sigma_{\rm broad}-\sigma_{\rm fixed})$.
 An efficiency of unity would mean the cross-calibration fully closes the gap
 to perfect nuisance knowledge.
 $\Mnu$ achieves the highest efficiency ($\sim\!60\%$): the neutrino mass
@@ -912,7 +912,7 @@ less sensitive to amplitude-related nuisance parameters.}
 \label{sec:results_sensitivity}
 
 \Cref{fig:sensitivity} shows how the combined \(\sigma(f\se)\) from
-the cross-cal scenario depends on the assumed FoG velocity ratio
+the calibrated scenario depends on the assumed FoG velocity ratio
 \(\rsv\). This parameter simultaneously controls the PFS FoG fiducial
 (\(\ctilde^{\PFS}\propto \rsv^4\)) and the asymmetric scale cut
 (\(\kmax^{\PFS}\propto \rsv^{-1}\)) in the overlap calibration.
@@ -987,11 +987,11 @@ None (broad)                     & ---       & ---       & ---       \\
 \(b_{\G_2}\se^2\) only            & \(-1\%\)  & \(-0.5\%\) & \(-5\%\) \\
 \(b_1\se + \Pshot + b_{\G_2}\se^2\) & \(-17\%\) & \(-55\%\) & \(-19\%\) \\
 All except \(b_1\se\)            & \(-4\%\)  & \(-4\%\)  & \(-9\%\)  \\
-All (= cross-cal)                & \(-19\%\) & \(-55\%\) & \(-20\%\) \\
+All (= calibrated)                & \(-19\%\) & \(-55\%\) & \(-20\%\) \\
 \hline
 \end{tabular}
 \caption{Parameter importance decomposition.  Each row uses the
-cross-calibrated prior for the indicated parameter(s) and the broad
+calibrated prior for the indicated parameter(s) and the broad
 prior for all others, then reports the improvement in full-area
 \(\sigma\) relative to the all-broad baseline. The linear bias
 \(b_1\se\) dominates because \(\Mnu\) is nearly perfectly
@@ -1014,7 +1014,7 @@ marginalized \(\sigma(\Mnu)\). The multi-tracer overlap constrains
 reducing \(\sigma(\Mnu)\) by more than a factor of two.
 \Cref{fig:fisher_contours} visualizes this mechanism. The broad-prior
 ellipse in the \(b_1\se\)--\(\Mnu\) plane is elongated along the
-degeneracy direction; the cross-calibrated ellipse collapses it.
+degeneracy direction; the calibrated ellipse collapses it.
 
 \begin{figure}[t]
 \centering
@@ -1022,7 +1022,7 @@ degeneracy direction; the cross-calibrated ellipse collapses it.
 \caption{Fisher contours (1\(\sigma\) and 2\(\sigma\)) in the
 \(b_1\se\)--\(\Mnu\), \(b_1\se\)--\(f\se\), and
 \(f\se\)--\(\Mnu\) planes, comparing broad priors (blue)
-with cross-calibrated priors (green). The near-perfect
+with calibrated priors (green). The near-perfect
 \(b_1\)--\(\Mnu\) degeneracy (left panel) is the dominant
 driver of the improvement: calibrating \(b_1\se\) from the
 PFS--DESI overlap collapses the elongated ellipse.
@@ -1362,7 +1362,7 @@ We verify the assembled Fisher matrix against four checks:
 
 \item \textbf{Scenario ordering.}
   The marginalized constraints obey
-  \(\sigma_{\rm fixed}\leq\sigma_{\rm xcal}
+  \(\sigma_{\rm fixed}\leq\sigma_{\rm cal}
   \leq\sigma_{\rm broad}\)
   for all cosmological parameters and redshift bins.
 
