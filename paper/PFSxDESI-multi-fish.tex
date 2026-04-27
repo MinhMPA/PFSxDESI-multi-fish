@@ -51,9 +51,9 @@
 \def\knl{k_\text{NL}}
 \renewcommand{\emph}[1]{\textit{#1}}
 \newcommand{\Om}{\Omega_m}
-\def\Mpch{\,h^{-1}\text{Mpc}}
+\def\Mpch{\,h^{-1}\,\text{Mpc}}
 \def\iMpch{\,h\,\text{Mpc}^{-1}}
-\def\Mpchcubed{\, h^{-3} \, \text{Mpc}^{3}}
+\def\Mpchcubed{\,h^{-3}\,\text{Mpc}^{3}}
 \def\kmax{k_{\rm max}}
 \newcommand{\dd}{\mathrm{d}}
 \DeclareMathOperator{\Cov}{Cov}
@@ -615,7 +615,7 @@ and the derivative evaluation.
 
 Derivatives \(\partial P_\ell/\partial\theta\) with respect to all
 nuisance and cosmological parameters are computed via JAX
-forward-mode automatic differentiation (\texttt{jax.jacfwd}).
+forward-mode automatic differentiation.
 For nuisance parameters, the autodiff traces through the one-loop
 \texttt{ps\_1loop\_jax} model; for \(\Om\) and \(\Mnu\), it traces
 end-to-end through the
@@ -1209,8 +1209,7 @@ We validate the ingredients of our Fisher forecast against a combination of nume
 \label{app:derivatives}
 
 All power spectrum derivatives \(\partial P_\ell/\partial\theta\) are
-computed via JAX forward-mode automatic differentiation
-(\texttt{jax.jacfwd}) through the full one-loop
+computed via JAX forward-mode automatic differentiation through the full one-loop
 \texttt{ps\_1loop\_jax} model, avoiding step-size tuning entirely.
 We validate against adaptive finite-difference derivatives
 computed with \texttt{numdifftools}\footnote{\url{https://github.com/pbrod/numdifftools}}, which
@@ -1323,7 +1322,7 @@ symmetry (\(\|C{-}C^T\|{<}10^{-12}\)), positive-definiteness, and
 \includegraphics[width=\textwidth]{\figurespath/cov_gl_vs_wigner3j.png}
 \caption{Validation of the Gaussian covariance.
 Left: selected covariance elements as a function of \(k\), computed
-via 20-point Gauss--Legendre quadrature using the full one-loop EFT
+via 20-point Gauss--Legendre (GL) quadrature using the full one-loop EFT
 \(P(k,\mu)\) for PFS-ELG and DESI-ELG at \(z=0.9\).
 Right: fractional difference between the GL result and the analytic
 Wigner~3\(j\) formula~\cite{Rubira:2025scu} (Eq.~2.20) at
