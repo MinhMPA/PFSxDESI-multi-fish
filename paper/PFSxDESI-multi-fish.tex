@@ -597,15 +597,15 @@ The Gaussian covariance at each \(k\) is
 \Cov\!\left[P_\ell^{XY},\, P_{\ell'}^{WZ}\right]\!(k)
 = \frac{(2\ell{+}1)(2\ell'{+}1)}{2 N_{\rm modes}(k)}
   \int_{-1}^{1}\!\dd\mu\; L_\ell(\mu)\, L_{\ell'}(\mu)\,
-  \bigl[P_{\rm tot}^{XW} P_{\rm tot}^{YZ}
-  + P_{\rm tot}^{XZ} P_{\rm tot}^{YW}\bigr],
+  \bigl[P^{XW} P^{YZ}
+  + P^{XZ} P^{YW}\bigr],
 \ee
 where \(N_{\rm modes}(k)=k^2\Delta k\, V/(2\pi^2)\) and
-\(P_{\rm tot}^{XY}(k,\mu)=P^{XY}(k,\mu)+\delta_{XY}/\nbar_X
-+P_{\rm shot}^{XY}\), with \(P_{\rm shot}^{XY}\) from
-\cref{eqn:cross_shot}.
+\(P^{XY}(k,\mu)\) includes the one-loop signal, the Poisson
+shot noise \(\delta_{XY}/\nbar_X\), and the cross-shot noise
+\(P_{\rm shot}^{XY}\) from \cref{eqn:cross_shot}.
 The \(\mu\)-integrals are evaluated with 20-point Gauss--Legendre
-quadrature. The signal \(P^{XY}(k,\mu)\) is computed from the one-loop
+quadrature. The signal contribution is computed from the one-loop
 EFTofLSS model~\cite{Chudaykin:2020aoj} using the FFTLog
 decomposition~\cite{Simonovic:2017mhp} implemented in
 \texttt{ps\_1loop\_jax}%
@@ -1259,8 +1259,8 @@ estimators:
 = \frac{(2\ell{+}1)(2\ell'{+}1)}{2\,N_{\rm modes}(k)}
   \!\int_{-1}^{1}\!\dd\mu\; L_\ell(\mu)\, L_{\ell'}(\mu)\,
   \bigl[
-    P_{\rm tot}^{XW}\! P_{\rm tot}^{YZ}
-  + P_{\rm tot}^{XZ}\! P_{\rm tot}^{YW}
+    P^{XW}\! P^{YZ}
+  + P^{XZ}\! P^{YW}
   \bigr],
 \ee
 where \(N_{\rm modes}(k)=k^2\Delta k\,V/(2\pi^2)\) is the number
@@ -1271,16 +1271,16 @@ for a single tracer (\(X{=}Y{=}W{=}Z\)) they are identical,
 recovering the familiar factor-of-two scaling of the power-spectrum
 variance.
 
-The total power \(P_{\rm tot}^{XY}(k,\mu)\) entering the covariance
-includes both the deterministic signal and all noise contributions:
+The power \(P^{XY}(k,\mu)\) entering the covariance
+includes the deterministic signal and all noise contributions:
 \be
 \label{eqn:ptot}
-P_{\rm tot}^{XY}(k,\mu) =
-  P^{XY}(k,\mu)
+P^{XY}(k,\mu) =
+  P^{XY,\mathrm{det}}(k,\mu)
   + \frac{\delta_{XY}^{\rm K}}{\nbar_X}
   + P_{\rm shot}^{XY}\,,
 \ee
-where \(P^{XY}(k,\mu)\) is the one-loop signal evaluated at the
+where \(P^{XY,\mathrm{det}}\) is the one-loop signal evaluated at the
 fiducial parameters, \(\delta_{XY}^{\rm K}/\nbar_X\) is the Poisson
 auto-shot noise (present only for auto-spectra), and
 \(P_{\rm shot}^{XY}\) is the cross-shot noise from
@@ -1298,14 +1298,14 @@ cross-spectrum pairs and \(N_\ell=3\) for the monopole, quadrupole, and hexadeca
 quadrature. An equivalent approach is the analytic Wigner~3\(j\)
 decomposition of Rubira \&
 Conteddu~\cite{Rubira:2025scu} (their Eq.~2.20), which first
-decomposes \(P_{\rm tot}(k,\mu)\) into multipoles \(P_\ell\) and
+decomposes \(P(k,\mu)\) into multipoles \(P_\ell\) and
 then evaluates the products of Legendre polynomials via
 \(L_{\ell_1}L_{\ell_2}=\sum_{\ell_3}(2\ell_3{+}1)
 \bigl(\begin{smallmatrix}\ell_1 & \ell_2 & \ell_3 \\
 0 & 0 & 0\end{smallmatrix}\bigr)^{\!2} L_{\ell_3}\).
 The two methods differ when the one-loop power spectrum has
 \(\mu\)-dependence beyond \(\ell=4\): the GL quadrature integrates
-the full \(P_{\rm tot}(k,\mu)\) directly, while the Wigner~3\(j\)
+the full \(P(k,\mu)\) directly, while the Wigner~3\(j\)
 formula truncates at the maximum multipole included in the
 decomposition. \Cref{fig:cov_validation} shows the convergence. At
 \(\ell_{\max}=4\) the analytic formula agrees with GL to
@@ -1324,7 +1324,7 @@ symmetry (\(\|C{-}C^T\|{<}10^{-12}\)), positive-definiteness, and
 \caption{Validation of the Gaussian covariance.
 Left: selected covariance elements as a function of \(k\), computed
 via 20-point Gauss--Legendre quadrature using the full one-loop EFT
-\(P_{\rm tot}(k,\mu)\) for PFS-ELG and DESI-ELG at \(z=0.9\).
+\(P(k,\mu)\) for PFS-ELG and DESI-ELG at \(z=0.9\).
 Right: fractional difference between the GL result and the analytic
 Wigner~3\(j\) formula~\cite{Rubira:2025scu} (Eq.~2.20) at
 \(\ell_{\max}=4\), \(6\), and \(8\). Each step in
