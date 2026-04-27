@@ -192,8 +192,8 @@ independent spectroscopic surveys. When PFS and DESI observe the same
 patch of sky, cross-spectra between disjoint galaxy populations
 contain no shared-object shot noise by construction; a multi-tracer
 Fisher analysis of these auto- and cross-spectra isolates the
-stochastic nuisance parameters model-independently. The calibrated priors are then exported to DESI's
-full \(14{,}000\;\text{deg}^2\) footprint, tightening cosmological
+stochastic nuisance parameters model-independently. The calibrated priors are then exported to the full
+\(14{,}000\;\text{deg}^2\) DESI footprint, tightening cosmological
 constraints without any simulation input.
 
 The \(\sim\!1{,}200\;\text{deg}^2\) overlap of the Subaru Prime Focus
@@ -637,7 +637,7 @@ adaptive finite-difference numerical derivatives in
 The calibrated priors from \cref{sec:prior_export} are applied to the
 full-area DESI-ELG Fisher forecast over \(14{,}000\;\text{deg}^2\).
 All scenarios use the same \(\kmax=0.20\iMpch\) for the full-area
-analysis---the EFT convergence for DESI-ELG is set by DESI's own
+analysis---the EFT convergence for DESI-ELG is set by the DESI
 \(\ctilde\), which is independent of the priors used. The improvement
 comes entirely from tighter nuisance priors, not from extending the
 \(k\)-range. We evaluate 3 scenarios:
@@ -660,10 +660,10 @@ ratios from the PS-level SBP of Zhang et al.\ \cite{DESI:2025wzd}
 
 The calibration transfers from overlap to full area if and only if
 DESI-ELG in the overlap has the same HOD---and therefore the same
-EFT parameters---as DESI-ELG outside. Since DESI's target selection
+EFT parameters---as DESI-ELG outside the overlap. Since the DESI target selection
 is spatially uniform by construction, this holds to the extent that
 imaging systematics do not induce spatial variation in the ELG
-population; DESI's imaging-systematics pipeline is designed to
+population; the DESI imaging-systematics pipeline is designed to
 control this~\cite{DESI:2025zgx}. We state this as an explicit
 assumption and note that a violation would manifest as a detectable
 mismatch between the calibrated and in-situ posteriors.
@@ -712,7 +712,7 @@ marginally---from \(\sigma=30\) to \(\sigma\approx 22\text{--}30\).
 Markers show the averaged calibrated prior width
 $\sigma_{\rm cal}$ per sample; light bars show the conservative broad
 prior $\sigma_{\rm broad}$.
-LRG1 (gray triangles) lies below PFS's redshift range and receives no
+LRG1 (gray triangles) lies below the PFS redshift range and receives no
 calibration.
 $b_1\se$ and $\Pshot$ show the strongest tightening across all
 calibrated samples, while the counterterms ($c_0$, $c_2$, $c_4$,
@@ -758,7 +758,7 @@ Number densities $\nbar$ are volume-weighted averages from fine-binned
 $n(z)$ files; biases $b_1$ are evaluated at the effective redshift;
 volumes $V$ assume the full $14{,}000\;\text{deg}^2$ footprint and
 Planck 2018 cosmology.
-LRG1 lies entirely below PFS's redshift range ($z<0.6$) and uses
+LRG1 lies entirely below the PFS redshift range ($z<0.6$) and uses
 broad priors. LRG2 overlaps one calibration bin $z=[0.6,0.8]$; the
 remaining samples average priors over 2--4 overlap bins.}
 \label{tab:dr2_samples}
@@ -770,7 +770,7 @@ reflecting their higher redshift-space distortion parameter
 that multi-survey priors break. LRG samples gain the most on
 \(\sigma(\Mnu)\) (66--69\%), driven by their large \(b_1\)
 (\(>2\)) which tightens the \(b_1\)--\(\Mnu\) degeneracy when
-calibrated. LRG1 (\(z=0.4\text{--}0.6\)) falls below PFS's
+calibrated. LRG1 (\(z=0.4\text{--}0.6\)) falls below the PFS
 redshift coverage and uses broad priors; it anchors the low-\(z\)
 cosmological constraint without multi-survey improvement.
 For context, power-spectrum-level SBPs on
@@ -806,7 +806,7 @@ six-sample DESI~DR2 forecast ($\kmax=0.20\iMpch$).
 Multi-survey priors improve the combined $\sigma(f\se)$ by 8\%
 and $\sigma(\Mnu)$ by 54\%. Per-sample improvements range from
 7--25\% on $f\se$ and 46--71\% on $\Mnu$.
-LRG1 uses broad priors (below PFS's redshift range, $z<0.6$).
+LRG1 uses broad priors (below the PFS redshift range, $z<0.6$).
 ELGs gain the most on $f\se$ (higher $\beta=f/b_1$);
 LRGs gain the most on $\Mnu$ (larger $b_1$ tightens the
 $b_1$--$\Mnu$ degeneracy).}
@@ -879,7 +879,7 @@ redshift bin.
 (\(\sim\!60\%\)), because the neutrino mass constraint is most
 sensitive to the amplitude-related stochastic parameters that the
 cross-calibration tightens. \(f\se\) efficiency rises with redshift
-(38\% at \(z\sim 0.9\) to 47\% at \(z\sim 1.5\)), reflecting PFS's
+(38\% at \(z\sim 0.9\) to 47\% at \(z\sim 1.5\)), reflecting the PFS
 growing \(\nbar\) advantage at higher \(z\). \(\Om\) is flat at
 \(\sim\!35\%\)---it is primarily shape-constrained and less sensitive
 to amplitude nuisance parameters.
@@ -894,7 +894,7 @@ to perfect nuisance knowledge.
 $\Mnu$ achieves the highest efficiency ($\sim\!60\%$): the neutrino mass
 constraint is most sensitive to precisely the stochastic parameters that
 the cross-calibration tightens.
-$f\se$ rises with redshift (38\%\,$\to$\,47\%), reflecting PFS's growing
+$f\se$ rises with redshift (38\%\,$\to$\,47\%), reflecting the PFS growing
 $\nbar$ advantage at higher $z$.
 $\Om$ is flat at $\sim\!35\%$---$\Om$ is primarily shape-constrained and
 less sensitive to amplitude-related nuisance parameters.}
