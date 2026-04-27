@@ -147,7 +147,7 @@ From their first applications on the Sloan Digital Sky Survey BOSS galaxy sample
 non-Gaussianity~\cite{Cabass:2022wjy,DAmico:2022gki,Chudaykin:2025vdh}, early dark energy~\cite{Ivanov:2020ril,DAmico:2020ods,Smith:2020rxx}, clustering dark energy~\cite{DAmico:2020tty}, interacting dark energy~\cite{Tsedrik:2025cwc}, ultra-light axions~\cite{Rogers:2023ezo} and dark-sector
 interactions~\cite{He:2023oke,He:2025npy}.
 More recently, the DESI collaboration~\cite{DESI:2024jxi,DESI:2024hhd,DESI:2025wzd} and independent
-reanalyses~\cite{Chudaykin:2025aux,Chudaykin:2025lww,Chudaykin:2025vdh,Ivanov:2026dvl,Chudaykin:2026nls} applied this framework to DESI~DR1 data, reporting evidence for dynamical dark energy and---when combined with CMB data---a preference for the normal neutrino mass hierarchy over the inverted hierarchy. Sharpening \(\sigma(\Mnu)\) from galaxy clustering is therefore a pressing goal: the neutrino mass constraint is currently the most prior-sensitive quantity in EFT full-shape analyses.
+reanalyses~\cite{Chudaykin:2025aux,Chudaykin:2025lww,Chudaykin:2025vdh,Ivanov:2026dvl,Chudaykin:2026nls} applied this framework to DESI~DR1 data, reporting evidence for dynamical dark energy and---when combined with CMB data---a preference for the normal neutrino mass hierarchy over the inverted hierarchy. Sharpening \(\sigma(\Mnu)\) from galaxy clustering is therefore a pressing goal, as the neutrino mass constraint is currently the most prior-sensitive quantity in EFT full-shape analyses.
 
 At next-to-leading (i.e.\ one-loop) order, the EFT framework
 parameterizes our ignorance of small-scale physics through
@@ -167,13 +167,13 @@ Tightening the nuisance priors is therefore a direct route to sharper
 cosmological constraints. All existing approaches to informative
 priors are simulation-based: HOD mock catalogs are first generated
 from N-body simulations, the EFT parameters are then measured from the
-mocks---either at the power-spectrum level or at the field
-level---and the resulting marginal distributions of EFT parameters are used as priors in the EFT full-shape analyses~\cite{Ivanov:2024hgq,Ivanov:2024xgb,Zhang:2024thl}. Zhang et
+mocks, either at the power-spectrum level or at the field
+level, and the resulting marginal distributions of EFT parameters are used as priors in the EFT full-shape analyses~\cite{Ivanov:2024hgq,Ivanov:2024xgb,Zhang:2024thl}. Zhang et
 al.~\cite{DESI:2025wzd} applied power-spectrum-level priors to
 DESI DR1, improving \(\sigma(\se)\) by \(\sim\!23\%\); Chudaykin,
 Ivanov \& Philcox~\cite{Chudaykin:2026nls} achieved
 \(\sim\!50\%\) with field-level priors. These gains are
-substantial---but the simulation-based priors (SBP) are only as accurate as the HOD model used to produce them~\cite{Akitsu:2024lyt}. Notably, the SBP analyses
+substantial, but the simulation-based priors (SBP) are only as accurate as the HOD model used to produce them~\cite{Akitsu:2024lyt}. Notably, the SBP analyses
 shift \(\se\) downward by \(\sim\!2\sigma\) relative to conservative
 priors~\cite{Chudaykin:2026nls}, deepening the tension with CMB
 measurements of \(S_8\). Whether this shift reflects new physics or
@@ -233,15 +233,15 @@ In a real MCMC analysis, the counterterms and stochastic amplitudes
 enter the model linearly or quadratically and are marginalized
 analytically~\cite{Chudaykin:2020aoj}. Their Gaussian priors therefore
 propagate directly into the marginalized posterior on cosmological
-parameters---broader nuisance priors mean weaker cosmological
+parameters; broader nuisance priors therefore mean weaker cosmological
 constraints, regardless of the sampler used.
 
-The cost is substantial: as noted in the Introduction,
+The cost is substantial. As noted in the Introduction,
 tightening nuisance priors from conservative to HOD-informed
 improves \(\sigma(\se)\) by 23--50\% depending on whether
 power-spectrum-level or field-level SBPs are
 used~\cite{DESI:2025wzd,Chudaykin:2026nls}. The nuisance prior
-is the dominant bottleneck---the question is how to tighten it
+is the dominant bottleneck. The question is how to tighten it
 without relying on simulation assumptions.
 
 
@@ -310,12 +310,12 @@ constraints is negligible (\(\sigma(f\se)\) varies by
 
 The key observation is that jointly fitting the auto-spectra
 \(P_\ell^{XX}\), \(P_\ell^{YY}\) and the cross-spectrum
-\(P_\ell^{XY}\) at each \(k\) over-determines the system: the
+\(P_\ell^{XY}\) at each \(k\) over-determines the system. The
 deterministic signal is shared (up to bias ratios), while the
 stochastic terms enter only the auto spectrum (or are quantifiably
 suppressed in the cross spectrum). The multi-tracer combination therefore
-isolates the constant shot-noise departure \(\Pshot\)---which
-enters the monopole as a \(k\)-independent offset---far more tightly
+isolates the constant shot-noise departure \(\Pshot\), which
+enters the monopole as a \(k\)-independent offset, far more tightly
 than any single tracer can. The \(k\)-dependent stochastic terms
 \(a_0\) and \(a_2\), by contrast, are degenerate with the leading
 counterterms \(c_0\) and \(c_2\) (both scale as \(k^2\)) and
@@ -379,15 +379,15 @@ priors in the full-area DESI Fisher forecast over
 \(V_{\rm full}/V_{\rm overlap} \approx 14{,}000/1{,}200 \approx 12\); the overlap calibrates the nuisance parameters, and the full area
 constrains the cosmology with those calibrated priors.
 
-In a real data analysis, the procedure generalizes naturally:
+In a real data analysis, the procedure generalizes naturally.
 Step~1 becomes a full MCMC on the multi-tracer likelihood in the
 overlap volume, yielding the joint posterior on all cosmological
-and nuisance parameters; Step~2 marginalizes this posterior over
+and nuisance parameters. Step~2 marginalizes this posterior over
 cosmological parameters and other tracers' nuisance parameters to
-obtain the marginal posterior for each DESI nuisance parameter;
-Step~3 uses these marginal posteriors---or Gaussian fits to
-them---as priors in the full-area DESI MCMC. The Fisher
-extraction above is the Gaussian limit of this procedure:
+obtain the marginal posterior for each DESI nuisance parameter.
+Step~3 uses these marginal posteriors, or Gaussian fits to
+them, as priors in the full-area DESI MCMC. The Fisher
+extraction above is the Gaussian limit of this procedure;
 inverting \(F_{\rm reg}\) gives the Gaussian posterior covariance,
 and extracting the diagonal is equivalent to marginalization under
 the Gaussian assumption.
@@ -397,7 +397,7 @@ Formally, the full-area Fisher in Step~2 includes the
 cosmological information in the overlap is counted twice---once
 implicitly through the calibrated priors and once explicitly in
 the full-area sum. We have verified that this double-counting is
-negligible: repeating the six-sample forecast with the overlap
+negligible. Repeating the six-sample forecast with the overlap
 excluded from Step~2 (\(12{,}800\;\text{deg}^2\) instead of
 \(14{,}000\;\text{deg}^2\)) changes the improvement on
 \(\sigma(f\se)\) from 8.2\% to 8.5\% and on \(\sigma(\Mnu)\) from
@@ -819,9 +819,9 @@ $b_1$--$\Mnu$ degeneracy).}
 \label{tab:six_sample}
 \end{table}
 
-The remaining gap to the fixed-nuisance limit---a factor of
+The remaining gap to the fixed-nuisance limit, a factor of
 \(\sim\!4.6\) on \(\sigma(f\se)\) for the combined
-forecast---is dominated by the counterterms
+forecast, is dominated by the counterterms
 (\(c_2\), \(c_4\), \(\ctilde\)) and the \(k\)-dependent stochastic
 terms (\(a_0\), \(a_2\)), which the overlap volume cannot constrain.
 These are precisely the parameters that SBPs tighten most
@@ -970,7 +970,7 @@ measurements and the \(S_8\) tension.
 \Cref{tab:importance} decomposes the cosmological improvement by
 progressively calibrating subsets of nuisance parameters from the
 overlap Fisher while keeping the remainder at their broad priors.
-The result is unambiguous: \textbf{the linear bias \(b_1\se\) is the
+The result is unambiguous---\textbf{the linear bias \(b_1\se\) is the
 dominant driver}, providing \(\sim\!70\%\) of the \(f\se\) gain,
 \(\sim\!97\%\) of the \(\Mnu\) gain, and \(\sim\!65\%\) of the
 \(\Om\) gain.
@@ -1004,7 +1004,7 @@ improvement drops to 4\% on \(f\se\) and \(\Mnu\).}
 \end{table}
 
 The physics behind this is the \(b_1\)--\(f\) degeneracy
-intrinsic to single-tracer redshift-space power spectra: \(\Mnu\)
+intrinsic to single-tracer redshift-space power spectra. \(\Mnu\)
 suppresses small-scale power, an effect nearly perfectly
 compensated by increasing \(b_1\) (Fisher correlation
 \(-0.994\)). With broad priors, \(b_1\se\) carries a flat
@@ -1012,7 +1012,7 @@ compensated by increasing \(b_1\) (Fisher correlation
 marginalized \(\sigma(\Mnu)\). The multi-tracer overlap constrains
 \(b_1\se\) to \(\sigma\approx 0.17\), breaking the degeneracy and
 reducing \(\sigma(\Mnu)\) by more than a factor of two.
-\Cref{fig:fisher_contours} visualizes this mechanism: the broad-prior
+\Cref{fig:fisher_contours} visualizes this mechanism. The broad-prior
 ellipse in the \(b_1\se\)--\(\Mnu\) plane is elongated along the
 degeneracy direction; the cross-calibrated ellipse collapses it.
 
@@ -1056,7 +1056,7 @@ Chudaykin et al.~\cite{Chudaykin:2026nls} report that field-level
 SBPs shrink the \(b_1\) posterior by 30--40\% for all DESI
 tracers; Zhang et al.~\cite{DESI:2025wzd} impose HOD-calibrated
 priors on the full bias vector including \(b_1\). The key
-difference is the source of the prior information: SBPs derive
+difference is the source of the prior information. SBPs derive
 \(b_1\) constraints from simulated galaxy--halo connections, while
 multi-survey priors derive them directly from cross-spectra between
 observed galaxy populations. The latter is model-independent by
@@ -1074,8 +1074,8 @@ variations of the full-area scale cut. Repeating the combined six-sample forecas
 \(\sigma(f\se)\) varies smoothly from 11\% to 8\% to 6\%, and on
 \(\sigma(\Mnu)\) from 59\% to 54\% to 49\%. The mild decrease
 with increasing \(\kmax\) reflects the growing weight of the
-counterterms and \(k\)-dependent stochastic terms---parameters
-that the overlap cannot constrain---at higher wavenumbers. The
+counterterms and \(k\)-dependent stochastic terms, which
+the overlap cannot constrain, at higher wavenumbers. The
 improvement remains significant across the full range of
 \(\kmax\) values considered.
 
@@ -1086,7 +1086,7 @@ implications for \(\Mnu\)}
 As established in \cref{sec:sbp_comparison}, multi-survey priors
 and SBPs constrain the same parameters through independent
 mechanisms. This independence makes them a direct cross-check on
-the \(S_8\) tension: Chudaykin et
+the \(S_8\) tension. Chudaykin et
 al.~\cite{Chudaykin:2026nls} report that field-level SBPs shift
 \(\se\) downward by \(\sim\!2\sigma\) relative to conservative
 priors, and whether this shift originates in the HOD modeling or
@@ -1096,11 +1096,11 @@ shift without HOD input would strengthen the new-physics
 interpretation; a null result would point to systematic biases in
 the galaxy--halo connection.
 
-The optimal strategy combines both approaches: multi-survey
+The optimal strategy combines both approaches---multi-survey
 priors for \(b_1\), \(\Pshot\), and \(b_{\G_2}\); SBPs for the
 counterterms and \(k\)-dependent stochasticity that the overlap
 volume cannot reach. The 54\% improvement on \(\sigma(\Mnu)\) is
-particularly consequential: DESI~DR1 combined with CMB data
+particularly consequential. DESI~DR1 combined with CMB data
 already prefers the normal neutrino mass hierarchy over the
 inverted hierarchy~\cite{DESI:2024hhd,Chudaykin:2025lww}, and
 tightening \(\sigma(\Mnu)\) from galaxy clustering sharpens this
@@ -1147,7 +1147,7 @@ volume. Our main findings are:
 
 \begin{enumerate}
 \item EFT nuisance marginalization is the dominant systematic cost in
-  full-shape analyses: conservative priors degrade \(\sigma(f\se)\) by
+  full-shape analyses; conservative priors degrade \(\sigma(f\se)\) by
   a factor of \(\sim\!4.6\) and \(\sigma(\Mnu)\) by
   \(\sim\!10\) relative to perfect nuisance knowledge, across the
   combined six-sample DESI forecast.
@@ -1226,7 +1226,7 @@ automatically for each parameter.
 \Cref{fig:deriv_validation} summarizes the derivative landscape and
 numerical validation. The left panel shows the normalized monopole
 derivatives \(|\partial P_0/\partial\theta_i|/P_0\) for all 15
-parameters---the hierarchy is evident: \(b_1\se\) and \(f\se\)
+parameters---the hierarchy is evident---\(b_1\se\) and \(f\se\)
 dominate at all scales, while the FoG counterterm \(\ctilde\)
 contributes at the \(10^{-4}\) level, confirming its negligible
 Fisher information at \(k\leq 0.25\iMpch\).
@@ -1313,7 +1313,7 @@ The two methods differ when the one-loop power spectrum has
 \(\mu\)-dependence beyond \(\ell=4\): the GL quadrature integrates
 the full \(P_{\rm tot}(k,\mu)\) directly, while the Wigner~3\(j\)
 formula truncates at the maximum multipole included in the
-decomposition. \Cref{fig:cov_validation} shows the convergence: at
+decomposition. \Cref{fig:cov_validation} shows the convergence. At
 \(\ell_{\max}=4\) the analytic formula agrees with GL to
 \(\sim\!10^{-6}\); including the \(\ell=6\) and \(\ell=8\)
 contributions from the one-loop integrals brings the agreement to
@@ -1378,7 +1378,7 @@ We verify the assembled Fisher matrix against four checks:
   \;\xrightarrow[\nbar\to\infty]{}\;
   \frac{2}{N_{\rm modes}}\,.
   \ee
-  \Cref{fig:ms09_convergence} shows the convergence: the
+  \Cref{fig:ms09_convergence} shows the convergence. The
   single-tracer error plateaus above the floor due to the
   \(b\)--\(f\) degeneracy, while the multi-tracer error drops
   monotonically toward it. At
