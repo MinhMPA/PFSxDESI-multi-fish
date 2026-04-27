@@ -514,11 +514,12 @@ cosmology~\cite{Planck:2018params}.}
 
 We follow the EFT parameterization of Chudaykin, Ivanov \& Philcox
 \cite{Chudaykin:2025aux,Chudaykin:2025lww}. The \(\sigma_8\)-scaled bias
-parameters \(b_1\se\), \(b_2\se^2\), and \(b_{\G_2}\se^2\) enter the
-Fisher matrix as explicit rows; the remaining nuisance parameters are
-analytically marginalized in a real MCMC but included as explicit
-Fisher parameters with their Gaussian priors, which is mathematically
-equivalent. \Cref{tab:eft_params} lists the full parameter set with
+parameters \(b_1\se\), \(b_2\se^2\), and \(b_{\G_2}\se^2\) are
+the only parameters sampled in a real
+MCMC~\cite{DESI:2024hhd,Chudaykin:2025lww}; the remaining nuisance
+parameters enter the model linearly and are marginalized
+analytically given their Gaussian priors. Including them as
+explicit Fisher parameters with the same priors is equivalent. \Cref{tab:eft_params} lists the full parameter set with
 fiducial values and conservative (``broad'') prior widths for
 DESI-ELG.
 
