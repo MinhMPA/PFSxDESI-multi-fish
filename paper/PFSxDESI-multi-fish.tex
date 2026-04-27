@@ -95,7 +95,7 @@
 \keywords{galaxy surveys, redshift surveys, galaxy clustering, power spectrum, cosmological parameters from LSS, neutrino masses from cosmology}
 
 \abstract{%
-Marginalizing over roughly twelve effective-field-theory (EFT) nuisance
+Marginalizing over roughly 12 effective-field-theory (EFT) nuisance
 parameters per tracer per redshift bin is the dominant systematic cost
 in full-shape galaxy power spectrum analyses.
 Simulation-based priors (SBP) can tighten these parameters but rely on
@@ -105,8 +105,8 @@ that calibrates EFT parameters from the multi-tracer analysis of
 overlapping spectroscopic surveys.
 %
 In the \(\sim\!1{,}200\;\text{deg}^2\) Prime Focus Spectrograph (PFS)--Dark Energy Spectroscopic Instrument (DESI) overlap at
-\(0.6<z<1.6\), up to four tracers (PFS-ELG, DESI-ELG, DESI-LRG,
-DESI-QSO) and ten cross-spectra per redshift bin provide
+\(0.6<z<1.6\), up to 4 tracers (PFS-ELG, DESI-ELG, DESI-LRG,
+DESI-QSO) and 10 cross-spectra per redshift bin provide
 model-independent constraints on the DESI nuisance parameters.
 Cross-spectra between different galaxy populations carry zero
 stochastic contribution, cleanly separating shot noise from signal.
@@ -151,7 +151,7 @@ reanalyses~\cite{Chudaykin:2025aux,Chudaykin:2025lww,Chudaykin:2025vdh,Ivanov:20
 
 At next-to-leading (i.e.\ one-loop) order, the EFT framework
 parameterizes our ignorance of small-scale physics through
-roughly twelve nuisance parameters per tracer per redshift
+roughly 12 nuisance parameters per tracer per redshift
 bin~\cite{Chudaykin:2020aoj,Desjacques:2016bnm}---bias coefficients,
 counterterms, and stochastic amplitudes (\cref{tab:eft_params}).
 Marginalizing over these parameters with conservative Gaussian priors
@@ -159,7 +159,7 @@ degrades \(\sigma(f\se)\) by a factor of \(\sim\!2.4\) and
 \(\sigma(\Mnu)\) by \(\sim\!6.4\) relative to perfect nuisance
 knowledge for a single DESI-ELG sample~\cite{Chudaykin:2024wlw};
 the degradation grows to \(\sim\!4.6\times\) and \(\sim\!10\times\)
-when six DR2 samples are combined (\cref{sec:conclusions}), illustrating
+when 6 DR2 samples are combined (\cref{sec:conclusions}), illustrating
 the increasing cost of nuisance-parameter marginalization in joint
 multi-sample (not multi-tracer) analyses.
 
@@ -197,10 +197,10 @@ full \(14{,}000\;\text{deg}^2\) footprint, tightening cosmological
 constraints without any simulation input.
 
 The \(\sim\!1{,}200\;\text{deg}^2\) overlap of the Subaru Prime Focus
-Spectrograph (PFS) ELG survey~\cite{Takada:2014pfs} with three DESI
+Spectrograph (PFS) ELG survey~\cite{Takada:2014pfs} with 3 DESI
 tracers---ELG, luminous red galaxies (LRG), and quasars
 (QSO)~\cite{DESI:2016fyo,DESI:2025zgx}---at \(0.6<z<1.6\)
-provides a concrete realization. With up to four tracers and ten cross-spectra per redshift bin, the overlap volume functions as a calibration laboratory for the EFT parameters that limit the full DESI analysis. The weaker finger-of-god (FoG) contamination expected in PFS samples motivates an asymmetric scale cut, \(\kmax^{\PFS}>\kmax^{\DESI}\)~\cite{Rubira:2025scu}\footnote{Data-driven FoG cleaning methods~\citep[e.g.,][]{BaleatoLizancos:2025wdg} offer a complementary route to extending the usable \(k\)-range.}.
+provides a concrete realization. With up to 4 tracers and 10 cross-spectra per redshift bin, the overlap volume functions as a calibration laboratory for the EFT parameters that limit the full DESI analysis. The weaker finger-of-god (FoG) contamination expected in PFS samples motivates an asymmetric scale cut, \(\kmax^{\PFS}>\kmax^{\DESI}\)~\cite{Rubira:2025scu}\footnote{Data-driven FoG cleaning methods~\citep[e.g.,][]{BaleatoLizancos:2025wdg} offer a complementary route to extending the usable \(k\)-range.}.
 
 This paper is organized as follows. \Cref{sec:method} describes the
 multi-survey prior mechanism. \Cref{sec:fisher} details the Fisher
@@ -220,12 +220,12 @@ and conclude in \cref{sec:conclusions}.
 \label{sec:marg_cost}
 
 The one-loop EFTofLSS model for the galaxy power spectrum multipoles
-\(P_\ell(k)\) involves roughly twelve nuisance parameters per tracer per
-redshift bin, summarized in \cref{tab:eft_params}: three bias parameters
+\(P_\ell(k)\) involves roughly 12 nuisance parameters per tracer per
+redshift bin, summarized in \cref{tab:eft_params}: 3 bias parameters
 (\(b_1\se\), \(b_2\se^2\), \(b_{\G_2}\se^2\)) that enter the Fisher
-matrix as explicit rows; the cubic tidal bias \(b_{\Gamma_3}\); five
+matrix as explicit rows; the cubic tidal bias \(b_{\Gamma_3}\); 5
 counterterms (\(c_0\), \(c_2\), \(c_4\), \(\ctilde\), \(c_1\)) that
-absorb UV sensitivity of the loop integrals; and three stochastic
+absorb UV sensitivity of the loop integrals; and 3 stochastic
 amplitudes (\(\Pshot\), \(a_0\), \(a_2\)) that parameterize departures
 from Poisson shot noise.
 
@@ -342,7 +342,7 @@ For our fiducial \(\rsv=0.75\), this gives
 We implement this by splitting the Fisher matrix sum into two
 \(k\)-ranges~\cite{Rubira:2025scu}. At
 \(k \leq \kmax^{\DESI}\), all \(N_t(N_t{+}1)/2\) spectra contribute
-(up to ten spectra for four tracers). At
+(up to 10 spectra for 4 tracers). At
 \(\kmax^{\DESI} < k \leq \kmax^{\PFS}\), the DESI auto-spectra are
 excluded and only the PFS auto and the PFS\(\times\)DESI cross-spectra
 remain. The total Fisher matrix is given by
@@ -362,7 +362,7 @@ the reduced versions excluding the DESI auto-spectrum rows and columns.
 \subsection{Prior export mechanism}
 \label{sec:prior_export}
 
-From the overlap multi-tracer Fisher \(F_{\rm overlap}\) (\cref{eqn:fisher_asym}), we extract calibrated priors for each DESI nuisance parameter in three steps:
+From the overlap multi-tracer Fisher \(F_{\rm overlap}\) (\cref{eqn:fisher_asym}), we extract calibrated priors for each DESI nuisance parameter in 3 steps:
 \begin{enumerate}
 \item Regularize the Fisher matrix: \(F_{\rm reg} = F_{\rm overlap} + F_{\rm broad}\),
   where \(F_{\rm broad}\) is diagonal with entries \(1/\sigma_{\rm broad}^2\)
@@ -441,17 +441,17 @@ analysis scenarios below.
 \subsection{Survey specifications}
 \label{sec:surveys}
 
-We consider the overlap of PFS-ELG with three DESI tracer samples in
+We consider the overlap of PFS-ELG with 3 DESI tracer samples in
 the shared \(\sim\!1{,}200\;\text{deg}^2\) footprint.
 
 \paragraph{DESI.}
 The Dark Energy Spectroscopic Instrument~\cite{DESI:2016fyo} covers
-\(14{,}000\;\text{deg}^2\) with three galaxy samples relevant to this
+\(14{,}000\;\text{deg}^2\) with 3 galaxy samples relevant to this
 analysis. The ELG sample~\cite{DESI:2025zgx} spans
 \(0.8<z<1.6\) with peak \(\nbar\sim 10^{-3}\Mpchcubed\) and bias
 \(b_1(z) = 0.84/D(z)\). The LRG sample covers \(0.4<z<1.1\) with
 \(\nbar\sim 5\times 10^{-4}\Mpchcubed\) and \(b_1(z)=1.7/D(z)\)---the
-highest bias of the three, providing strong contrast with PFS. The QSO
+highest bias of the 3, providing strong contrast with PFS. The QSO
 sample extends to \(z\sim 2.1\) but has low density
 (\(\nbar\sim 3\times 10^{-5}\Mpchcubed\)) and \(b_1(z)=1.2/D(z)\).
 
@@ -469,7 +469,7 @@ each bin. PFS-ELG (\(0.6<z<2.4\)) overlaps with DESI-LRG
 (\(0.8<z<1.6\)) at \(0.8<z<1.6\), and with DESI-QSO
 (\(0.8<z<2.1\)) at \(0.8<z<1.6\) (we truncate at
 \(z=1.6\) where DESI-ELG ends).
-We rebin the overlap into five matched redshift bins:
+We rebin the overlap into 5 matched redshift bins:
 \(z=[0.6,\,0.8]\), \([0.8,\,1.0]\), \([1.0,\,1.2]\),
 \([1.2,\,1.4]\), and \([1.4,\,1.6]\).
 Number densities are volume-weighted averages from
@@ -478,8 +478,8 @@ at the volume-weighted effective redshift.
 \Cref{tab:surveys} summarizes the survey properties per bin. At
 \(z=[0.6,\,0.8]\), only PFS-ELG and DESI-LRG overlap
 (\(N_t=2\), \(N_{\rm spec}=3\)).
-At \(z=[0.8,\,1.0]\) and \([1.0,\,1.2]\), all four tracers overlap (\(N_t=4\), \(N_{\rm spec}=10\)); the LRG sample drops
-out above \(z=1.1\), leaving three tracers in the remaining bins.
+At \(z=[0.8,\,1.0]\) and \([1.0,\,1.2]\), all 4 tracers overlap (\(N_t=4\), \(N_{\rm spec}=10\)); the LRG sample drops
+out above \(z=1.1\), leaving 3 tracers in the remaining bins.
 
 \begin{table}[t]
 \centering
@@ -541,7 +541,7 @@ $a_2$          & 0 & 0 & 0 & 0 & $\N(0,1^2)$ & --- \\
 \hline
 \end{tabular}
 \caption{EFT nuisance parameters and fiducial values at $z=0.9$ for all
-four tracers, following the parameterization of Chudaykin, Ivanov \& Philcox~\cite{Chudaykin:2025lww}.
+4 tracers, following the parameterization of Chudaykin, Ivanov \& Philcox~\cite{Chudaykin:2025lww}.
 Bias fiducials: $b_1$ from the survey-specific bias model
 (\cref{sec:surveys}); $b_2$ from the Lazeyras et al.~\cite{Lazeyras:2015lgp} co-evolution
 relation; $b_{\G_2}=-2/7(b_1{-}1)$; $b_{\Gamma_3}=23/42(b_1{-}1)$.
@@ -590,7 +590,7 @@ magnitude larger than the ELG value. The leading counterterm
 
 The observables are power spectrum multipoles
 \(P_\ell(k)\) for \(\ell=0,2,4\)~\cite{Ivanov:2019pdj,dAmico:2019fhj},
-computed for each auto- and cross-spectrum pair. At each wavenumber \(k\), the observable vector has \(3 N_{\rm spec}\) elements, where \(N_{\rm spec}=N_t(N_t{+}1)/2\) is the number of auto- and cross-spectrum pairs---up to 30 elements for four tracers.
+computed for each auto- and cross-spectrum pair. At each wavenumber \(k\), the observable vector has \(3 N_{\rm spec}\) elements, where \(N_{\rm spec}=N_t(N_t{+}1)/2\) is the number of auto- and cross-spectrum pairs---up to 30 elements for 4 tracers.
 
 The Gaussian covariance at each \(k\) is
 \be
@@ -640,7 +640,7 @@ All scenarios use the same \(\kmax=0.20\iMpch\) for the full-area
 analysis---the EFT convergence for DESI-ELG is set by DESI's own
 \(\ctilde\), which is independent of the priors used. The improvement
 comes entirely from tighter nuisance priors, not from extending the
-\(k\)-range. We evaluate three scenarios:
+\(k\)-range. We evaluate 3 scenarios:
 \begin{itemize}
 \item \textbf{Broad}: conservative Gaussian priors from
   \cref{tab:eft_params}. Baseline.
@@ -680,7 +680,7 @@ mismatch between the calibrated and in-situ posteriors.
 \Cref{fig:calibrated_vs_broad} compares the calibrated prior
 widths with the conservative broad
 priors~\cite{Chudaykin:2025lww,DESI:2024jxi} for all DESI-ELG
-nuisance parameters. Three parameters show significant tightening.
+nuisance parameters. 3 parameters show significant tightening.
 The linear bias \(b_1\se\), which carries a flat prior in the
 broad analysis, is constrained to
 \(\sigma(b_1\se)\approx 0.17\text{--}0.27\) by the multi-tracer
@@ -708,7 +708,7 @@ marginally---from \(\sigma=30\) to \(\sigma\approx 22\text{--}30\).
 \begin{figure}[t]
 \centering
 \includegraphics[width=\textwidth]{\figurespath/calibrated_vs_broad.png}
-\caption{Calibrated versus broad priors for all six DESI~DR2 samples.
+\caption{Calibrated versus broad priors for all 6 DESI~DR2 samples.
 Markers show the averaged calibrated prior width
 $\sigma_{\rm cal}$ per sample; light bars show the conservative broad
 prior $\sigma_{\rm broad}$.
@@ -728,7 +728,7 @@ $k^2$/$k^4$ contributions (\cref{sec:discussion}).}
 \label{sec:results_full_area}
 
 We now export the calibrated priors to the full
-\(14{,}000\;\text{deg}^2\) DESI footprint, forecasting all six
+\(14{,}000\;\text{deg}^2\) DESI footprint, forecasting all 6
 DR2 tracer samples---LRG1--3, ELG1--2, and QSO---each analysed
 with its own auto-spectrum and the calibrated priors from Step~1.
 \Cref{tab:dr2_samples} lists the survey properties of each sample;
@@ -827,7 +827,7 @@ competing.
 \includegraphics[width=\textwidth]{\figurespath/full_area_constraints.png}
 \caption{Full-area DESI-ELG constraints ($\kmax=0.20\iMpch$).
 Marginalized $1\sigma$ uncertainties on $f\se$, $\Mnu$, and $\Om$
-from $14{,}000\;\text{deg}^2$, combining four $z$-bins, under three
+from $14{,}000\;\text{deg}^2$, combining 4 $z$-bins, under 3
 scenarios. Multi-survey priors (green) improve $\sigma(f\se)$ by
 $\sim\!19\%$ and $\sigma(\Mnu)$ by $\sim\!55\%$ for this single
 tracer. The combined six-sample results are in
@@ -857,8 +857,8 @@ Fixed nuisance & ---     & 0.039 & $-59$ & 0.21  & $-84$ & 0.033 & $-48$ \\
 \hline
 \end{tabular}
 \caption{Full-area DESI-ELG constraints ($\kmax=0.20\iMpch$, combined
-over four $z$-bins at $0.8<z<1.6$). Multi-survey priors are calibrated
-from the five-bin overlap Fisher (up to 4~tracers, 10~spectra per bin).
+over 4 $z$-bins at $0.8<z<1.6$). Multi-survey priors are calibrated
+from the 5-bin overlap Fisher (up to 4~tracers, 10~spectra per bin).
 Two $\ctilde$ templates are tested: ``Zhang+'' uses
 $\sigma_v$ from Zhang et al.~\cite{DESI:2025wzd} (Table~1); ``Ivanov'' uses
 $\ctilde$ from Ivanov~\cite{Ivanov:2021elg} (Eq.~19). The improvement is robust to the
@@ -1022,7 +1022,7 @@ driver of the improvement: calibrating \(b_1\se\) from the
 PFS--DESI overlap collapses the elongated ellipse.
 The right panel shows the resulting marginalized cosmological
 contour. Fiducial: DESI-ELG at \(z=0.9\), combined over
-four \(z\)-bins in 14,000~deg\(^2\).}
+4 \(z\)-bins in 14,000~deg\(^2\).}
 \label{fig:fisher_contours}
 \end{figure}
 
@@ -1112,7 +1112,7 @@ the sub-leading counterterm \(c_1\) and break the
 \(b_1\)--\(b_2\)--\(b_{\G_2}\) degeneracies through the \(Z_2\)
 kernel structure.
 
-The forecast rests on three assumptions that future work should
+The forecast rests on 3 assumptions that future work should
 test. The Gaussian Fisher approximation captures the leading
 information content but not non-Gaussian posterior structure;
 an MCMC analysis with the full likelihood would sharpen the
@@ -1152,7 +1152,7 @@ volume. Our main findings are:
   \(b_1\)--\(f\) degeneracy that limits single-tracer analyses
   (\cref{tab:importance,fig:fisher_contours}).
 
-\item Forecasting all six DESI~DR2 tracer samples (LRG1--3,
+\item Forecasting all 6 DESI~DR2 tracer samples (LRG1--3,
   ELG1--2, QSO), multi-survey priors improve the combined
   \(\sigma(f\se)\) by 8\% (7--25\% per sample) and
   \(\sigma(\Mnu)\) by 54\% (46--71\% per sample)---achieved
@@ -1266,7 +1266,7 @@ estimators:
 where \(N_{\rm modes}(k)=k^2\Delta k\,V/(2\pi^2)\) is the number
 of Fourier modes in a shell of width \(\Delta k\), and
 \(L_\ell(\mu)\) are the Legendre polynomials. The two terms inside
-the brackets are the two Wick pairings of the four galaxy fields;
+the brackets are the two Wick pairings of the 4 galaxy fields;
 for a single tracer (\(X{=}Y{=}W{=}Z\)) they are identical,
 recovering the familiar factor-of-two scaling of the power-spectrum
 variance.
@@ -1339,7 +1339,7 @@ that the GL quadrature captures it automatically.}
 \subsection{Fisher matrix}
 \label{app:fisher_checks}
 
-We verify the assembled Fisher matrix against four checks:
+We verify the assembled Fisher matrix against 4 checks:
 
 \begin{enumerate}
 \item \textbf{Analytic regression.}
@@ -1360,7 +1360,7 @@ We verify the assembled Fisher matrix against four checks:
   for all cosmological parameters and redshift bins.
 
 \item \textbf{Cosmic-variance-free limit.}
-  In the linear-bias Kaiser model with two tracers of different
+  In the linear-bias Kaiser model with 2 tracers of different
   bias (\(b_A=1\), \(b_B=2\), \(f=0.8\)) and no counterterms, the
   multi-tracer Fisher for \(P_m\) (marginalized over both biases
   via a Schur complement) recovers the cosmic-variance-free
@@ -1418,7 +1418,7 @@ Blue: conditional (all nuisance parameters fixed).
 Orange: marginalized over nuisance parameters with broad priors.
 The gap quantifies the information lost to nuisance
 marginalization at each scale.
-For \(\Mnu\), the loss exceeds three orders of magnitude---this is
+For \(\Mnu\), the loss exceeds 3 orders of magnitude---this is
 the cost that multi-survey priors aim to recover.}
 \label{fig:fisher_info}
 \end{figure}
