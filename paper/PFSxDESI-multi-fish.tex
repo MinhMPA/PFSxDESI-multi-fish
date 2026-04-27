@@ -229,7 +229,7 @@ absorb UV sensitivity of the loop integrals; and three stochastic
 amplitudes (\(\Pshot\), \(a_0\), \(a_2\)) that parameterize departures
 from Poisson shot noise.
 
-In a real MCMC analysis, the counterterms and stochastic amplitudes
+In a real Markov chain Monte Carlo (MCMC) analysis, the counterterms and stochastic amplitudes
 enter the model linearly or quadratically and are marginalized
 analytically~\cite{Chudaykin:2020aoj}. Their Gaussian priors therefore
 propagate directly into the marginalized posterior on cosmological
@@ -515,13 +515,9 @@ cosmology~\cite{Planck:2018params}.}
 We follow the EFT parameterization of Chudaykin, Ivanov \& Philcox
 \cite{Chudaykin:2025aux,Chudaykin:2025lww}. The \(\sigma_8\)-scaled bias
 parameters \(b_1\se\), \(b_2\se^2\), and \(b_{\G_2}\se^2\) are
-the only parameters sampled in a real
-MCMC~\cite{DESI:2024hhd,Chudaykin:2025lww}; the remaining nuisance
-parameters enter the model linearly and are marginalized
+the only parameters sampled in a real MCMC~\cite{DESI:2024hhd,Chudaykin:2025lww}; the remaining nuisance parameters enter the model linearly and are marginalized
 analytically given their Gaussian priors. Including them as
-explicit Fisher parameters with the same priors is equivalent. \Cref{tab:eft_params} lists the full parameter set with
-fiducial values and conservative (``broad'') prior widths for
-DESI-ELG.
+explicit Fisher parameters with the same priors is equivalent. \Cref{tab:eft_params} lists the full parameter set with fiducial values and conservative (``broad'') prior widths for DESI-ELG.
 
 \begin{table}[t]
 \centering
@@ -570,7 +566,7 @@ physically motivated prescriptions. The FoG counterterm scales with
 the squared virial velocity:
 \(\ctilde^{\PFS}=\ctilde^{\DESI\text{-ELG}}\times \rsv^4\), where
 \(\rsv\equiv \sigma_{v,\PFS}/\sigma_{v,\DESI}\). We adopt a fiducial
-\(\rsv=0.75\) (PFS selects fainter [OII] emitters in lower-mass halos)
+\(\rsv=0.75\) (PFS selects fainter [OII] emitters in lower-mass halos~\cite{PFS-CO-target:inprep})
 and test the range \(\rsv\in[0.5,\,1.0]\) in \cref{sec:results_sensitivity}.
 The leading counterterms (\(c_0\), \(c_2\), \(c_4\)) scale with the
 bias ratio \(b_1^{\PFS}/b_1^{\DESI}\); the nonlinear biases \(b_2\)
@@ -1219,7 +1215,7 @@ computed via JAX forward-mode automatic differentiation
 (\texttt{jax.jacfwd}) through the full one-loop
 \texttt{ps\_1loop\_jax} model, avoiding step-size tuning entirely.
 We validate against adaptive finite-difference derivatives
-computed with \texttt{numdifftools}~\cite{numdifftools}, which
+computed with \texttt{numdifftools}\footnote{\url{https://github.com/pbrod/numdifftools}}, which
 uses Richardson extrapolation to find the optimal step size
 automatically for each parameter.
 
