@@ -15,6 +15,12 @@
 \graphicspath{{figs/}}
 %\usepackage[allfiguresdraft]{draftfigure}
 
+%%% GitHub icon
+\usepackage{fontawesome5}
+\makeatletter
+\newcommand{\github}[1]{%
+   \href{#1}{\faGithub}%
+}
 
 %%%%%%%%%%%%%%%
 %% Reference %%
@@ -122,9 +128,9 @@ accounts for \(\sim\!70\%\) of the \(f\se\) gain and
 \(\sim\!97\%\) of the \(\Mnu\) gain by breaking the
 \(b_1\sigma_8\)--\(f\se\) degeneracy intrinsic to single-tracer analyses.
 Multi-survey prior calibration parallels the SBP approach, which tightens \(b_1\)
-through HOD assumptions; multi-survey priors provide a
+through HOD model assumptions; multi-survey priors provide a
 model-independent consistency check on these assumptions and
-generalize to arbitrary combinations of overlapping spectroscopic surveys.
+generalize to arbitrary combinations of overlapping spectroscopic surveys. Code is available at this repository \github{https://github.com/MinhMPA/PFSxDESI-multi-fish}.
 }
 
 
@@ -1003,7 +1009,7 @@ The physics behind this is the \(b_1\)--\(f\) degeneracy
 intrinsic to single-tracer redshift-space power spectra. \(\Mnu\)
 suppresses small-scale power, an effect nearly perfectly
 compensated by increasing \(b_1\) (Fisher correlation
-\(-0.994\)). With broad priors, \(b_1\se\) carries a flat
+\(-0.99\)). With broad priors, \(b_1\se\) carries a flat
 (uninformative) prior, so this degeneracy fully propagates into the
 marginalized \(\sigma(\Mnu)\). The multi-tracer overlap constrains
 \(b_1\se\) to \(\sigma\approx 0.17\), breaking the degeneracy and
@@ -1047,7 +1053,7 @@ set by the remaining nuisance calibration (\(\Pshot\),
 
 The headline improvement of 8--54\% therefore requires adopting an
 informative \(b_1\) prior---but this is precisely what the
-simulation-based prior program has already begun to do.
+SBP program attempts to do.
 Field-level SBPs already shrink \(b_1\) by
 30--40\%~\cite{Chudaykin:2026nls}, and power-spectrum-level SBPs
 impose HOD-calibrated priors on the full bias vector including
@@ -1071,7 +1077,7 @@ variations of the full-area scale cut. Repeating the combined six-sample forecas
 \(\sigma(\Mnu)\) from 59\% to 54\% to 49\%. The mild decrease
 with increasing \(\kmax\) reflects the growing weight of the
 counterterms and \(k\)-dependent stochastic terms, which
-the overlap cannot constrain, at higher wavenumbers. The
+the survey overlap cannot constrain, at higher wavenumbers. The
 improvement remains significant across the full range of
 \(\kmax\) values considered.
 
@@ -1114,8 +1120,7 @@ the sub-leading counterterm \(c_1\) and break the
 \(b_1\)--\(b_2\)--\(b_{\G_2}\) degeneracies through the \(Z_2\)
 kernel structure.
 
-The forecast rests on three assumptions that future work should
-test. The Gaussian Fisher approximation captures the leading
+The present forecast rests on three assumptions that future works should validate. The Gaussian Fisher approximation captures the leading
 information content but not non-Gaussian posterior structure;
 an MCMC analysis with the full likelihood would sharpen the
 comparison with SBPs. The PFS-ELG EFT fiducials are scaled from
@@ -1182,6 +1187,7 @@ I am grateful to Linda Blot and Jingjing Shi for heartening and uplifting conver
 
 It takes two villages to build the PFS and DESI surveys; I thank everyone in the PFS and DESI collaborations, whose collective efforts made these surveys possible and successful.
 I acknowledge support from the Japan Foundation for Promotion of Astronomy Research Grant and the JSPS KAKENHI Grant Numbers 25K23373 and 26H00404.
+This work was supported by World Premier International Research Center Initiative (WPI Initiative), MEXT, Japan.
 
 This study utilized the following open-source libraries and software packages:
 \href{https://github.com/google/jax}{\code{JAX}},
@@ -1295,29 +1301,16 @@ At each wavenumber, the observable vector has
 cross-spectrum pairs and \(N_\ell=3\) for the monopole, quadrupole, and hexadecapole
 \(\ell=0,2,4\), respectively. The covariance is therefore an
 \(N_{\rm obs}\times N_{\rm obs}\) matrix at each \(k\). The
-\(\mu\)-integrals are evaluated with 20-point Gauss--Legendre (GL)
-quadrature. An equivalent approach is the analytic Wigner~3\(j\)
-decomposition of Rubira \&
-Conteddu~\cite{Rubira:2025scu} (their Eq.~2.20), which first
-decomposes \(P(k,\mu)\) into multipoles \(P_\ell\) and
-then evaluates the products of Legendre polynomials via
+\(\mu\)-integrals are evaluated with 20-point GL
+quadrature. An equivalent approach is the analytic Wigner~3\(j\) decomposition of Rubira \&
+Conteddu~\cite{Rubira:2025scu} (their Eq.~2.20), which first decomposes \(P(k,\mu)\) into multipoles \(P_\ell\) and then evaluates the products of Legendre polynomials via
 \(L_{\ell_1}L_{\ell_2}=\sum_{\ell_3}(2\ell_3{+}1)
 \bigl(\begin{smallmatrix}\ell_1 & \ell_2 & \ell_3 \\
 0 & 0 & 0\end{smallmatrix}\bigr)^{\!2} L_{\ell_3}\).
-The two methods differ when the one-loop power spectrum has
-\(\mu\)-dependence beyond \(\ell=4\): the GL quadrature integrates
-the full \(P(k,\mu)\) directly, while the Wigner~3\(j\)
-formula truncates at the maximum multipole included in the
-decomposition. \Cref{fig:cov_validation} shows the convergence. At
-\(\ell_{\max}=4\) the analytic formula agrees with GL to
-\(\sim\!10^{-6}\); including the \(\ell=6\) and \(\ell=8\)
-contributions from the one-loop integrals brings the agreement to
-\(\sim\!10^{-9}\) and \(\sim\!10^{-11}\), respectively. The GL
-quadrature is therefore equivalent to
-\(\ell_{\max}\to\infty\) automatically.
-The covariance matrix at every \(k\) additionally passes exact
-symmetry (\(\|C{-}C^T\|{<}10^{-12}\)), positive-definiteness, and
-\(\Cov\propto 1/V\) scaling checks.
+The two methods differ when the one-loop power spectrum has \(\mu\)-dependence beyond \(\ell=4\): the GL quadrature integrates the full \(P(k,\mu)\) directly, while the Wigner~3\(j\) formula truncates at the maximum multipole included in the decomposition.
+\Cref{fig:cov_validation} shows the convergence. At \(\ell_{\max}=4\) the analytic formula agrees with GL to \(\sim\!10^{-6}\); including the \(\ell=6\) and \(\ell=8\) contributions from the one-loop integrals brings the agreement to \(\sim\!10^{-9}\) and \(\sim\!10^{-11}\), respectively.
+The GL quadrature is therefore equivalent to \(\ell_{\max}\to\infty\).
+The covariance matrix at every \(k\) additionally passes exact symmetry (\(\|C{-}C^T\|{<}10^{-12}\)), positive-definiteness, and \(\Cov\propto 1/V\) scaling checks.
 
 \begin{figure}[t]
 \centering
@@ -1331,7 +1324,7 @@ Wigner~3\(j\) formula~\cite{Rubira:2025scu} (their Eq.~2.20) at
 \(\ell_{\max}=4\), \(6\), and \(8\). Each step in
 \(\ell_{\max}\) gains \(\sim\!3\) orders of magnitude, confirming
 that the one-loop model has non-negligible \(\ell>4\) content and
-that the GL quadrature captures it automatically.}
+that the GL quadrature correctly captures it, as expected.}
 \label{fig:cov_validation}
 \end{figure}
 
