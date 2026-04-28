@@ -473,7 +473,7 @@ We rebin the overlap into 5 matched redshift bins:
 \(z=[0.6,\,0.8]\), \([0.8,\,1.0]\), \([1.0,\,1.2]\),
 \([1.2,\,1.4]\), and \([1.4,\,1.6]\).
 Number densities are volume-weighted averages from
-fine-binned \(n(z)\) files (\(\Delta z=0.01\)); bias parameters are evaluated
+fine-binned \(n(z)\) tables (\(\Delta z=0.01\)); bias parameters are evaluated
 at the volume-weighted effective redshift.
 \Cref{tab:surveys} summarizes the survey properties per bin. At
 \(z=[0.6,\,0.8]\), only PFS-ELG and DESI-LRG overlap
@@ -500,7 +500,7 @@ $[1.4,\,1.6]$ & $3.1$ & 1.50 & $1.2$ & 1.69 & --- & --- & $0.31$ & 2.42 & 3 & 6 
 $\sim\!1{,}200\;\text{deg}^2$ PFS--DESI overlap.
 Number densities $\nbar$ in units of
 $10^{-4}\,h^3\,\text{Mpc}^{-3}$ are volume-weighted averages from
-fine-binned $n(z)$ files. $N_t$ is the number of overlapping tracers;
+fine-binned $n(z)$ tables. $N_t$ is the number of overlapping tracers;
 $N_{\rm spec} = N_t(N_t{+}1)/2$ is the number of auto- and
 cross-spectra. At $z=[0.6,\,0.8]$, only PFS-ELG and DESI-LRG
 overlap; the LRG sample drops out above $z=1.1$.
@@ -761,8 +761,7 @@ QSO  & $[0.8,\,2.1]$ & 1.45 & 0.30 & 2.38 & 61.0 \\
 \end{tabular}
 \caption{DESI~DR2 tracer samples used in the full-area forecast.
 Number densities $\nbar$ are volume-weighted averages from fine-binned
-$n(z)$ files; biases $b_1$ are evaluated at the effective redshift;
-volumes $V$ assume the full $14{,}000\;\text{deg}^2$ footprint and
+$n(z)$ tables; $b_1$ values are evaluated at the effective redshift; $V$ values assume the full $14{,}000\;\text{deg}^2$ footprint and
 Planck 2018 cosmology.
 LRG1 lies entirely below the PFS redshift range ($z<0.6$) and uses
 broad priors. LRG2 overlaps one calibration bin $z=[0.6,0.8]$; the
@@ -825,24 +824,21 @@ forecast, is dominated by the counterterms
 (\(c_2\), \(c_4\), \(\ctilde\)) and the \(k\)-dependent stochastic
 terms (\(a_0\), \(a_2\)), which the overlap volume cannot constrain.
 These are precisely the parameters that SBPs tighten most
-effectively, making the two approaches complementary rather than
-competing.
+effectively, making the two approaches complementary.
 
 \begin{figure}[t]
 \centering
 \includegraphics[width=\textwidth]{\figurespath/full_area_constraints.png}
 \caption{Full-area DESI-ELG constraints ($\kmax=0.20\iMpch$).
-Marginalized $1\sigma$ uncertainties on $f\se$, $\Mnu$, and $\Om$
-from $14{,}000\;\text{deg}^2$, combining 4 $z$-bins, under 3
+Marginalized $1\sigma$ uncertainties on $f\se$ (left panel), $\Mnu$ (middle panel), and $\Om$ (right panel) from the $14{,}000\;\text{deg}^2$ DESI footprint, combining 4 $z$-bins, under 3
 scenarios. Multi-survey priors (green) improve $\sigma(f\se)$ by
 $\sim\!19\%$ and $\sigma(\Mnu)$ by $\sim\!55\%$ for this single
-tracer. The combined six-sample results are in
+tracer. The combined results are given in
 \cref{tab:six_sample}.
-Horizontal lines show SBP benchmarks from DESI~DR1 re-analyses:
+Horizontal lines indicate the SBP benchmarks from the DESI~DR1 re-analyses:
 power-spectrum-level SBP (dashed)~\cite{DESI:2025wzd}
 and field-level SBP (dotted)~\cite{Chudaykin:2026nls}.
-No field-level SBP line is shown for $\Mnu$ because
-field-level SBPs worsen the
+No field-level SBP line is shown for $\Mnu$; field-level SBPs worsen the
 $\Lambda$CDM neutrino-mass bound (their Table~IV),
 owing to a downward $\se$ shift that opens room for larger $\Mnu$.}
 \label{fig:full_area}
@@ -1182,7 +1178,7 @@ volume. Our main findings are:
 Special thanks to Yosuke Kobayashi and Kazuyuki Akitsu for early access to their one-loop power spectrum code, \code{ps\_1loop\_jax}.
 I also thank Jingjing Shi for providing the PFS survey specifications and Kazuyuki Akitsu for engaging discussions about simulation-based priors.
 
-I am grateful to Linda Blot and Jingjing Shi for heartening and uplifting conversations between the VJA flights on which this work was begun and finished.
+I am grateful to Linda Blot and Jingjing Shi for heartening and uplifting conversations between the VJA red-eye flights on which this work was begun and finished.
 
 It takes two villages to build the PFS and DESI surveys; I thank everyone in the PFS and DESI collaborations, whose collective efforts made these surveys possible and successful.
 I acknowledge support from the Japan Foundation for Promotion of Astronomy Research Grant and the JSPS KAKENHI Grant Numbers 25K23373 and 26H00404.
