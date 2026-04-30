@@ -2,7 +2,7 @@
 
 Fisher forecast for **multi-survey priors** — data-driven calibration of EFT nuisance parameters from the multi-tracer analysis of the PFS--DESI overlap volume, exported to DESI's full 14,000 deg² footprint.
 
-**Paper**: N.-M. Nguyen, *"Multi-tracers, multi-surveys: data-driven EFT prior calibration from the PFS--DESI overlap"*.
+**Paper**: [Nhat-Minh Nguyen (2026), arXiv:2604.25171, *"Multi-tracers, multi-surveys: data-driven EFT prior calibration from the PFS--DESI overlap"*](https://arxiv.org/abs/2604.25171).
 
 ## Key results
 
