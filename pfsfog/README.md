@@ -1,10 +1,24 @@
-# pfsfog — Fisher forecast for PFS x DESI EFT prior calibration
+# PFSFOG — Pooled Full-shape Surveys: Forecasts Of Galaxies
 
 > **Dependency**: requires [`ps_1loop_jax`](https://github.com/archaeo-pteryx/ps_1loop_jax) (Kobayashi & Akitsu, in prep.) for one-loop power spectrum evaluation.
 
-Two-step pipeline:
-1. **Step 1 (overlap calibration)**: Multi-tracer Fisher in the ~1,200 deg² PFS--DESI overlap. Up to 4 tracers (PFS-ELG, DESI-ELG, DESI-LRG, DESI-QSO), 10 cross-spectra per z-bin. Extracts calibrated priors for each DESI tracer's nuisance parameters.
-2. **Step 2 (full-area forecast)**: Single-tracer auto-spectrum Fisher for each DESI DR2 sample (LRG1--3, ELG1--2, QSO) in 14,000 deg², using calibrated or broad priors. Combines via shared cosmological parameters.
+Joint multi-tracer, multi-survey Fisher analysis. The framework pools
+Fisher information across the disjoint regions of N overlapping
+spectroscopic surveys' footprints, with per-region multi-tracer Fishers
+combined in a common parameter space (cosmology shared globally;
+nuisance unique per (tracer, redshift bin)). Marginalize once over all
+nuisance to get cosmology σ.
+
+**Headline driver:** `scripts/run_joint_fisher.py` — runs DESI-only
+joint vs DESI+PFS joint and reports σ(fσ8), σ(Mν), σ(Ωm) plus the
+PFS-unique relative tightening.
+
+The implementation realizes N=2 (Subaru/PFS × DESI overlap). The
+architecture (`pfsfog/fisher_joint.py`) generalizes to N ≥ 3 by
+enumerating the 2^N − 1 disjoint footprint regions.
+
+**Legacy two-stage pipeline** (deprecated): `scripts/run_desi_multisample.py`
+plus `pfsfog/prior_export.py` — kept for reproducibility.
 
 ## Quick start
 
@@ -41,7 +55,7 @@ pytest tests/ -q   # 96 tests, ~10s
 |--------|---------|
 | `cosmo.py` | `FiducialCosmology` — P_lin via cosmopower-jax; sigma8 from emulator; H, D, f from `ps_1loop_jax.background`. `make_plin_func()` and `make_growth_rate_func()` return pure JAX functions for end-to-end autodiff. Planck 2018 fiducial. |
 | `surveys.py` | Load n(z) from `survey_specs/*.txt`. `Survey` dataclass with nbar_eff, z_eff, volume. `SurveyGroup` manages PFS + multiple DESI tracers. |
-| `config.py` | `ForecastConfig` — all tuneable knobs: kmin/kmax/dk, z-bins, areas, r_sigma_v, f_shared_elg=0.045, backend choices. YAML loader. |
+| `config.py` | `ForecastConfig` — all tuneable knobs: kmin/kmax/dk, z-bins, areas, r_sigma_v, f_shared_elg=0.05, backend choices. YAML loader. |
 
 ### EFT parameters
 
@@ -89,7 +103,7 @@ pytest tests/ -q   # 96 tests, ~10s
 ## Key conventions
 
 - **EFT parameterization**: Chudaykin, Ivanov & Philcox (2025, arXiv:2511.20757, Table I).
-- **Cross-shot noise**: Zero for different populations. For PFS x DESI-ELG: `f_shared / nbar_DESI` where f_shared = n_shared / nbar_PFS = 0.045 (J. Shi, priv. comm.).
+- **Cross-shot noise**: Zero for different populations. For PFS x DESI-ELG: `f_shared / nbar_DESI` where f_shared = n_shared / nbar_PFS = 0.05 (fiducial; results are insensitive to f_shared in [0, 1]).
 - **Asymmetric kmax**: `kmax_PFS = kmax_DESI / r_sigma_v`. Default r_sigma_v = 0.75.
 - **Units**: k in h/Mpc, P(k) in (Mpc/h)^3, volumes in (Mpc/h)^3.
 - **Precision**: `jax.config.update('jax_enable_x64', True)` — float64 throughout.

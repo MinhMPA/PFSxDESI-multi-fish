@@ -1,5 +1,8 @@
 """Multi-tracer pipeline: PFS × {DESI-ELG, DESI-LRG, DESI-QSO}.
 
+DEPRECATED — legacy two-stage CLI. Use ``scripts/run_joint_fisher.py`` for
+the proper joint Fisher analysis.
+
 Generalises cli.py to N tracers in the overlap volume.
 """
 

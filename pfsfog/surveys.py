@@ -215,6 +215,8 @@ class SurveyGroup:
     pfs: Survey
     desi_tracers: dict[str, Survey]    # {"DESI-ELG": ..., "DESI-LRG": ..., ...}
     overlap_area_deg2: float = 1200.0
+    desi_full_area_deg2: float = 14000.0
+    pfs_zmax: float = 1.6              # PFS truncation for joint analysis
 
     @property
     def all_surveys(self) -> dict[str, Survey]:
@@ -250,6 +252,37 @@ class SurveyGroup:
             if v > 0:
                 return v
         return 0.0
+
+    def V_nonoverlap(self, zlo: float, zhi: float) -> float:
+        """DESI footprint volume outside the PFS overlap."""
+        area = self.desi_full_area_deg2 - self.overlap_area_deg2
+        for s in self.desi_tracers.values():
+            v = s.volume_rescaled(zlo, zhi, area)
+            if v > 0:
+                return v
+        return 0.0
+
+    def V_desi_full(self, zlo: float, zhi: float) -> float:
+        """Full DESI volume (overlap + nonoverlap)."""
+        for s in self.desi_tracers.values():
+            v = s.volume_rescaled(zlo, zhi, self.desi_full_area_deg2)
+            if v > 0:
+                return v
+        return 0.0
+
+    def active_desi(self, zlo: float, zhi: float,
+                    nbar_min: float = 1e-6) -> dict[str, Survey]:
+        """DESI-only active tracers (excludes PFS)."""
+        return {n: s for n, s in self.desi_tracers.items()
+                if s.nbar_eff(zlo, zhi) > nbar_min}
+
+    def active_with_pfs_truncation(self, zlo: float, zhi: float,
+                                    nbar_min: float = 1e-6) -> dict[str, Survey]:
+        """All active tracers, dropping PFS above pfs_zmax."""
+        active = self.active_tracers(zlo, zhi, nbar_min)
+        if zlo >= self.pfs_zmax and "PFS-ELG" in active:
+            active.pop("PFS-ELG")
+        return active
 
 
 def default_survey_pair() -> SurveyPair:

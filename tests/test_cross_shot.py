@@ -18,7 +18,7 @@ class TestCrossShotFormula:
 
     def test_cross_shot_value(self):
         """The cross-shot value should be f_shared / nbar_DESI."""
-        f_shared = 0.045
+        f_shared = 0.05
         nbar_PFS = 8.6e-4
         nbar_DESI = 8.1e-4
 
@@ -44,7 +44,7 @@ class TestCrossShotFormula:
         ells = (0,)
 
         nbar = {"A": 8e-4, "B": 5e-4}
-        f_shared = 0.045
+        f_shared = 0.05
 
         # Simple P(k,mu) = constant for easy verification
         def pkmu_const(k, mu):
@@ -83,7 +83,7 @@ class TestCrossShotFormula:
         # PFS-ELG x DESI-LRG: zero by construction
         # PFS-ELG x DESI-QSO: zero by construction
         # Only PFS-ELG x DESI-ELG has non-zero cross-shot
-        f_shared = 0.045
+        f_shared = 0.05
         cross_shot_elg = f_shared / 8.1e-4  # nbar_DESI-ELG
 
         # For LRG and QSO, cross-shot is identically zero

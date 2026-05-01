@@ -1,5 +1,9 @@
 #!/usr/bin/env python
-"""End-to-end: overlap → export → full area → summary + figures."""
+"""DEPRECATED — legacy two-stage end-to-end driver.
+
+Use ``scripts/run_joint_fisher.py`` for the proper joint Fisher analysis.
+This script is kept for reproducibility of historical results.
+"""
 
 import sys
 from pathlib import Path

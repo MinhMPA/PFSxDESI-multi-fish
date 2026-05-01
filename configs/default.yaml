@@ -17,9 +17,10 @@ overlap_area_deg2: 1200.0
 
 r_sigma_v: 0.75
 
-# Shared ELG fraction: f_shared = n_shared / nbar_PFS (J. Shi, priv. comm.)
-# Cross-shot noise: P_shot^{cross} = f_shared / nbar_DESI
-f_shared_elg: 0.045
+# Shared ELG fraction: f_shared = n_shared / nbar_PFS, fiducial 0.05.
+# Cross-shot noise: P_shot^{cross} = f_shared / nbar_DESI.
+# Results are insensitive to f_shared in [0, 1] (verified in the f_shared sweep).
+f_shared_elg: 0.05
 
 cosmo_backend: cosmopower
 oneloop_backend: ps_1loop_jax

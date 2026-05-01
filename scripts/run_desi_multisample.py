@@ -1,13 +1,14 @@
 #!/usr/bin/env python
-"""Full-area DESI forecast using all 6 DR2 samples with calibrated priors.
+"""LEGACY two-stage forecast (calibration → cosmology with priors).
 
-Step 1: Multi-tracer overlap calibration (PFS × DESI) → calibrated priors
-        for DESI-ELG, DESI-LRG, DESI-QSO per overlap z-bin.
-Step 2: Single-tracer auto-spectrum Fisher for each DR2 sample
-        (LRG1–3, ELG1–2, QSO), then combine via shared cosmology.
+DEPRECATED — use ``scripts/run_joint_fisher.py`` instead.
 
-Usage:
-    python scripts/run_desi_multisample.py
+This pipeline double-counts DESI auto-spectra (used in both Step 1 nuisance
+calibration and Step 2 cosmology). The joint Fisher in
+``pfsfog/fisher_joint.py`` avoids this by combining all data in a single
+multi-tracer Fisher, marginalized once over all nuisance parameters.
+
+Kept for reference and reproducibility of historical results.
 """
 import sys
 from dataclasses import dataclass
