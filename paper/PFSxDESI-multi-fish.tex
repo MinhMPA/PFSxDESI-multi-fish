@@ -190,8 +190,7 @@ systematic biases absorbed from the HOD modeling remains an open
 question---one that an independent, data-driven calibration of the
 same parameters could help resolve.
 
-Meanwhile, multi-tracer Fisher forecasts have shown that jointly fitting multiple galaxy populations can break parameter degeneracies beyond what single-tracer analyses can achieve~\cite{Alarcon:2016bkr,Mergulhao:2021kip,Mergulhao:2023zso,Rubira:2025scu,Qin:2025nkk}.
-Zhao et al.~\cite{Zhao:2024eboss} demonstrated this with eBOSS DR16 data by jointly analyzing LRGs and ELGs within a single survey, improving \(\sigma(\se)\) by 18--27\% depending on the treatment of stochastic terms in the LRG--ELG cross spectrum. This demonstrates the statistical value of multi-tracer information, but not the calibration of survey-independent EFT priors: same-survey analyses share observational systematics, and even for disjoint tracer catalogs with no shared-object shot noise, residual cross-stochasticity remains a modeling assumption.
+Meanwhile, multi-tracer Fisher forecasts have demonstrated parameter degeneracy breaking beyond what single-tracer analyses can achieve~\cite{Alarcon:2016bkr,Mergulhao:2021kip,Mergulhao:2023zso,Rubira:2025scu,Qin:2025nkk}. In particular, Zhao et al.~\cite{Zhao:2024eboss} demonstrated this with eBOSS DR16 data by jointly analyzing LRGs and ELGs within a single survey, improving \(\sigma(\se)\) by 18--27\% depending on the treatment of stochastic terms in the LRG--ELG cross spectrum. This demonstrates the statistical value of multi-tracer information, but not the calibration of survey-independent EFT priors: same-survey analyses share observational systematics, and even for disjoint tracer catalogs with no shared-object shot noise, residual cross-stochasticity remains a modeling assumption.
 
 In this paper we demonstrate that EFT nuisance parameters can be
 calibrated directly from observational data, without any HOD modeling
@@ -199,7 +198,7 @@ input, by combining two complementary multi-tracer channels into a
 single joint Fisher analysis. The first channel is internal to DESI:
 across its full \(14{,}000\;\text{deg}^2\) footprint, the
 LRG\,$\times$\,ELG\,$\times$\,QSO multi-tracer cross-correlations break
-parameter degeneracies~\cite{McDonald:2009cvfree}. The second is cross-survey: in the
+parameter degeneracies~\cite{McDonald:2008sh}. The second is cross-survey: in the
 \(\sim\!1{,}200\;\text{deg}^2\) overlap with the Subaru Prime Focus
 Spectrograph (PFS) Cosmology Program~\cite{Takada:2014pfs}, an additional ELG sample
 with distinct selection and shot noise contributes auto- and
@@ -272,7 +271,7 @@ The multi-tracer analysis of overlapping surveys provides exactly
 this---it isolates bias and stochastic parameters from the
 cross-spectrum between independent galaxy populations.
 The approach exploits the different stochastic
-properties of distinct galaxy populations~\citep[e.g.,][]{Seljak:2008xr,McDonald:2009cvfree,Mergulhao:2021kip,Mergulhao:2023zso,Rubira:2025scu}.
+properties of distinct galaxy populations~\citep[e.g.,][]{Seljak:2008xr,McDonald:2008sh,Mergulhao:2021kip,Mergulhao:2023zso,Rubira:2025scu}.
 The auto-power spectrum of tracer \(X\) at multipole \(\ell\) can be written schematically as
 \be
 \label{eqn:auto}
@@ -725,7 +724,7 @@ broad analysis, is constrained to
 Fisher---a qualitative change from zero to finite prior information.
 The cross-spectra constrain the linear bias ratios
 \(b_1^X/b_1^Y\) between
-tracers~\cite{Seljak:2008xr,McDonald:2009cvfree}, and the
+tracers~\cite{Seljak:2008xr,McDonald:2008sh}, and the
 \(\mu\)-dependent RSD structure across \(\ell=0,2,4\) then breaks
 the degeneracy between the individual \(b_1\se\) values and
 \(f\se\).
@@ -818,7 +817,7 @@ LRG, ELG, and QSO sharing the full
 \(14{,}000\;\text{deg}^2\) footprint at \(0.8<z<1.6\), the
 DESI-internal cross-correlations break the
 \(b_1\sigma_8\) degeneracy via the McDonald--Seljak
-mechanism~\cite{McDonald:2009cvfree}. Adding PFS to the
+mechanism~\cite{McDonald:2008sh}. Adding PFS to the
 \(1{,}200\;\text{deg}^2\) overlap further tightens the
 calibration through a fourth, low-bias ELG sample with distinct
 selection and shot noise. The PFS-induced improvement is largest
@@ -990,7 +989,7 @@ compensated by an increase in \(b_1\) (Fisher correlation
 \(-0.99\)); with a flat \(b_1\) prior this degeneracy fully
 propagates into the marginalized \(\sigma(\Mnu)\). Multi-tracer
 cross-correlations break the degeneracy at fixed signal: the
-McDonald--Seljak mechanism~\cite{McDonald:2009cvfree} extracts
+McDonald--Seljak mechanism~\cite{McDonald:2008sh} extracts
 bias \emph{ratios} \(b_1^X/b_1^Y\) cosmic-variance-free from any pair
 of tracers in the same volume, while the \(k\)-dependent EFT shape
 information~\cite{Rubira:2025scu} pins down individual \(b_1\se\)
@@ -1374,7 +1373,7 @@ We verify the assembled Fisher matrix against five checks:
   bias (\(b_A=1\), \(b_B=2\), \(f=0.8\)) and no counterterms, the
   multi-tracer Fisher for \(P_m\) (marginalized over both biases
   via a Schur complement) recovers the cosmic-variance-free
-  floor~\cite{McDonald:2009cvfree}:
+  floor~\cite{McDonald:2008sh}:
   \be
   \label{eqn:ms09_floor}
   \frac{\sigma^2(P_m)}{P_m^2}
