@@ -27,16 +27,19 @@
 %%%%%%%%%%%%%%%
 
 \usepackage[nameinlink,noabbrev]{cleveref}
+% Use abbreviated forms uniformly: cleveref's \cref and \Cref both render
+% as "Eq.", "Sec.", "Fig.", "Tab.", "App." (capital S/F/T/E/A is fine at
+% sentence start since the abbreviation already starts with uppercase).
 \crefname{equation}{Eq.}{Eqs.}
 \crefname{section}{Sec.}{Secs.}
 \crefname{figure}{Fig.}{Figs.}
 \crefname{table}{Tab.}{Tabs.}
 \crefname{appendix}{App.}{Apps.}
-\Crefname{figure}{Figure}{Figures}
-\Crefname{equation}{Equation}{Equations}
-\Crefname{section}{Section}{Sections}
-\Crefname{table}{Table}{Tables}
-\Crefname{appendix}{Appendix}{Appendices}
+\Crefname{equation}{Eq.}{Eqs.}
+\Crefname{section}{Sec.}{Secs.}
+\Crefname{figure}{Fig.}{Figs.}
+\Crefname{table}{Tab.}{Tabs.}
+\Crefname{appendix}{App.}{Apps.}
 
 %%%%%%%%%%%%%%%%%%%%%%
 %%	  Environment   %%
