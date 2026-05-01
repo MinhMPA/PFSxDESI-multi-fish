@@ -214,7 +214,7 @@ shared cosmological parameters \((f\se,\Mnu,\Om)\) and
 per-(tracer, \(z\)-bin) nuisance parameters, marginalized in one
 pass.
 
-The PFS overlap covers \(0.6<z<1.6\) with up to four tracers
+The PFS overlap covers \(0.6<z<1.6\) with up to 4 tracers
 (PFS-ELG plus DESI-LRG, DESI-ELG, DESI-QSO) and ten auto- and
 cross-spectra per redshift bin. The weaker finger-of-god (FoG)
 contamination expected in PFS samples motivates an asymmetric scale
@@ -392,7 +392,7 @@ multi-tracer Fisher across the full DESI footprint. The
 bin, the per-bin Fisher decomposes as \cref{eq:volume_partition},
 \(F_z = F_z^{\rm overlap}(V_{\rm overlap})
        + F_z^{\rm nonoverlap}(V_{\rm nonoverlap})\):
-\(F_z^{\rm overlap}\) includes all four tracers (PFS-ELG plus
+\(F_z^{\rm overlap}\) includes all 4 tracers (PFS-ELG plus
 DESI-LRG, DESI-ELG, DESI-QSO when active in the bin) with their
 auto- and cross-spectra; \(F_z^{\rm nonoverlap}\) includes only
 DESI tracers. Under the Gaussian-covariance approximation, which
@@ -400,12 +400,11 @@ already neglects super-sample covariance (SSC), Fourier modes in
 disjoint volumes are uncorrelated and the two Fishers add
 exactly~\cite{Takada:2013bfn,Li:2014sga}. The same Gaussian
 approximation underlies all standard full-shape Fisher
-forecasts; SSC contributes \(\lesssim 10\%\) corrections to
-parameter uncertainties at our scale
-cuts~\cite{Wadekar:2019rdu,Sugiyama:2019ike} and is omitted here
-along with the bispectrum, survey window, and other higher-order
-covariance terms (\cref{sec:discussion}).
-We combine the per-redshift Fishers across the eight redshift bins
+forecasts; SSC and other higher-order covariance
+terms~\cite{Wadekar:2019rdu,Sugiyama:2019ike} are sub-leading at
+our scale cuts and are omitted here along with the bispectrum and
+survey window contributions (\cref{sec:discussion}).
+We combine the per-redshift Fishers across the 8 redshift bins
 covering \(0.4<z<2.1\) with shared cosmological parameters
 \((f\se,\,\Mnu,\,\Om)\) and per-(tracer, \(z\)-bin) nuisance
 parameters. The final cosmological constraints come from
@@ -774,8 +773,8 @@ $k^2$/$k^4$ contributions (\cref{sec:discussion}).}
 \subsection{Full-area DESI constraints}
 \label{sec:results_full_area}
 
-We now combine the cross-survey overlap calibration with DESI's
-internal multi-tracer self-calibration over the full
+We now combine the cross-survey overlap calibration with the
+DESI internal multi-tracer self-calibration over the full
 \(14{,}000\;\text{deg}^2\) footprint, in a single joint Fisher
 analysis. The volume splits into the
 \(1{,}200\;\text{deg}^2\) PFS--DESI overlap, where up to four
@@ -836,7 +835,7 @@ DESI~DR1~\cite{DESI:2025wzd} achieved \(\sim\!23\%\) on
 ($\kmax=0.20\iMpch$). Marginalized $1\sigma$ uncertainties on
 $f\se$ (left panel), $\Mnu$ (middle panel), and $\Om$ (right
 panel) from the $14{,}000\;\text{deg}^2$ DESI footprint,
-combining all eight redshift bins covering $0.4<z<2.1$. The
+combining all 8 redshift bins covering $0.4<z<2.1$. The
 DESI-only joint analysis (blue) uses LRG, ELG, and QSO with
 internal multi-tracer cross-correlations; the DESI+PFS joint
 analysis (green) adds the PFS-ELG sample in the
@@ -1023,7 +1022,7 @@ overlap further collapses the \(b_1\se\)--\(\Mnu\) contour
 already partially closed by DESI-internal multi-tracer
 self-calibration. \(b_1\se\) shown for DESI-ELG at the
 representative bin \(z=[0.8,\,1.0]\); cosmology shared globally
-across the eight redshift bins covering \(0.4<z<2.1\).}
+across the 8 redshift bins covering \(0.4<z<2.1\).}
 \label{fig:fisher_contours}
 \end{figure}
 
@@ -1072,7 +1071,7 @@ The optimal strategy combines both approaches---multi-tracer
 calibration for \(b_1\) and the stochastic terms; SBPs for the
 counterterms and \(k\)-dependent stochasticity that the multi-tracer
 covariance cannot reach. The 22\% improvement on
-\(\sigma(\Mnu)\) from adding PFS to DESI's joint analysis is
+\(\sigma(\Mnu)\) from adding PFS to the DESI joint analysis is
 particularly consequential. DESI~DR1 combined with CMB data already
 prefers the normal neutrino mass hierarchy over the inverted
 hierarchy~\cite{DESI:2024hhd,Chudaykin:2025lww}, and any further
@@ -1121,8 +1120,8 @@ separate prior-export step. Our main findings are:
 \item The volume-partitioned joint Fisher
   \(F=F_{\rm overlap}(1{,}200\,\text{deg}^2)
    + F_{\rm nonoverlap}(12{,}800\,\text{deg}^2)\)
-  combines DESI's internal multi-tracer self-calibration over the
-  full footprint with the PFS-DESI cross-survey channel in the
+  combines the DESI internal multi-tracer self-calibration over
+  the full footprint with the PFS-DESI cross-survey channel in the
   overlap, with cosmology shared globally and nuisance parameters
   unique per (tracer, redshift bin). The framework avoids the
   auto-spectra double-counting inherent to a two-stage
@@ -1358,11 +1357,11 @@ We verify the assembled Fisher matrix against five checks:
   our implementation of \cref{eq:volume_partition} adds the two
   region Fishers without double-counting, within the SSC-free
   approximation. The neglected SSC contribution from
-  long-wavelength modes shared between the two regions is
-  expected to modify parameter uncertainties at the
-  \(\lesssim 10\%\) level at our scale
-  cuts~\cite{Wadekar:2019rdu,Sugiyama:2019ike}, comparable to or
-  smaller than other neglected non-Gaussian covariance terms.
+  long-wavelength modes shared between the two regions is a
+  sub-leading correction to the Gaussian
+  covariance~\cite{Wadekar:2019rdu,Sugiyama:2019ike}, comparable
+  to or smaller than other neglected non-Gaussian covariance
+  terms.
 
 \item \textbf{Scenario ordering.}
   The marginalized constraints obey
