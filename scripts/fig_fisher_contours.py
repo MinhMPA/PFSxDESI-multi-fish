@@ -1,11 +1,21 @@
 #!/usr/bin/env python
-"""Fisher contour figure: DESI-only joint vs DESI+PFS joint.
+"""Fisher contour figure: broad single-tracer vs DESI-only joint vs DESI+PFS joint.
 
-Three panels showing 1- and 2-σ ellipses for the cosmology pairs
-(b₁σ₈ at z∼0.9, Mν), (b₁σ₈ at z∼0.9, fσ₈), and (fσ₈, Mν). The b₁σ₈
-column is the DESI-ELG nuisance in the z=[0.8, 1.0] bin (chosen as
-representative; other bins look similar). All three cosmology parameters
-are shared globally in the joint Fisher.
+Three panels showing 1- and 2-sigma ellipses for the cosmology pairs
+(b1*sigma8 at z~0.9, M_nu), (b1*sigma8 at z~0.9, f*sigma8), and (f*sigma8, M_nu).
+
+The b1*sigma8 column is the DESI-ELG nuisance in the z=[0.8, 1.0] bin
+(representative; other bins look similar). All three cosmology
+parameters are shared globally.
+
+The three scenarios:
+- DESI single-tracer broad: each (DESI tracer, z-bin) analyzed independently
+  with broad nuisance priors. The b1*sigma8-Mnu degeneracy runs free.
+- DESI-only joint: multi-tracer Fisher across LRG, ELG, QSO with internal
+  cross-correlations. The McDonald-Seljak mechanism breaks the
+  b1*sigma8 degeneracy from data.
+- DESI+PFS joint: adds PFS-ELG in the 1,200 deg^2 overlap. Further
+  tightens b1*sigma8 and Mnu via the 4-tracer cross-correlations.
 """
 from __future__ import annotations
 
@@ -25,7 +35,9 @@ from matplotlib.patches import Ellipse
 
 from pfsfog.config import ForecastConfig
 from pfsfog.cosmo import FiducialCosmology
-from pfsfog.fisher_joint import run_joint_fisher
+from pfsfog.fisher_joint import (
+    run_broad_baseline, run_joint_fisher,
+)
 from pfsfog.surveys import (
     SurveyGroup, desi_elg, desi_lrg, desi_qso, pfs_elg,
 )
@@ -50,80 +62,46 @@ def _build():
         desi_full_area_deg2=cfg.desi_area_deg2,
         pfs_zmax=1.6,
     )
+    res_b = run_broad_baseline(cfg, cosmo, ps, sg, zbins=ZBINS)
     res_d = run_joint_fisher(cfg, cosmo, ps, sg, include_pfs=False, zbins=ZBINS)
     res_j = run_joint_fisher(cfg, cosmo, ps, sg, include_pfs=True, zbins=ZBINS)
-    return cosmo, res_d, res_j
-
-
-def _ellipse_panel(ax, Cd, Cj, ix, iy, xc, yc, xlabel, ylabel):
-    for C, color, label in [(Cd, "#4C72B0", "DESI-only"),
-                            (Cj, "#55A868", "DESI+PFS")]:
-        c2 = np.array([[C[ix, ix], C[ix, iy]],
-                       [C[iy, ix], C[iy, iy]]])
-        vals, vecs = np.linalg.eigh(c2)
-        vals = np.maximum(vals, 1e-30)
-        ang = np.degrees(np.arctan2(vecs[1, 0], vecs[0, 0]))
-        for ns, al in [(1, 0.35), (2, 0.12)]:
-            w = 2 * ns * np.sqrt(vals[0])
-            h = 2 * ns * np.sqrt(vals[1])
-            e = Ellipse(xy=(xc, yc), width=w, height=h, angle=ang,
-                        fill=True, facecolor=color, alpha=al,
-                        edgecolor=color, linewidth=1.5)
-            ax.add_patch(e)
-        ax.plot([], [], color=color, lw=2, label=label)
-    ax.set_xlabel(xlabel)
-    ax.set_ylabel(ylabel)
-    ax.autoscale_view()
-    x1, x2 = ax.get_xlim(); y1, y2 = ax.get_ylim()
-    dx = (x2 - x1) * 0.15; dy = (y2 - y1) * 0.15
-    ax.set_xlim(x1 - dx, x2 + dx)
-    ax.set_ylim(y1 - dy, y2 + dy)
-    ax.plot(xc, yc, "+", color="k", ms=8, mew=1.5)
+    return cosmo, res_b, res_d, res_j
 
 
 def main():
-    cosmo, res_d, res_j = _build()
+    cosmo, res_b, res_d, res_j = _build()
 
+    Cb = np.linalg.inv(res_b.fisher.F)
     Cd = np.linalg.inv(res_d.fisher.F)
     Cj = np.linalg.inv(res_j.fisher.F)
 
+    pn_b = res_b.fisher.param_names
     pn_d = res_d.fisher.param_names
     pn_j = res_j.fisher.param_names
 
-    # Picks: representative b1σ8 = DESI-ELG at z=[0.8, 1.0]
+    # Representative b1*sigma8: DESI-ELG at z=[0.8, 1.0]
     label_b = "b1_sigma8_DESI-ELG_z0.80-1.00"
-    ix_d_b = pn_d.index(label_b)
-    ix_j_b = pn_j.index(label_b)
-    ix_d_f = pn_d.index("fsigma8")
-    ix_j_f = pn_j.index("fsigma8")
-    ix_d_m = pn_d.index("Mnu")
-    ix_j_m = pn_j.index("Mnu")
 
     # Fiducials at z=0.9
     xf = float(cosmo.f(0.9)) * cosmo.sigma8(0.9)
     xm = 0.06
     xb = desi_elg().b1_of_z(0.9) * cosmo.sigma8(0.9)
 
-    fig, axes = plt.subplots(1, 3, figsize=(14, 4.2))
-
-    # Build per-panel sub-covariances by index
     def sub(C, names, names_pair):
         i, j = names.index(names_pair[0]), names.index(names_pair[1])
         return np.array([[C[i, i], C[i, j]], [C[j, i], C[j, j]]])
 
-    # Panel 1: (b1σ8, Mν)
-    _ellipse_panel(axes[0], Cd, Cj,
-                   ix_d_b, ix_d_m, xb, xm,
-                   r"$b_1\sigma_8\;(z{\sim}0.9)$", r"$M_\nu$ [eV]")
-
-    # For DESI+PFS, indices may differ — rebuild for each panel using sub-blocks
-    def panel(ax, Cd_pair, Cj_pair, xc, yc, xl, yl):
-        for C, color, label in [(Cd_pair, "#4C72B0", "DESI-only"),
-                                (Cj_pair, "#55A868", "DESI+PFS")]:
-            vals, vecs = np.linalg.eigh(C)
+    def panel(ax, sub_b, sub_d, sub_j, xc, yc, xl, yl):
+        scenarios = [
+            (sub_b, "#C44E52", "DESI broad (single-tracer)"),
+            (sub_d, "#4C72B0", "DESI-only joint"),
+            (sub_j, "#55A868", "DESI+PFS joint"),
+        ]
+        for Cpair, color, label in scenarios:
+            vals, vecs = np.linalg.eigh(Cpair)
             vals = np.maximum(vals, 1e-30)
             ang = np.degrees(np.arctan2(vecs[1, 0], vecs[0, 0]))
-            for ns, al in [(1, 0.35), (2, 0.12)]:
+            for ns, al in [(1, 0.30), (2, 0.10)]:
                 w = 2 * ns * np.sqrt(vals[0])
                 h = 2 * ns * np.sqrt(vals[1])
                 e = Ellipse(xy=(xc, yc), width=w, height=h, angle=ang,
@@ -140,21 +118,25 @@ def main():
         ax.set_ylim(y1 - dy, y2 + dy)
         ax.plot(xc, yc, "+", color="k", ms=8, mew=1.5)
 
-    axes[0].clear()
+    fig, axes = plt.subplots(1, 3, figsize=(15, 4.5))
+
     panel(axes[0],
+          sub(Cb, pn_b, (label_b, "Mnu")),
           sub(Cd, pn_d, (label_b, "Mnu")),
           sub(Cj, pn_j, (label_b, "Mnu")),
           xb, xm, r"$b_1\sigma_8\;(z{\sim}0.9)$", r"$M_\nu$ [eV]")
     panel(axes[1],
+          sub(Cb, pn_b, (label_b, "fsigma8")),
           sub(Cd, pn_d, (label_b, "fsigma8")),
           sub(Cj, pn_j, (label_b, "fsigma8")),
           xb, xf, r"$b_1\sigma_8\;(z{\sim}0.9)$", r"$f\sigma_8$")
     panel(axes[2],
+          sub(Cb, pn_b, ("fsigma8", "Mnu")),
           sub(Cd, pn_d, ("fsigma8", "Mnu")),
           sub(Cj, pn_j, ("fsigma8", "Mnu")),
           xf, xm, r"$f\sigma_8$", r"$M_\nu$ [eV]")
 
-    axes[0].legend(frameon=False, fontsize=12, loc="upper right")
+    axes[0].legend(frameon=False, fontsize=11, loc="upper right")
 
     fig.tight_layout()
     fig.savefig(OUT / "fisher_contours.png", bbox_inches="tight", dpi=300)

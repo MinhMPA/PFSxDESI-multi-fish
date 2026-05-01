@@ -509,3 +509,79 @@ def run_joint_fisher(
     return JointFisherResult(
         fisher=fr, sigma=sigma, per_zbin_active=per_zbin_active,
     )
+
+
+def run_broad_baseline(
+    cfg,
+    cosmo,
+    ps,
+    sg: SurveyGroup,
+    zbins: list[tuple[float, float]],
+    add_cosmo_priors: bool = True,
+) -> JointFisherResult:
+    """DESI single-tracer broad-prior baseline (no multi-tracer info).
+
+    Builds, per (DESI tracer, z-bin), an independent single-tracer
+    auto-spectrum Fisher at the full DESI footprint volume, then combines
+    them in the same (cosmo + per-(tracer, z-bin) nuisance) parameter
+    space as the joint Fisher. Cross-spectra are excluded — this is the
+    legacy "DESI alone, no multi-tracer" reference scenario in which the
+    b1*sigma8-Mnu degeneracy runs free under the broad nuisance priors.
+    """
+    per_zbin = []
+    per_zbin_active = []
+    for zb in zbins:
+        active_desi = sg.active_desi(zb[0], zb[1])
+        if not active_desi:
+            continue
+        V_full = sg.V_desi_full(zb[0], zb[1])
+
+        zbin_fishers = []
+        zbin_names_list = []
+        for tn, surv in active_desi.items():
+            F, names = build_zbin_fisher(
+                zb, {tn: surv}, V_full, cosmo, ps, cfg,
+            )
+            zbin_fishers.append(F)
+            zbin_names_list.append(names)
+
+        union: list[str] = list(COSMO_NAMES)
+        for nl in zbin_names_list:
+            for n in nl:
+                if n not in union:
+                    union.append(n)
+        F_total = np.zeros((len(union), len(union)))
+        for F, nl in zip(zbin_fishers, zbin_names_list):
+            F_total += embed_fisher(F, nl, union)
+
+        per_zbin.append((F_total, union))
+        per_zbin_active.append(sorted(active_desi.keys()))
+
+    fr = combine_zbins_heterogeneous(
+        per_zbin, survey_name="DESI single-tracer broad",
+    )
+
+    if add_cosmo_priors:
+        prior_diag = np.zeros(len(fr.param_names))
+        for i, pn in enumerate(fr.param_names):
+            if pn in COSMO_PRIOR_SIGMA:
+                prior_diag[i] = 1.0 / COSMO_PRIOR_SIGMA[pn] ** 2
+            else:
+                for nuis in NUISANCE_NAMES:
+                    if pn.startswith(nuis + "_"):
+                        s = broad_priors().sigma_dict()[nuis]
+                        if s is not None:
+                            prior_diag[i] = 1.0 / s ** 2
+                        break
+        fr = FisherResult(
+            F=fr.F + np.diag(prior_diag),
+            param_names=fr.param_names,
+            z_bin=fr.z_bin,
+            survey_name=fr.survey_name,
+            kmax=fr.kmax,
+        )
+
+    sigma = {cp: fr.marginalized_sigma(cp) for cp in COSMO_NAMES}
+    return JointFisherResult(
+        fisher=fr, sigma=sigma, per_zbin_active=per_zbin_active,
+    )
