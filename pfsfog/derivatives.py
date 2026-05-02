@@ -6,7 +6,7 @@ Validation: adaptive finite difference via numdifftools (optimal step selection)
 
 from __future__ import annotations
 
-from functools import partial
+from functools import lru_cache, partial
 
 import jax
 import jax.numpy as jnp
@@ -637,6 +637,132 @@ def dPell_d_cosmo_all(
                 )
 
     return derivs
+
+
+# ---------------------------------------------------------------------------
+# JIT-compiled vectorized cosmology derivatives (perf path)
+# ---------------------------------------------------------------------------
+# After the nuisance JIT pass landed (commit 10d6a6e), profiling showed
+# `dPell_d_cosmo_all` was the new dominant cost — 74% of the per-z-bin
+# wall time, 36 eager `jacfwd` calls per z-bin (3 cosmo × 3 ell × N_tracer
+# × N_region). The variant below packs (fσ8, Mν, Ωm) into a 3-vector and
+# takes one `jacfwd` per ell, then folds the whole thing inside `jax.jit`,
+# so the trace through cosmopower-jax + ps_1loop_jax compiles once and is
+# reused across z-bins / tracers / regions.
+
+
+@lru_cache(maxsize=4)
+def _cached_pkdata_fn(backend: str):
+    """Cache the pkdata closure so its identity is stable across calls.
+
+    Without this, every `dPell_d_cosmo_all_jit` call would build a fresh
+    closure → `static_argnums` hashes by `id(...)` → JIT cache miss on
+    every call → defeats the entire optimization.
+    """
+    from .cosmo import make_plin_func
+    return make_plin_func(backend)
+
+
+@lru_cache(maxsize=1)
+def _cached_f_fn():
+    """Cache the f(z) closure (same reasoning as `_cached_pkdata_fn`)."""
+    from .cosmo import make_growth_rate_func
+    return make_growth_rate_func()
+
+
+@partial(jax.jit, static_argnums=(0,), static_argnames=("ells",))
+def _dPell_d_fsigma8_jit(
+    ps_model: PowerSpectrum1Loop,
+    k: jnp.ndarray,
+    pk_data: dict,
+    fiducial_params: dict,
+    sigma8_z: float,
+    ells: tuple[int, ...],
+) -> jnp.ndarray:
+    """fσ8 derivative for all ells. Returns shape ``(N_ell, Nk)``.
+
+    Mirrors the eager ``dPell_d_fsigma8``: ``∂P/∂(fσ8) = ∂P/∂f / σ8``,
+    using the input ``pk_data`` (NOT a cosmopower-rebuilt one) — fσ8
+    perturbs only ``f``, leaving the linear power spectrum unchanged.
+    """
+    fid_f = fiducial_params["f"]
+
+    def _pell_of_f(f_val: float, ell: int) -> jnp.ndarray:
+        p = _make_mutable(fiducial_params)
+        p["f"] = f_val
+        return ps_model.get_pk_ell(k, ell, pk_data, p)
+
+    grads = []
+    for ell in ells:
+        g = jax.jacfwd(lambda fv: _pell_of_f(fv, ell))(fid_f)  # (Nk,)
+        grads.append(g / sigma8_z)
+    return jnp.stack(grads, axis=0)        # (N_ell, Nk)
+
+
+@partial(jax.jit, static_argnums=(0, 1, 2), static_argnames=("ells",))
+def _dPell_d_OmMnu_jit(
+    ps_model: PowerSpectrum1Loop,
+    pkdata_fn,                 # closure from make_plin_func (static identity)
+    f_fn,                      # closure from make_growth_rate_func (static identity)
+    k: jnp.ndarray,
+    cosmo_dict: dict,
+    fiducial_params: dict,
+    z: float,
+    ells: tuple[int, ...],
+) -> jnp.ndarray:
+    """(Mν, Ωm) derivatives for all ells. Returns shape ``(2, N_ell, Nk)``.
+
+    Axis-0 order matches the public output: 0=Mν, 1=Ωm. The trace flows
+    through cosmopower-jax (P_lin recomputation) and ps_1loop_jax
+    (background f + 1-loop FFTLog).
+    """
+    def _pell_at_delta(delta_vec: jnp.ndarray, ell: int) -> jnp.ndarray:
+        cd = dict(cosmo_dict)
+        cd["mnu"] = cd["mnu"] + delta_vec[0]
+        cd["omega_cdm"] = cd["omega_cdm"] + delta_vec[1] * cd["h"] ** 2
+        pkd = pkdata_fn(z, cd)
+        f_new = f_fn(z, cd)
+        par = _make_mutable(fiducial_params)
+        par["f"] = f_new
+        return ps_model.get_pk_ell(k, ell, pkd, par)
+
+    delta_zero = jnp.zeros(2, dtype=jnp.float64)
+    grads_per_ell = []
+    for ell in ells:
+        g = jax.jacfwd(lambda d: _pell_at_delta(d, ell))(delta_zero)  # (Nk, 2)
+        grads_per_ell.append(jnp.transpose(g, (1, 0)))                # (2, Nk)
+    return jnp.stack(grads_per_ell, axis=1)                           # (2, N_ell, Nk)
+
+
+def dPell_d_cosmo_all_jit(
+    ps_model: PowerSpectrum1Loop,
+    k: jnp.ndarray,
+    pk_data: dict,
+    cosmo,
+    fiducial_params: dict,
+    z: float,
+    sigma8_z: float,
+    ells: tuple[int, ...] = (0, 2, 4),
+) -> np.ndarray:
+    """Drop-in vectorized + JIT-compiled cosmology derivatives.
+
+    Returns a stacked numpy array of shape ``(3, N_ell, Nk)`` indexed by
+    ``COSMO_NAMES`` order: ``(fsigma8, Mnu, Omegam)``. Numerically
+    equivalent (rtol=1e-7) to the eager ``dPell_d_cosmo_all`` with
+    ``use_autodiff=True`` — fσ8 uses the input ``pk_data``, while
+    Mν/Ωm rebuild ``pk_data`` via cosmopower-jax inside the trace.
+    """
+    pkdata_fn = _cached_pkdata_fn(cosmo.backend)
+    f_fn = _cached_f_fn()
+    fs8 = _dPell_d_fsigma8_jit(
+        ps_model, k, pk_data, fiducial_params, sigma8_z, tuple(ells),
+    )                                                        # (N_ell, Nk)
+    om_mn = _dPell_d_OmMnu_jit(
+        ps_model, pkdata_fn, f_fn,
+        k, dict(cosmo.params), fiducial_params, z, tuple(ells),
+    )                                                        # (2, N_ell, Nk)
+    out = jnp.concatenate([fs8[None, :, :], om_mn], axis=0)  # (3, N_ell, Nk)
+    return np.asarray(out)
 
 
 # ---------------------------------------------------------------------------

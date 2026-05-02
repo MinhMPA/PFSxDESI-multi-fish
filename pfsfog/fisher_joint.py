@@ -36,7 +36,7 @@ import numpy as np
 from .covariance_mt_general import multi_tracer_cov_general
 from .derivatives import (
     dPcross_dtheta_autodiff_all_jit,
-    dPell_d_cosmo_all,
+    dPell_d_cosmo_all_jit,
     dPell_dtheta_autodiff_all_jit,
 )
 from .eft_params import (
@@ -206,19 +206,19 @@ def build_zbin_fisher(
         cross_shot=cross_shot,
     )
 
-    # Auto-spectrum derivatives: nuisance (JIT'd, vectorized) + cosmology (dict)
-    # nuis_arr has shape (N_nuis, N_ell, Nk); the small cosmology dict
-    # (3 params) is left as-is — it's not the dispatch bottleneck.
+    # Auto-spectrum derivatives: nuisance + cosmology, both JIT'd & vectorized.
+    # `nuis_arr` shape: (N_nuis, N_ell, Nk); `cosmo_arr` shape: (3, N_ell, Nk)
+    # with axis 0 in COSMO_NAMES order.
     derivs_auto = {}
     for tn in tracer_names:
         nuis_arr = dPell_dtheta_autodiff_all_jit(
             ps, jnp.array(k), pk_data, ps1l_params[tn], s8, ells=ells,
         )
-        d_cosmo = dPell_d_cosmo_all(
+        cosmo_arr = dPell_d_cosmo_all_jit(
             ps, jnp.array(k), pk_data, cosmo, ps1l_params[tn],
-            z_eff, s8, ells,
+            z_eff, s8, ells=ells,
         )
-        derivs_auto[tn] = (nuis_arr, d_cosmo)
+        derivs_auto[tn] = (nuis_arr, cosmo_arr)
 
     # Cross-spectrum derivatives: nuisance only (cross-cosmo not wired).
     # cross_arr has shape (2, N_nuis, N_ell, Nk) — axis 0 is side ("A"=0, "B"=1).
@@ -251,10 +251,11 @@ def _assemble_fisher_with_cosmo(
     NUISANCE_NAMES × tracer_0, NUISANCE_NAMES × tracer_1, ...]`` —
     matches ``zbin_param_names``.
 
-    ``derivs_auto[tn]`` is a ``(nuis_arr, cosmo_dict)`` tuple where
-    ``nuis_arr`` has shape ``(N_nuis, N_ell, Nk)`` (NUISANCE_NAMES order,
-    matches ``ells``). ``derivs_cross[pair_key]`` is a numpy array of
-    shape ``(2, N_nuis, N_ell, Nk)``; axis 0 is side index (A=0, B=1).
+    ``derivs_auto[tn]`` is a ``(nuis_arr, cosmo_arr)`` tuple where
+    ``nuis_arr`` has shape ``(N_nuis, N_ell, Nk)`` (NUISANCE_NAMES order)
+    and ``cosmo_arr`` has shape ``(N_COSMO, N_ell, Nk)`` (COSMO_NAMES
+    order). ``derivs_cross[pair_key]`` is a numpy array of shape
+    ``(2, N_nuis, N_ell, Nk)`` with axis 0 the side index (A=0, B=1).
     """
     Nt = len(tracer_names)
     Nell = len(ells)
@@ -280,18 +281,12 @@ def _assemble_fisher_with_cosmo(
             entry = derivs_auto.get(tracer_name)
             if entry is None:
                 continue
-            nuis_arr, d_cosmo = entry  # (N_nuis, N_ell, Nk), {cn: {ell: arr}}
+            nuis_arr, cosmo_arr = entry   # (N_nuis, N_ell, Nk), (N_COSMO, N_ell, Nk)
 
-            # Cosmology columns (auto only)
-            for ic, cn in enumerate(COSMO_NAMES):
-                if cn in d_cosmo:
-                    for il, ell in enumerate(ells):
-                        if ell in d_cosmo[cn]:
-                            # Each tracer's auto-spectrum contributes its
-                            # cosmology derivative on its own ell rows.
-                            D[:, obs_offset + il, ic] = np.asarray(
-                                d_cosmo[cn][ell]
-                            )
+            # Cosmology columns: each tracer's auto contributes its own
+            # cosmology derivative on its own ell rows.
+            for il in range(Nell):
+                D[:, obs_offset + il, :N_COSMO] = cosmo_arr[:, il, :].T
 
             # Nuisance columns — straight slice from the JIT'd array
             col_lo = N_COSMO + ti * N_NUIS
