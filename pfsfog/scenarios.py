@@ -1,4 +1,11 @@
-"""Analysis scenarios and summary output."""
+"""Analysis scenarios and summary output.
+
+LEGACY — defines the "broad / cross-cal / oracle" scenario labels used
+by the two-stage pipeline. The joint Fisher
+(``pfsfog.fisher_joint``) reports its results directly with
+"DESI-only joint" / "DESI+PFS joint" labels and does not use this
+module. Kept for the legacy ``run_desi_multisample.py`` driver.
+"""
 
 from __future__ import annotations
 

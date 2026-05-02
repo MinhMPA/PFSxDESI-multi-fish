@@ -1,8 +1,11 @@
 """Export calibrated priors from the overlap multi-tracer Fisher.
 
-DEPRECATED — used by the legacy two-stage pipeline. The joint Fisher in
-``pfsfog/fisher_joint.py`` does not need a prior export step; nuisance
-parameters are marginalized in one pass at the end.
+LEGACY — used only by the two-stage pipeline (Step 1 overlap calibration
+→ Step 2 single-tracer cosmology with calibrated Gaussian priors).
+The joint Fisher in ``pfsfog/fisher_joint.py`` replaces this approach:
+all data and nuisance parameters live in one Fisher matrix, marginalized
+in a single pass, so no prior export step is needed. Kept for
+reproducibility of the original two-stage results.
 
 Steps:
 1. Add broad Gaussian priors to regularize F_MT.

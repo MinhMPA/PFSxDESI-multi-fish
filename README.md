@@ -1,15 +1,20 @@
-# Multi-survey EFT prior calibration: PFS x DESI Fisher forecast
+# Joint multi-tracer Fisher forecast: PFS × DESI
 
-Fisher forecast for **multi-survey priors** — data-driven calibration of EFT nuisance parameters from the multi-tracer analysis of the PFS--DESI overlap volume, exported to DESI's full 14,000 deg² footprint.
+Joint multi-tracer Fisher analysis for full-shape galaxy power spectrum
+forecasts. Across the 14,000 deg² DESI footprint plus the 1,200 deg²
+PFS overlap at 0.6 < z < 1.6, the framework pools Fisher information
+from all auto- and cross-spectra into a single joint Fisher with
+shared cosmology and per-(tracer, z-bin) nuisance parameters,
+marginalized in one pass.
 
-**Paper**: [Nhat-Minh Nguyen (2026), arXiv:2604.25171, *"Multi-tracers, multi-surveys: data-driven EFT prior calibration from the PFS--DESI overlap"*](https://arxiv.org/abs/2604.25171).
+**Paper**: [Nhat-Minh Nguyen (2026), arXiv:2604.25171, *"Multi-tracers, multi-surveys: a joint Fisher analysis of PFS×DESI"*](https://arxiv.org/abs/2604.25171).
 
 ## Key results
 
-- The ~1,200 deg² PFS--DESI overlap at 0.6 < z < 1.6 calibrates EFT parameters for all DESI tracers (ELG, LRG, QSO) using up to 4 tracers and 10 cross-spectra per z-bin.
-- Forecasting all 6 DESI DR2 samples (LRG1--3, ELG1--2, QSO), multi-survey priors improve sigma(f*sigma8) by 8% (7--25% per sample) and sigma(M_nu) by 53% (46--69% per sample).
-- The dominant driver is b1*sigma8 calibration, which breaks the b1--f degeneracy (~70% of the f*sigma8 gain, ~97% of the M_nu gain).
-- Multi-survey priors are not a replacement for simulation-based priors but a model-independent cross-check -- particularly relevant for the S8 tension.
+- Compared to the **single-tracer analysis with broad priors** (the legacy DESI-DR1 baseline), the DESI+PFS joint Fisher tightens σ(fσ₈) by ~42%, σ(Mν) by ~85%, σ(Ωm) by ~55% at kmax = 0.20 h/Mpc.
+- The bulk of this improvement comes from **DESI's own internal multi-tracer self-calibration** (LRG × ELG × QSO across the full footprint). Adding the PFS overlap on top contributes a unique +8% on σ(fσ₈), +22% on σ(Mν), and +9% on σ(Ωm).
+- The dominant mechanism is b₁σ₈ calibration via the McDonald–Seljak cosmic-variance-free bias-ratio extraction, which breaks the b₁σ₈–Mν degeneracy intrinsic to single-tracer redshift-space analyses.
+- The joint Fisher is not a replacement for simulation-based priors but a model-independent companion — particularly relevant as an independent cross-check on the S8 tension.
 
 ## Structure
 
@@ -17,8 +22,8 @@ Fisher forecast for **multi-survey priors** — data-driven calibration of EFT n
 pfsfog/              Fisher forecast pipeline (Python/JAX)
 survey_specs/        PFS and DESI n(z) tables
 configs/             YAML configuration files
-scripts/             Analysis and figure-generation scripts
-tests/               96 unit tests
+scripts/             Analysis and figure-generation scripts (legacy in scripts/_obsolete/)
+tests/               130 unit tests + 2 slow-marked parallel-equivalence tests
 notebooks/           Jupyter notebook for interactive figure reproduction
 paper/               LaTeX draft, bibliography, and figures
 ```
@@ -73,7 +78,8 @@ pip install -e .     # installs pfsfog + remaining deps (numpy, scipy, matplotli
 ### 5. Verify
 
 ```bash
-pytest tests/ -q     # 120 tests, ~10s
+pytest tests/ -q                          # 130 tests, ~12 min (sequential default)
+pytest tests/ -q -m slow -v               # 2 parallel-vs-sequential equivalence tests, ~12 min
 ```
 
 ## Usage
@@ -81,18 +87,29 @@ pytest tests/ -q     # 120 tests, ~10s
 ### Run the forecast
 
 ```bash
-# Single-ELG pipeline with default config (~30s)
-python -m pfsfog
+# Joint Fisher: DESI-only vs DESI+PFS (~14 min sequential, ~7 min parallel with warm cache)
+python scripts/run_joint_fisher.py
+python scripts/run_joint_fisher.py --parallel --n-workers 8   # multi-process opt-in
 
-# 6-sample DESI DR2 forecast (~5min)
-python scripts/run_desi_multisample.py
-
-# Parameter importance decomposition
+# Parameter importance decomposition (legacy two-stage pipeline)
 python scripts/run_parameter_importance.py
 
-# Sensitivity sweep (r_sigma_v)
+# Sensitivity sweep (r_sigma_v) — legacy diagnostic
 python scripts/run_sensitivity.py
 ```
+
+### Parallel mode
+
+`run_joint_fisher` (and `run_broad_baseline`) accepts opt-in
+`parallel=True`, `n_workers`, and `threads_per_worker` kwargs. The parallel
+path dispatches the per-z-bin loop across a `multiprocessing` spawn pool,
+using a JAX persistent compilation cache (`.cache/jax/`, set via
+`PFSFOG_JAX_CACHE_DIR`) to amortize JIT-compile cost across worker
+processes. After the first run populates the cache, subsequent runs see a
+~1.9× wall-clock speedup on a typical 8–16 core machine.
+
+The parallel path is numerically identical to sequential (rtol = 1e-10,
+verified by `tests/test_fisher_joint.py::test_run_*_parallel_matches_sequential`).
 
 ### Configuration
 
@@ -118,18 +135,24 @@ cfg = ForecastConfig(r_sigma_v=0.5, kmax=0.25)
 
 ### Reproduce paper figures
 
-```bash
-# All main-text figures
-python scripts/make_all_figures.py
+The notebook `notebooks/figures.ipynb` is the canonical figure source —
+each figure has a separate **compute** cell and **plot** cell, so plot
+tweaks don't trigger expensive recomputation. The compute cells default
+to `PARALLEL = True` for joint-Fisher figures (Fig. 1, 2, 5).
 
-# Appendix figures
-python scripts/fig_deriv_validation.py
-python scripts/fig_ms09_convergence.py
-python scripts/fig_fisher_info_density.py
-python scripts/fig_fisher_contours.py
+```bash
+jupyter notebook notebooks/figures.ipynb
 ```
 
-Or interactively: `jupyter notebook notebooks/figures.ipynb`
+Standalone scripts for individual figures:
+
+```bash
+python scripts/fig_fisher_contours.py     # Fig. 5: 3-scenario contour plot
+python scripts/fig_deriv_validation.py    # Fig. A1
+python scripts/fig_ms09_convergence.py    # Fig. A2
+python scripts/fig_fisher_info_density.py # Fig. A3
+python scripts/fig_cov_validation.py      # Fig. A4
+```
 
 ### Output
 

@@ -1,14 +1,21 @@
 #!/usr/bin/env python
-"""LEGACY two-stage forecast (calibration → cosmology with priors).
+"""LEGACY two-stage 6-sample DESI DR2 forecast.
 
-DEPRECATED — use ``scripts/run_joint_fisher.py`` instead.
+This script implements the original two-stage architecture:
+  Step 1 — multi-tracer Fisher in the PFS×DESI overlap (1,200 deg²) →
+           export calibrated Gaussian priors per (DESI tracer, z-bin).
+  Step 2 — per-DR2-sample single-tracer auto-spectrum Fisher across the
+           full 14,000 deg² DESI footprint, applying the Step-1 priors.
 
-This pipeline double-counts DESI auto-spectra (used in both Step 1 nuisance
-calibration and Step 2 cosmology). The joint Fisher in
-``pfsfog/fisher_joint.py`` avoids this by combining all data in a single
-multi-tracer Fisher, marginalized once over all nuisance parameters.
+The two-stage approach has known methodological issues — DESI auto-spectra
+are used in both stages, so their information is partially double-counted.
+``scripts/run_joint_fisher.py`` (the headline driver) replaces this with a
+single joint Fisher across the full footprint and the PFS overlap,
+marginalized in a single pass. That is the recommended pipeline for new
+work; this script is retained for reproducibility of the original results.
 
-Kept for reference and reproducibility of historical results.
+Usage:
+    python scripts/run_desi_multisample.py
 """
 import sys
 from dataclasses import dataclass

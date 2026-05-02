@@ -1,5 +1,13 @@
 """End-to-end pipeline: overlap → export → full-area Fisher → summary.
 
+LEGACY single-ELG two-stage CLI. Runs Step 1 overlap calibration on
+PFS×DESI-ELG only, exports calibrated priors, then runs Step 2 single-
+tracer cosmology Fisher across DESI's full 14,000 deg² footprint with
+those priors. The joint Fisher in ``pfsfog/fisher_joint.py`` (driver:
+``scripts/run_joint_fisher.py``) replaces this with a single Fisher
+spanning all four tracers and the full footprint, marginalized in one
+pass. Kept for reproducibility.
+
 Usage:
     python -m pfsfog.cli [--config configs/default.yaml]
 """

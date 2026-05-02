@@ -1,8 +1,12 @@
 #!/usr/bin/env python
-"""DEPRECATED — legacy two-stage end-to-end driver.
+"""LEGACY single-ELG end-to-end driver: overlap → priors → full-area
+Fisher → all main-text figures (legacy two-stage pipeline only).
 
-Use ``scripts/run_joint_fisher.py`` for the proper joint Fisher analysis.
-This script is kept for reproducibility of historical results.
+The recommended pipeline for new work is the joint Fisher
+(``scripts/run_joint_fisher.py``), which spans all four tracers in the
+overlap and the full DESI footprint in a single Fisher matrix. This
+script is retained for reproducibility of the original two-stage
+results.
 """
 
 import sys

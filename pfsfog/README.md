@@ -23,28 +23,22 @@ plus `pfsfog/prior_export.py` — kept for reproducibility.
 ## Quick start
 
 ```bash
-# Single-ELG pipeline (~30s)
-python -m pfsfog
-
-# Multi-tracer pipeline (up to 4 tracers, ~2min)
-python -c "
-from pfsfog.config import ForecastConfig
-from pfsfog.cli_multitrace import run_multitrace_pipeline
-cfg = ForecastConfig.from_yaml('configs/default.yaml')
-run_multitrace_pipeline(cfg)
-"
-
-# 6-sample DESI DR2 forecast (~5min)
-python scripts/run_desi_multisample.py
-
-# Parameter importance decomposition
-python scripts/run_parameter_importance.py
-
-# Sensitivity sweep (r_sigma_v)
-python scripts/run_sensitivity.py
+# Joint Fisher (headline driver): DESI-only vs DESI+PFS (~14 min sequential)
+python scripts/run_joint_fisher.py
+python scripts/run_joint_fisher.py --parallel --n-workers 8   # ~7 min with warm JAX cache
 
 # Tests
-pytest tests/ -q   # 96 tests, ~10s
+pytest tests/ -q                  # 130 tests, ~12 min (default — slow tests skipped)
+pytest tests/ -m slow -v          # 2 parallel-vs-sequential equivalence tests
+```
+
+Legacy two-stage pipeline (kept for reproducibility):
+
+```bash
+python -m pfsfog                                 # legacy single-ELG pipeline
+python scripts/run_desi_multisample.py           # legacy 6-sample DR2 forecast
+python scripts/run_parameter_importance.py       # legacy diagnostic
+python scripts/run_sensitivity.py                # legacy r_sigma_v sweep
 ```
 
 ## Module guide
@@ -54,7 +48,7 @@ pytest tests/ -q   # 96 tests, ~10s
 | Module | Purpose |
 |--------|---------|
 | `cosmo.py` | `FiducialCosmology` — P_lin via cosmopower-jax; sigma8 from emulator; H, D, f from `ps_1loop_jax.background`. `make_plin_func()` and `make_growth_rate_func()` return pure JAX functions for end-to-end autodiff. Planck 2018 fiducial. |
-| `surveys.py` | Load n(z) from `survey_specs/*.txt`. `Survey` dataclass with nbar_eff, z_eff, volume. `SurveyGroup` manages PFS + multiple DESI tracers. |
+| `surveys.py` | Load n(z) from `survey_specs/*.txt`. `Survey` dataclass with nbar_eff, z_eff, volume. `SurveyGroup` manages PFS + multiple DESI tracers. `b1_of_z` callables are module-level functions / `functools.partial` so `Survey` objects are picklable (required for multiprocessing). |
 | `config.py` | `ForecastConfig` — all tuneable knobs: kmin/kmax/dk, z-bins, areas, r_sigma_v, f_shared_elg=0.05, backend choices. YAML loader. |
 
 ### EFT parameters
@@ -83,22 +77,24 @@ pytest tests/ -q   # 96 tests, ~10s
 |--------|---------|
 | `fisher.py` | `FisherResult` dataclass with `marginalized_sigma`. Fisher assembly + `add_gaussian_prior`. |
 | `fisher_mt_general.py` | N-tracer Fisher. Parameter vector: 3 cosmo + 12 nuisance per tracer. |
-| `prior_export.py` | Regularize overlap Fisher -> extract calibrated sigma for each DESI nuisance param. |
-| `fisher_full_area.py` | Single-tracer DESI Fisher with imported priors. `combine_zbins` (or `combine_samples`) sums cosmo blocks. Supports sample-label disambiguation for DR2 samples. |
+| `fisher_joint.py` | **Joint multi-tracer, multi-survey Fisher.** Volume-partitioned per z-bin, heterogeneous combine across z-bins, opt-in `parallel`/`n_workers`/`threads_per_worker` kwargs on `run_joint_fisher` and `run_broad_baseline`. |
+| `_fisher_joint_parallel.py` | Internal — spawn-context multiprocessing pool for the per-z-bin loop, with parent-side BLAS throttling and JAX persistent compilation cache. |
+| `prior_export.py` | **Legacy** — extract calibrated σ for DESI nuisance from the two-stage overlap Fisher. Superseded by `fisher_joint.py`. |
+| `fisher_full_area.py` | **Legacy** — single-tracer DESI Fisher with imported priors. `combine_zbins` assumes uniform tracer counts; superseded by `fisher_joint.combine_zbins_heterogeneous` for the joint analysis. |
 
 ### Scenarios and output
 
 | Module | Purpose |
 |--------|---------|
-| `scenarios.py` | Three scenarios: broad, cross-cal, oracle. `nuisance_prior_diag` selects prior source. |
+| `scenarios.py` | **Legacy** — broad / cross-cal / oracle scenario labels and `nuisance_prior_diag` for the two-stage pipeline. Joint Fisher uses "DESI-only joint" / "DESI+PFS joint" labels directly and does not import this module. |
 | `plots.py` | Publication figures (serif font, >=14pt). SBP benchmark lines from Zhang+ 2025 and Chudaykin+ 2026. |
 
 ### Pipeline runners
 
 | Module | Purpose |
 |--------|---------|
-| `cli.py` | Single-ELG pipeline. `run_pipeline` -> `PipelineResults`. |
-| `cli_multitrace.py` | Multi-tracer pipeline. PFS x {DESI-ELG, DESI-LRG, DESI-QSO}. |
+| `cli.py` | **Legacy** — single-ELG two-stage CLI. `run_pipeline` -> `PipelineResults`. Superseded by `scripts/run_joint_fisher.py`. |
+| `cli_multitrace.py` | **Legacy** — multi-tracer two-stage CLI (PFS × DESI). Superseded by `scripts/run_joint_fisher.py`. |
 
 ## Key conventions
 
@@ -107,3 +103,5 @@ pytest tests/ -q   # 96 tests, ~10s
 - **Asymmetric kmax**: `kmax_PFS = kmax_DESI / r_sigma_v`. Default r_sigma_v = 0.75.
 - **Units**: k in h/Mpc, P(k) in (Mpc/h)^3, volumes in (Mpc/h)^3.
 - **Precision**: `jax.config.update('jax_enable_x64', True)` — float64 throughout.
+- **Parallel mode**: `run_joint_fisher` and `run_broad_baseline` accept opt-in `parallel=True`, `n_workers`, `threads_per_worker` kwargs. Workers spawn (macOS-safe with JAX/XLA) and share a JAX persistent compilation cache at `.cache/jax/` (override with `PFSFOG_JAX_CACHE_DIR`). Numerically identical to sequential (rtol=1e-10, verified by slow-marked tests).
+- **Test markers**: default `pytest tests/ -q` skips `@pytest.mark.slow`. The two parallel-vs-sequential equivalence tests (~12 min) run via `pytest -m slow -v`.

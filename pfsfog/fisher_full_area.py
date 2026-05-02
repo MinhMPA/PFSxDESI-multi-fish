@@ -4,6 +4,12 @@ F_total(z) = F_DESI_ST(z; V_full, kmax) + F_ext_prior(z)
 
 Combines z-bins for shared cosmo params; per-z nuisance params
 are independent across z-bins.
+
+LEGACY — Step 2 of the two-stage pipeline. ``combine_zbins`` here
+assumes a uniform NUISANCE_NAMES count per z-bin (single-tracer per
+sample). For the joint multi-tracer Fisher where active-tracer counts
+vary across z-bins, use
+``pfsfog.fisher_joint.combine_zbins_heterogeneous``.
 """
 
 from __future__ import annotations

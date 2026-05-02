@@ -1,7 +1,11 @@
 """Multi-tracer pipeline: PFS × {DESI-ELG, DESI-LRG, DESI-QSO}.
 
-DEPRECATED — legacy two-stage CLI. Use ``scripts/run_joint_fisher.py`` for
-the proper joint Fisher analysis.
+LEGACY two-stage CLI — runs the overlap-only multi-tracer Fisher (Step 1)
+and exports calibrated nuisance priors. The joint Fisher in
+``pfsfog/fisher_joint.py`` (driver: ``scripts/run_joint_fisher.py``)
+replaces this with a single Fisher across DESI's full footprint plus
+the PFS overlap, marginalized in one pass. Kept for reproducibility of
+the original two-stage results.
 
 Generalises cli.py to N tracers in the overlap volume.
 """
