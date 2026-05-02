@@ -6,8 +6,11 @@ Validates:
 3. Heterogeneous = single-Fisher reduction when only one Fisher contributes
 4. PFS-empty reduction: include_pfs=False reproduces DESI-only path
 5. End-to-end smoke: run_joint_fisher returns finite sensible σ values
+6. Survey picklability — required for multiprocessing the per-z-bin loop
 """
 from __future__ import annotations
+
+import pickle
 
 import jax
 jax.config.update("jax_enable_x64", True)
@@ -69,6 +72,33 @@ def sg():
 # ---------------------------------------------------------------------------
 # Test 1: embed_fisher round-trip
 # ---------------------------------------------------------------------------
+
+
+def test_surveys_picklable():
+    """Survey objects must round-trip through pickle for multiprocessing.
+
+    The bias callable ``b1_of_z`` was historically a lambda / nested
+    closure, which is not picklable. After replacing with a module-level
+    function (PFS-ELG) and ``functools.partial`` (DESI tracers), all
+    Survey constructors must produce picklable objects.
+    """
+    from pfsfog.surveys import pfs_elg, desi_elg, desi_lrg, desi_qso
+
+    cases = [
+        (pfs_elg,  0.85),
+        (desi_elg, 0.95),
+        (desi_lrg, 0.70),
+        (desi_qso, 1.50),
+    ]
+    for ctor, ztest in cases:
+        s = ctor()
+        s_round = pickle.loads(pickle.dumps(s))
+        # b1(z) must be unchanged after round-trip
+        assert s.b1_of_z(ztest) == pytest.approx(s_round.b1_of_z(ztest), rel=1e-12)
+        # nz_eff must be unchanged
+        assert s.nbar_eff(ztest, ztest + 0.05) == pytest.approx(
+            s_round.nbar_eff(ztest, ztest + 0.05), rel=1e-12
+        )
 
 
 def test_embed_fisher_roundtrip():
@@ -194,3 +224,49 @@ def test_run_joint_fisher_smoke(cosmo, ps, cfg, sg):
     delta_fs8 = (res_desi.sigma["fsigma8"] - res_joint.sigma["fsigma8"]) \
                 / res_desi.sigma["fsigma8"]
     assert 0.0 <= delta_fs8 < 0.5  # 0–50% range
+
+
+# ---------------------------------------------------------------------------
+# Test 7: parallel-vs-sequential equivalence (slow-marked)
+# ---------------------------------------------------------------------------
+
+
+@pytest.mark.slow
+def test_run_joint_fisher_parallel_matches_sequential(cosmo, ps, cfg, sg):
+    """run_joint_fisher(parallel=True) must produce a Fisher matrix
+    numerically identical (rtol=1e-10) to the sequential path."""
+    from pfsfog.fisher_joint import run_joint_fisher
+    zbins = [(0.8, 1.0), (1.0, 1.2)]  # 2 bins keeps test ~1 min
+
+    res_seq = run_joint_fisher(cfg, cosmo, ps, sg, include_pfs=True,
+                               zbins=zbins, parallel=False)
+    res_par = run_joint_fisher(cfg, cosmo, ps, sg, include_pfs=True,
+                               zbins=zbins, parallel=True, n_workers=2)
+
+    assert res_seq.fisher.param_names == res_par.fisher.param_names
+    np.testing.assert_allclose(res_seq.fisher.F, res_par.fisher.F,
+                               rtol=1e-10, atol=0)
+    for cp in COSMO_NAMES:
+        np.testing.assert_allclose(
+            res_seq.sigma[cp], res_par.sigma[cp], rtol=1e-10
+        )
+
+
+@pytest.mark.slow
+def test_run_broad_baseline_parallel_matches_sequential(cosmo, ps, cfg, sg):
+    """run_broad_baseline(parallel=True) must match the sequential path."""
+    from pfsfog.fisher_joint import run_broad_baseline
+    zbins = [(0.8, 1.0), (1.0, 1.2)]
+
+    res_seq = run_broad_baseline(cfg, cosmo, ps, sg,
+                                 zbins=zbins, parallel=False)
+    res_par = run_broad_baseline(cfg, cosmo, ps, sg,
+                                 zbins=zbins, parallel=True, n_workers=2)
+
+    assert res_seq.fisher.param_names == res_par.fisher.param_names
+    np.testing.assert_allclose(res_seq.fisher.F, res_par.fisher.F,
+                               rtol=1e-10, atol=0)
+    for cp in COSMO_NAMES:
+        np.testing.assert_allclose(
+            res_seq.sigma[cp], res_par.sigma[cp], rtol=1e-10
+        )
