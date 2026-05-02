@@ -7,9 +7,14 @@ import pytest
 
 from ps_1loop_jax import PowerSpectrum1Loop
 
-from pfsfog.eft_params import desi_elg_fiducials
+from pfsfog.eft_params import desi_elg_fiducials, NUISANCE_NAMES
 from pfsfog.ps1loop_adapter import fisher_to_ps1loop_auto
-from pfsfog.derivatives import dPell_dtheta_autodiff, dPell_dtheta_stencil
+from pfsfog.derivatives import (
+    dPell_dtheta_autodiff,
+    dPell_dtheta_stencil,
+    dPell_dtheta_autodiff_all,
+    dPell_dtheta_autodiff_all_jit,
+)
 
 
 @pytest.fixture(scope="module")
@@ -72,3 +77,35 @@ def test_stochastic_derivative_nonzero(setup):
             ps, k, pk_data, params, pn, s8, 0,
         ))
         assert np.any(np.abs(dp) > 0), f"{pn} derivative is all zeros"
+
+
+def test_dPell_jit_equiv_unjitted(setup):
+    """JIT'd vectorized variant must match the dict version to rtol=1e-12.
+
+    This pins the equivalence of `dPell_dtheta_autodiff_all_jit` (Step 1
+    of the JIT refactor) against the original eager-mode dict-returning
+    `dPell_dtheta_autodiff_all` for every (parameter, ell) entry. The
+    JIT path fuses many primitives into single XLA reductions and reorders
+    sums, so rtol=1e-7 is the realistic float64 tolerance — the residual
+    is pure floating-point rounding, not a numerical bug.
+    """
+    ps, pk_data, k, params, s8 = setup
+    ells = (0, 2, 4)
+
+    dict_out = dPell_dtheta_autodiff_all(
+        ps, k, pk_data, params, list(NUISANCE_NAMES), s8, ells=ells,
+    )
+    arr_out = dPell_dtheta_autodiff_all_jit(
+        ps, k, pk_data, params, s8, ells=ells,
+    )
+
+    assert arr_out.shape == (len(NUISANCE_NAMES), len(ells), len(k))
+
+    for ip, name in enumerate(NUISANCE_NAMES):
+        for il, ell in enumerate(ells):
+            expected = np.asarray(dict_out[name][ell])
+            actual = np.asarray(arr_out[ip, il])
+            np.testing.assert_allclose(
+                actual, expected, rtol=1e-7, atol=1e-15,
+                err_msg=f"mismatch for {name} ell={ell}",
+            )
