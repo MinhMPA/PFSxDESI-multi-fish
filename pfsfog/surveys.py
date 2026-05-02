@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import functools
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Callable
@@ -101,6 +102,37 @@ class Survey:
 
 
 # ---------------------------------------------------------------------------
+# Bias model callables (module-level so Survey objects are picklable)
+# ---------------------------------------------------------------------------
+
+
+def _pfs_elg_bias(z: float) -> float:
+    """PFS-ELG linear bias model: b1(z) = 0.9 + 0.4*z (Orsi+ 2010)."""
+    return 0.9 + 0.4 * z
+
+
+def _desi_bias(b0: float, z: float,
+               cosmo: FiducialCosmology | None = None) -> float:
+    """DESI-style linear bias model: b1(z) = b0 / D(z).
+
+    Module-level (rather than nested) so ``functools.partial(_desi_bias, b0)``
+    is picklable and can cross multiprocessing boundaries.
+    """
+    if cosmo is None:
+        cosmo = FiducialCosmology()
+    return b0 / float(cosmo.D(z))
+
+
+def _make_desi_bias(b0: float):
+    """Create a DESI-style bias function b(z) = b0 / D(z).
+
+    Returns a ``functools.partial`` rather than a nested closure so the
+    resulting callable can be pickled (required for multiprocessing).
+    """
+    return functools.partial(_desi_bias, b0)
+
+
+# ---------------------------------------------------------------------------
 # Built-in surveys
 # ---------------------------------------------------------------------------
 
@@ -117,17 +149,8 @@ def pfs_elg() -> Survey:
         z_max_all=z_max,
         nz_all=nz,
         Vz_all=Vz,
-        b1_of_z=lambda z: 0.9 + 0.4 * z,
+        b1_of_z=_pfs_elg_bias,
     )
-
-
-def _make_desi_bias(b0: float):
-    """Create a DESI-style bias function b(z) = b0 / D(z)."""
-    def _b1(z: float, cosmo: FiducialCosmology | None = None) -> float:
-        if cosmo is None:
-            cosmo = FiducialCosmology()
-        return b0 / float(cosmo.D(z))
-    return _b1
 
 
 def desi_elg() -> Survey:

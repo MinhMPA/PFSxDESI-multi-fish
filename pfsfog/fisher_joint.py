@@ -457,27 +457,53 @@ def run_joint_fisher(
     include_pfs: bool,
     zbins: list[tuple[float, float]],
     add_cosmo_priors: bool = True,
+    parallel: bool = False,
+    n_workers: int | None = None,
+    threads_per_worker: int = 1,
 ) -> JointFisherResult:
     """Build the joint multi-tracer Fisher across all z-bins.
 
     ``include_pfs=False`` runs the DESI-only joint baseline; ``True`` runs
     the full PFS+DESI joint analysis. The two scenarios are compared via
     their cosmology σ values.
-    """
-    per_zbin = []
-    per_zbin_active = []
-    for zb in zbins:
-        F, names = volume_partitioned_zbin_fisher(
-            zb, sg, cosmo, ps, cfg, include_pfs=include_pfs,
-        )
-        per_zbin.append((F, names))
 
-        # Track active tracers for reporting
-        if include_pfs and zb[0] < sg.pfs_zmax:
-            active = sorted(sg.active_with_pfs_truncation(zb[0], zb[1]).keys())
-        else:
-            active = sorted(sg.active_desi(zb[0], zb[1]).keys())
-        per_zbin_active.append(active)
+    Parameters
+    ----------
+    parallel : bool, default False
+        Opt-in flag. If True, the per-z-bin loop is dispatched across a
+        ``multiprocessing.Pool`` (spawn context). The parallel path is
+        numerically identical to the sequential path; default behavior
+        is unchanged.
+    n_workers : int, optional
+        Number of worker processes when ``parallel=True``. Defaults to
+        ``min(len(zbins), os.cpu_count(), 8)``.
+    threads_per_worker : int, default 1
+        BLAS thread budget per worker. Only used when ``parallel=True``.
+        Tune to balance worker count against per-worker BLAS threading
+        on your hardware (typical: ``n_workers × threads_per_worker``
+        ≤ logical CPU count).
+    """
+    if parallel:
+        from ._fisher_joint_parallel import _run_joint_parallel
+        per_zbin, per_zbin_active = _run_joint_parallel(
+            cfg, sg, include_pfs, zbins,
+            n_workers=n_workers, threads_per_worker=threads_per_worker,
+        )
+    else:
+        per_zbin = []
+        per_zbin_active = []
+        for zb in zbins:
+            F, names = volume_partitioned_zbin_fisher(
+                zb, sg, cosmo, ps, cfg, include_pfs=include_pfs,
+            )
+            per_zbin.append((F, names))
+
+            # Track active tracers for reporting
+            if include_pfs and zb[0] < sg.pfs_zmax:
+                active = sorted(sg.active_with_pfs_truncation(zb[0], zb[1]).keys())
+            else:
+                active = sorted(sg.active_desi(zb[0], zb[1]).keys())
+            per_zbin_active.append(active)
 
     fr = combine_zbins_heterogeneous(
         per_zbin,
@@ -518,6 +544,9 @@ def run_broad_baseline(
     sg: SurveyGroup,
     zbins: list[tuple[float, float]],
     add_cosmo_priors: bool = True,
+    parallel: bool = False,
+    n_workers: int | None = None,
+    threads_per_worker: int = 1,
 ) -> JointFisherResult:
     """DESI single-tracer broad-prior baseline (no multi-tracer info).
 
@@ -527,35 +556,51 @@ def run_broad_baseline(
     space as the joint Fisher. Cross-spectra are excluded — this is the
     legacy "DESI alone, no multi-tracer" reference scenario in which the
     b1*sigma8-Mnu degeneracy runs free under the broad nuisance priors.
+
+    Parameters
+    ----------
+    parallel : bool, default False
+        Opt-in flag. If True, dispatches the per-z-bin loop across a
+        multiprocessing pool (spawn context). Numerically identical to
+        the sequential path.
+    n_workers : int, optional
+        Number of worker processes when ``parallel=True``.
     """
-    per_zbin = []
-    per_zbin_active = []
-    for zb in zbins:
-        active_desi = sg.active_desi(zb[0], zb[1])
-        if not active_desi:
-            continue
-        V_full = sg.V_desi_full(zb[0], zb[1])
+    if parallel:
+        from ._fisher_joint_parallel import _run_broad_parallel
+        per_zbin, per_zbin_active = _run_broad_parallel(
+            cfg, sg, zbins,
+            n_workers=n_workers, threads_per_worker=threads_per_worker,
+        )
+    else:
+        per_zbin = []
+        per_zbin_active = []
+        for zb in zbins:
+            active_desi = sg.active_desi(zb[0], zb[1])
+            if not active_desi:
+                continue
+            V_full = sg.V_desi_full(zb[0], zb[1])
 
-        zbin_fishers = []
-        zbin_names_list = []
-        for tn, surv in active_desi.items():
-            F, names = build_zbin_fisher(
-                zb, {tn: surv}, V_full, cosmo, ps, cfg,
-            )
-            zbin_fishers.append(F)
-            zbin_names_list.append(names)
+            zbin_fishers = []
+            zbin_names_list = []
+            for tn, surv in active_desi.items():
+                F, names = build_zbin_fisher(
+                    zb, {tn: surv}, V_full, cosmo, ps, cfg,
+                )
+                zbin_fishers.append(F)
+                zbin_names_list.append(names)
 
-        union: list[str] = list(COSMO_NAMES)
-        for nl in zbin_names_list:
-            for n in nl:
-                if n not in union:
-                    union.append(n)
-        F_total = np.zeros((len(union), len(union)))
-        for F, nl in zip(zbin_fishers, zbin_names_list):
-            F_total += embed_fisher(F, nl, union)
+            union: list[str] = list(COSMO_NAMES)
+            for nl in zbin_names_list:
+                for n in nl:
+                    if n not in union:
+                        union.append(n)
+            F_total = np.zeros((len(union), len(union)))
+            for F, nl in zip(zbin_fishers, zbin_names_list):
+                F_total += embed_fisher(F, nl, union)
 
-        per_zbin.append((F_total, union))
-        per_zbin_active.append(sorted(active_desi.keys()))
+            per_zbin.append((F_total, union))
+            per_zbin_active.append(sorted(active_desi.keys()))
 
     fr = combine_zbins_heterogeneous(
         per_zbin, survey_name="DESI single-tracer broad",

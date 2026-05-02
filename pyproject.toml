@@ -37,3 +37,7 @@ pfsfog = ["../survey_specs/*.txt"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+markers = [
+    "slow: tests that exceed ~30s (e.g., end-to-end multi-process Fisher runs)",
+]
+addopts = "-m 'not slow'"

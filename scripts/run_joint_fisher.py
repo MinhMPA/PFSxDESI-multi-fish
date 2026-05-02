@@ -47,6 +47,19 @@ ZBINS = [
 
 
 def main():
+    import argparse
+    ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
+    ap.add_argument(
+        "--parallel", action="store_true",
+        help="Multi-process the per-z-bin loop (≈1.5–2× wall-clock speedup; "
+             "warm JAX cache after first run helps the most).",
+    )
+    ap.add_argument(
+        "--n-workers", type=int, default=None,
+        help="Number of worker processes (default: min(len(zbins), cpu_count, 8)).",
+    )
+    args = ap.parse_args()
+
     cfg = ForecastConfig.from_yaml("configs/default.yaml")
     cosmo = FiducialCosmology(backend=cfg.cosmo_backend)
     from ps_1loop_jax import PowerSpectrum1Loop
@@ -70,15 +83,19 @@ def main():
     print(f"Footprint: DESI {sg.desi_full_area_deg2:.0f} deg², "
           f"overlap {sg.overlap_area_deg2:.0f} deg²")
     print(f"PFS truncation: z < {sg.pfs_zmax}")
+    if args.parallel:
+        print(f"Parallel: True (n_workers={args.n_workers or 'auto'})")
     print()
+
+    kwargs = dict(parallel=args.parallel, n_workers=args.n_workers)
 
     print("Running DESI-only joint Fisher ...")
     res_desi = run_joint_fisher(cfg, cosmo, ps, sg,
-                                include_pfs=False, zbins=ZBINS)
+                                include_pfs=False, zbins=ZBINS, **kwargs)
 
     print("Running DESI+PFS joint Fisher ...")
     res_joint = run_joint_fisher(cfg, cosmo, ps, sg,
-                                 include_pfs=True, zbins=ZBINS)
+                                 include_pfs=True, zbins=ZBINS, **kwargs)
 
     # --- Reporting ---
     print()
