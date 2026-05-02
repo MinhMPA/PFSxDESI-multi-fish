@@ -212,3 +212,6 @@ ps_1loop_jax/
 
 # Pipeline output
 results/
+
+# Claude Code local agent state (session locks, scheduled-task metadata, etc.)
+.claude/
