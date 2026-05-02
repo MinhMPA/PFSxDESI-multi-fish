@@ -7,7 +7,9 @@ import pytest
 
 from ps_1loop_jax import PowerSpectrum1Loop
 
-from pfsfog.eft_params import desi_elg_fiducials, pfs_elg_fiducials, NUISANCE_NAMES
+from pfsfog.eft_params import (
+    desi_elg_fiducials, pfs_elg_fiducials, NUISANCE_NAMES, COSMO_NAMES,
+)
 from pfsfog.ps1loop_adapter import fisher_to_ps1loop_auto, fisher_to_ps1loop_cross
 from pfsfog.derivatives import (
     dPell_dtheta_autodiff,
@@ -16,6 +18,8 @@ from pfsfog.derivatives import (
     dPell_dtheta_autodiff_all_jit,
     dPcross_dtheta_autodiff,
     dPcross_dtheta_autodiff_all_jit,
+    dPell_d_cosmo_all,
+    dPell_d_cosmo_all_jit,
 )
 
 
@@ -162,3 +166,38 @@ def test_dPcross_jit_equiv_unjitted(setup_cross):
                     actual, expected, rtol=1e-7, atol=1e-15,
                     err_msg=f"mismatch side={side} {name} ell={ell}",
                 )
+
+
+def test_dPell_d_cosmo_jit_equiv_unjitted(setup):
+    """JIT'd cosmology derivs match the eager dict-returning version
+    for every (param, ell) at rtol=1e-7.
+
+    Pins the equivalence of `dPell_d_cosmo_all_jit` against the original
+    `dPell_d_cosmo_all` (which calls `dPell_d_fsigma8` and
+    `dPell_d_cosmo_autodiff` per (param, ell)). The JIT path fuses the
+    cosmopower-jax forward + ps_1loop FFTLog + jacfwd into one trace per
+    multipole, so reductions reorder and the residual is pure float64
+    rounding (same rtol budget as the nuisance JIT tests).
+    """
+    ps, pk_data, k, params, s8 = setup
+    from pfsfog.cosmo import FiducialCosmology
+
+    cosmo = FiducialCosmology(backend="cosmopower")
+    z = 0.9
+    ells = (0, 2, 4)
+
+    dict_out = dPell_d_cosmo_all(ps, k, pk_data, cosmo, params, z, s8, ells)
+    arr_out = dPell_d_cosmo_all_jit(
+        ps, k, pk_data, cosmo, params, z, s8, ells=ells,
+    )
+
+    assert arr_out.shape == (len(COSMO_NAMES), len(ells), len(k))
+
+    for ic, cn in enumerate(COSMO_NAMES):
+        for il, ell in enumerate(ells):
+            expected = np.asarray(dict_out[cn][ell])
+            actual = np.asarray(arr_out[ic, il])
+            np.testing.assert_allclose(
+                actual, expected, rtol=1e-7, atol=1e-15,
+                err_msg=f"mismatch for {cn} ell={ell}",
+            )
