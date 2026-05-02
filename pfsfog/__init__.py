@@ -13,3 +13,11 @@ Subaru/PFS x DESI overlap; the architecture (`embed_fisher`,
 generalizes to N>=3 by enumerating the 2^N - 1 disjoint footprint
 regions.
 """
+from ._jax_cache import enable_cache as _enable_jax_cache
+
+# Persistent JIT-compilation cache. Without this, JIT'd derivative
+# kernels (notably the cosmology-cosmopower trace, which costs ~29 s to
+# compile) recompile every kernel restart in sequential / notebook
+# usage. The cache is shared with spawned parallel workers.
+_enable_jax_cache()
+del _enable_jax_cache

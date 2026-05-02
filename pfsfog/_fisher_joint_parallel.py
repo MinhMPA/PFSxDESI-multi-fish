@@ -41,12 +41,6 @@ _THREAD_ENV_VARS = (
 )
 
 
-_JAX_CACHE_DIR = os.environ.get(
-    "PFSFOG_JAX_CACHE_DIR",
-    str(Path(__file__).resolve().parent.parent / ".cache" / "jax"),
-)
-
-
 def _init_worker() -> None:
     """Per-worker initialization run once when each spawn-process starts.
 
@@ -64,10 +58,8 @@ def _init_worker() -> None:
     """
     import jax  # noqa: F401
     jax.config.update("jax_enable_x64", True)
-    Path(_JAX_CACHE_DIR).mkdir(parents=True, exist_ok=True)
-    jax.config.update("jax_compilation_cache_dir", _JAX_CACHE_DIR)
-    jax.config.update("jax_persistent_cache_min_compile_time_secs", 0.5)
-    jax.config.update("jax_persistent_cache_min_entry_size_bytes", 0)
+    from ._jax_cache import enable_cache
+    enable_cache()
 
 
 # Per-worker cache for FiducialCosmology / PowerSpectrum1Loop.
