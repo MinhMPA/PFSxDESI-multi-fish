@@ -7,13 +7,15 @@ import pytest
 
 from ps_1loop_jax import PowerSpectrum1Loop
 
-from pfsfog.eft_params import desi_elg_fiducials, NUISANCE_NAMES
-from pfsfog.ps1loop_adapter import fisher_to_ps1loop_auto
+from pfsfog.eft_params import desi_elg_fiducials, pfs_elg_fiducials, NUISANCE_NAMES
+from pfsfog.ps1loop_adapter import fisher_to_ps1loop_auto, fisher_to_ps1loop_cross
 from pfsfog.derivatives import (
     dPell_dtheta_autodiff,
     dPell_dtheta_stencil,
     dPell_dtheta_autodiff_all,
     dPell_dtheta_autodiff_all_jit,
+    dPcross_dtheta_autodiff,
+    dPcross_dtheta_autodiff_all_jit,
 )
 
 
@@ -79,6 +81,27 @@ def test_stochastic_derivative_nonzero(setup):
         assert np.any(np.abs(dp) > 0), f"{pn} derivative is all zeros"
 
 
+@pytest.fixture(scope="module")
+def setup_cross():
+    """Cross-spectrum setup: PFS-ELG × DESI-ELG params."""
+    ps = PowerSpectrum1Loop(do_irres=False)
+    k_lin = jnp.geomspace(1e-4, 10.0, 256)
+    pk_lin = 1e4 * (k_lin / 0.05) ** (-2.5)
+    pk_data = {"k": k_lin, "pk": pk_lin}
+    k = jnp.geomspace(0.01, 0.25, 20)
+
+    s8 = 0.49
+    b1_desi = 1.3
+    b1_pfs = 1.5
+    fid_A = pfs_elg_fiducials(b1_pfs, b1_desi, s8)  # PFS = side A
+    fid_B = desi_elg_fiducials(b1_desi, s8)         # DESI = side B
+    params = fisher_to_ps1loop_cross(
+        fid_A, fid_B, sigma8_z=s8, f_z=0.87, h=0.6736,
+        nbar_A=1e-3, nbar_B=4e-4,
+    )
+    return ps, pk_data, k, params, s8
+
+
 def test_dPell_jit_equiv_unjitted(setup):
     """JIT'd vectorized variant must match the dict version to rtol=1e-12.
 
@@ -109,3 +132,33 @@ def test_dPell_jit_equiv_unjitted(setup):
                 actual, expected, rtol=1e-7, atol=1e-15,
                 err_msg=f"mismatch for {name} ell={ell}",
             )
+
+
+def test_dPcross_jit_equiv_unjitted(setup_cross):
+    """JIT'd cross-spectrum derivs must match the per-(side,param,ell) version.
+
+    Pins `dPcross_dtheta_autodiff_all_jit` (Step 2) against the original
+    eager `dPcross_dtheta_autodiff` for every (side, parameter, ell).
+    Same rtol=1e-7 rationale as the auto-spectrum test — XLA reduction
+    reordering inside fused jacfwd shifts the last few digits.
+    """
+    ps, pk_data, k, params, s8 = setup_cross
+    ells = (0, 2, 4)
+    sides = ("A", "B")
+
+    arr_out = dPcross_dtheta_autodiff_all_jit(
+        ps, k, pk_data, params, s8, ells=ells,
+    )
+    assert arr_out.shape == (2, len(NUISANCE_NAMES), len(ells), len(k))
+
+    for is_, side in enumerate(sides):
+        for ip, name in enumerate(NUISANCE_NAMES):
+            for il, ell in enumerate(ells):
+                expected = np.asarray(dPcross_dtheta_autodiff(
+                    ps, k, pk_data, params, name, s8, side, ell,
+                ))
+                actual = np.asarray(arr_out[is_, ip, il])
+                np.testing.assert_allclose(
+                    actual, expected, rtol=1e-7, atol=1e-15,
+                    err_msg=f"mismatch side={side} {name} ell={ell}",
+                )
