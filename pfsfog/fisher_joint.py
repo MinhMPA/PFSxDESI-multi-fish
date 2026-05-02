@@ -35,9 +35,9 @@ import numpy as np
 
 from .covariance_mt_general import multi_tracer_cov_general
 from .derivatives import (
-    dPcross_dtheta_autodiff,
+    dPcross_dtheta_autodiff_all_jit,
     dPell_d_cosmo_all,
-    dPell_dtheta_autodiff_all,
+    dPell_dtheta_autodiff_all_jit,
 )
 from .eft_params import (
     COSMO_NAMES,
@@ -206,20 +206,22 @@ def build_zbin_fisher(
         cross_shot=cross_shot,
     )
 
-    # Auto-spectrum derivatives: nuisance + cosmology
+    # Auto-spectrum derivatives: nuisance (JIT'd, vectorized) + cosmology (dict)
+    # nuis_arr has shape (N_nuis, N_ell, Nk); the small cosmology dict
+    # (3 params) is left as-is — it's not the dispatch bottleneck.
     derivs_auto = {}
     for tn in tracer_names:
-        d_nuis = dPell_dtheta_autodiff_all(
-            ps, jnp.array(k), pk_data, ps1l_params[tn],
-            NUISANCE_NAMES, s8, ells,
+        nuis_arr = dPell_dtheta_autodiff_all_jit(
+            ps, jnp.array(k), pk_data, ps1l_params[tn], s8, ells=ells,
         )
         d_cosmo = dPell_d_cosmo_all(
             ps, jnp.array(k), pk_data, cosmo, ps1l_params[tn],
             z_eff, s8, ells,
         )
-        derivs_auto[tn] = {**d_nuis, **d_cosmo}
+        derivs_auto[tn] = (nuis_arr, d_cosmo)
 
-    # Cross-spectrum derivatives: nuisance only (cross-cosmo not wired)
+    # Cross-spectrum derivatives: nuisance only (cross-cosmo not wired).
+    # cross_arr has shape (2, N_nuis, N_ell, Nk) — axis 0 is side ("A"=0, "B"=1).
     derivs_cross = {}
     for (a, b) in pairs:
         if a == b:
@@ -227,17 +229,9 @@ def build_zbin_fisher(
         cross_params = fisher_to_ps1loop_cross(
             fids[a], fids[b], s8, f_z, h, nbars[a], nbars[b]
         )
-        cd = {}
-        for nn in NUISANCE_NAMES:
-            for side in ("A", "B"):
-                cd[f"{nn}:{side}"] = {
-                    ell: dPcross_dtheta_autodiff(
-                        ps, jnp.array(k), pk_data, cross_params,
-                        nn, s8, side, ell,
-                    )
-                    for ell in ells
-                }
-        derivs_cross[(a, b)] = cd
+        derivs_cross[(a, b)] = dPcross_dtheta_autodiff_all_jit(
+            ps, jnp.array(k), pk_data, cross_params, s8, ells=ells,
+        )
 
     F = _assemble_fisher_with_cosmo(
         tracer_names, pairs, derivs_auto, derivs_cross, cov, k,
@@ -256,6 +250,11 @@ def _assemble_fisher_with_cosmo(
     Parameter ordering: ``[fσ8, Mν, Ωm,
     NUISANCE_NAMES × tracer_0, NUISANCE_NAMES × tracer_1, ...]`` —
     matches ``zbin_param_names``.
+
+    ``derivs_auto[tn]`` is a ``(nuis_arr, cosmo_dict)`` tuple where
+    ``nuis_arr`` has shape ``(N_nuis, N_ell, Nk)`` (NUISANCE_NAMES order,
+    matches ``ells``). ``derivs_cross[pair_key]`` is a numpy array of
+    shape ``(2, N_nuis, N_ell, Nk)``; axis 0 is side index (A=0, B=1).
     """
     Nt = len(tracer_names)
     Nell = len(ells)
@@ -278,43 +277,41 @@ def _assemble_fisher_with_cosmo(
         if pA == pB:
             tracer_name = pA
             ti = tracer_idx[tracer_name]
-            d_for_tr = derivs_auto.get(tracer_name, {})
+            entry = derivs_auto.get(tracer_name)
+            if entry is None:
+                continue
+            nuis_arr, d_cosmo = entry  # (N_nuis, N_ell, Nk), {cn: {ell: arr}}
 
             # Cosmology columns (auto only)
             for ic, cn in enumerate(COSMO_NAMES):
-                if cn in d_for_tr:
+                if cn in d_cosmo:
                     for il, ell in enumerate(ells):
-                        if ell in d_for_tr[cn]:
-                            # Cosmology derivatives are summed across all
-                            # auto-spectra (each tracer's auto contributes).
+                        if ell in d_cosmo[cn]:
+                            # Each tracer's auto-spectrum contributes its
+                            # cosmology derivative on its own ell rows.
                             D[:, obs_offset + il, ic] = np.asarray(
-                                d_for_tr[cn][ell]
+                                d_cosmo[cn][ell]
                             )
 
-            # Nuisance columns
-            for ip_nuis, nuis_name in enumerate(NUISANCE_NAMES):
-                col = N_COSMO + ti * N_NUIS + ip_nuis
-                if nuis_name in d_for_tr:
-                    for il, ell in enumerate(ells):
-                        if ell in d_for_tr[nuis_name]:
-                            D[:, obs_offset + il, col] = np.asarray(
-                                d_for_tr[nuis_name][ell]
-                            )
+            # Nuisance columns — straight slice from the JIT'd array
+            col_lo = N_COSMO + ti * N_NUIS
+            for il in range(Nell):
+                D[:, obs_offset + il, col_lo:col_lo + N_NUIS] = (
+                    nuis_arr[:, il, :].T
+                )
         else:
             pair_key = (pA, pB) if pA < pB else (pB, pA)
-            cd = derivs_cross.get(pair_key, {})
-            for ip_nuis, nuis_name in enumerate(NUISANCE_NAMES):
-                for side, side_tracer in (("A", pair_key[0]),
-                                          ("B", pair_key[1])):
-                    key = f"{nuis_name}:{side}"
-                    if key in cd:
-                        ti = tracer_idx[side_tracer]
-                        col = N_COSMO + ti * N_NUIS + ip_nuis
-                        for il, ell in enumerate(ells):
-                            if ell in cd[key]:
-                                D[:, obs_offset + il, col] += np.asarray(
-                                    cd[key][ell]
-                                )
+            cross_arr = derivs_cross.get(pair_key)
+            if cross_arr is None:
+                continue
+            # cross_arr shape: (2, N_nuis, N_ell, Nk); side 0=A, 1=B
+            for is_, side_tracer in enumerate(pair_key):
+                ti = tracer_idx[side_tracer]
+                col_lo = N_COSMO + ti * N_NUIS
+                for il in range(Nell):
+                    D[:, obs_offset + il, col_lo:col_lo + N_NUIS] += (
+                        cross_arr[is_, :, il, :].T
+                    )
 
     F = np.zeros((Np, Np))
     for ik in range(Nk):

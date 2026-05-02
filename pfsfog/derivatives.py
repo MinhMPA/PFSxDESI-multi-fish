@@ -148,6 +148,110 @@ def dPell_dtheta_autodiff_all(
 
 
 # ---------------------------------------------------------------------------
+# JIT-compiled vectorized derivatives (perf path)
+# ---------------------------------------------------------------------------
+# The dict-keyed loop above triggers ~36 separate `jax.jacfwd` calls per
+# tracer per z-bin, which is the dominant Python-dispatch overhead in the
+# joint Fisher build (per profile, ~85% of per-z-bin wall time). The
+# vectorized variants below take *one* `jacfwd` over a flat 12-vector
+# (one per ℓ), then collapse into a stacked array shape
+# (N_nuis, N_ell, Nk). The output is numerically identical to the
+# dict-keyed version (validated by ``test_dPell_jit_equiv_unjitted``).
+
+# Static schema derived from _PARAM_MAP, in NUISANCE_NAMES order.
+# Parameters with info=None (e.g. ``c1``) get path=None and contribute a
+# zero column to the gradient.
+_NUIS_PATHS: tuple[tuple[str, ...] | None, ...] = tuple(
+    _PARAM_MAP[n][0] if _PARAM_MAP.get(n) is not None else None
+    for n in NUISANCE_NAMES
+)
+_NUIS_S8_POWERS = jnp.array(
+    [_PARAM_MAP[n][1] if _PARAM_MAP.get(n) is not None else 0
+     for n in NUISANCE_NAMES],
+    dtype=jnp.float64,
+)
+
+
+def _pack_nuisance(fid_params: dict) -> jnp.ndarray:
+    """Read 12 nuisance fiducials (NUISANCE_NAMES order) into a flat vector."""
+    return jnp.array([
+        float(_get_nested(fid_params, p)) if p is not None else 0.0
+        for p in _NUIS_PATHS
+    ], dtype=jnp.float64)
+
+
+def _build_nuis_params(vec: jnp.ndarray, fid_params: dict) -> dict:
+    """Reconstruct ``fid_params`` with the 12 nuisance entries set from ``vec``.
+
+    Inside ``jax.jit`` this loop unrolls (paths are static); each
+    `_set_nested` writes a traced array into the params dict. Parameters
+    with path=None are skipped (they contribute zero gradient).
+    """
+    p = _make_mutable(fid_params)
+    for i, path in enumerate(_NUIS_PATHS):
+        if path is not None:
+            _set_nested(p, path, vec[i])
+    return p
+
+
+@partial(jax.jit, static_argnums=(0,), static_argnames=("ells",))
+def _dPell_d_nuisance_jit(
+    ps_model: PowerSpectrum1Loop,
+    k: jnp.ndarray,
+    pk_data: dict,
+    fid_params: dict,
+    nuis_vec: jnp.ndarray,
+    sigma8_z: float,
+    ells: tuple[int, ...],
+) -> jnp.ndarray:
+    """Vectorized auto-spectrum nuisance derivatives.
+
+    Returns shape ``(N_nuis, N_ell, Nk)`` with ``N_nuis == 12`` (parameter
+    order matches ``NUISANCE_NAMES``). Sigma8 chain rule is applied
+    inside the trace.
+    """
+    grads_per_ell = []
+    for ell in ells:
+        def _f(v):
+            p = _build_nuis_params(v, fid_params)
+            return ps_model.get_pk_ell(k, ell, pk_data, p)
+        # jacfwd of (Nk,) wrt (12,) → shape (Nk, 12)
+        g = jax.jacfwd(_f)(nuis_vec)
+        grads_per_ell.append(jnp.transpose(g, (1, 0)))  # → (12, Nk)
+    out = jnp.stack(grads_per_ell, axis=1)              # → (12, N_ell, Nk)
+    # Sigma8 chain rule: d(raw) / d(σ8^p) = raw / σ8^p
+    s8_scale = sigma8_z ** _NUIS_S8_POWERS              # shape (12,)
+    return out / s8_scale[:, None, None]
+
+
+def dPell_dtheta_autodiff_all_jit(
+    ps_model: PowerSpectrum1Loop,
+    k: jnp.ndarray,
+    pk_data: dict,
+    fiducial_params: dict,
+    sigma8_z: float,
+    ells: tuple[int, ...] = (0, 2, 4),
+) -> np.ndarray:
+    """Drop-in vectorized replacement for ``dPell_dtheta_autodiff_all``.
+
+    Returns a stacked array of shape ``(N_nuis, N_ell, Nk)`` indexed by
+    ``NUISANCE_NAMES`` order (same parameter set, same ordering as the
+    dict-returning version).
+
+    Equivalent in numerics to ``dPell_dtheta_autodiff_all`` but uses one
+    JIT-compiled ``jacfwd`` per multipole instead of N_nuis × N_ell
+    separate eager jacfwds — eliminates ~85% of the per-z-bin Python
+    dispatch overhead.
+    """
+    nuis_vec = _pack_nuisance(fiducial_params)
+    out = _dPell_d_nuisance_jit(
+        ps_model, k, pk_data, fiducial_params, nuis_vec,
+        sigma8_z, tuple(ells),
+    )
+    return np.asarray(out)
+
+
+# ---------------------------------------------------------------------------
 # Cross-power derivatives
 # ---------------------------------------------------------------------------
 
@@ -223,6 +327,142 @@ def dPcross_dtheta_autodiff(
 
     dpd_raw = jax.jacfwd(_pk_ell_of_param)(fid_val)
     return dpd_raw / s8_factor
+
+
+# ---------------------------------------------------------------------------
+# JIT-compiled vectorized cross-spectrum derivatives
+# ---------------------------------------------------------------------------
+# Mirrors the auto-spectrum vectorization (Step 1) for cross-power. One
+# `jax.jacfwd` per ell over a flat 12-vector replaces the 12 separate
+# eager jacfwds per side (A/B) inside `build_zbin_fisher`. The "side" arg
+# is static so the two compilations are cached separately and reused
+# across z-bins / tracer pairs.
+
+# Static schemas built from _CROSS_PATH_A / _CROSS_PATH_B in NUISANCE_NAMES order.
+_CROSS_PATHS_A: tuple[tuple[str, ...] | None, ...] = tuple(
+    _CROSS_PATH_A[n][0] if _CROSS_PATH_A.get(n) is not None else None
+    for n in NUISANCE_NAMES
+)
+_CROSS_S8_POWERS_A = jnp.array(
+    [_CROSS_PATH_A[n][1] if _CROSS_PATH_A.get(n) is not None else 0
+     for n in NUISANCE_NAMES],
+    dtype=jnp.float64,
+)
+_CROSS_PATHS_B: tuple[tuple[str, ...] | None, ...] = tuple(
+    _CROSS_PATH_B[n][0] if _CROSS_PATH_B.get(n) is not None else None
+    for n in NUISANCE_NAMES
+)
+_CROSS_S8_POWERS_B = jnp.array(
+    [_CROSS_PATH_B[n][1] if _CROSS_PATH_B.get(n) is not None else 0
+     for n in NUISANCE_NAMES],
+    dtype=jnp.float64,
+)
+
+
+def _pack_cross_nuisance(fid_params: dict, side: str) -> jnp.ndarray:
+    """Read 12 nuisance fiducials for one cross side into a flat vector."""
+    paths = _CROSS_PATHS_A if side == "A" else _CROSS_PATHS_B
+    return jnp.array([
+        float(_get_nested(fid_params, p)) if p is not None else 0.0
+        for p in paths
+    ], dtype=jnp.float64)
+
+
+def _build_cross_nuis_params_A(vec: jnp.ndarray, fid_params: dict) -> dict:
+    p = _make_mutable(fid_params)
+    for i, path in enumerate(_CROSS_PATHS_A):
+        if path is not None:
+            _set_nested(p, path, vec[i])
+    return p
+
+
+def _build_cross_nuis_params_B(vec: jnp.ndarray, fid_params: dict) -> dict:
+    p = _make_mutable(fid_params)
+    for i, path in enumerate(_CROSS_PATHS_B):
+        if path is not None:
+            _set_nested(p, path, vec[i])
+    return p
+
+
+@partial(jax.jit, static_argnums=(0,), static_argnames=("ells",))
+def _dPcross_d_nuisance_A_jit(
+    ps_model: PowerSpectrum1Loop,
+    k: jnp.ndarray,
+    pk_data: dict,
+    fid_params: dict,
+    nuis_vec: jnp.ndarray,
+    sigma8_z: float,
+    ells: tuple[int, ...],
+) -> jnp.ndarray:
+    """Vectorized cross-spectrum nuisance derivatives for side A.
+
+    Returns shape ``(N_nuis, N_ell, Nk)``. Parameters absent from
+    `_CROSS_PATH_A` (Pshot, a0, a2, c1) contribute exact zero columns.
+    """
+    grads_per_ell = []
+    for ell in ells:
+        def _f(v):
+            p = _build_cross_nuis_params_A(v, fid_params)
+            return ps_model.get_pk_ell_pair(
+                k, ell, pk_data, p, add_stochasticity=False,
+            )
+        g = jax.jacfwd(_f)(nuis_vec)             # (Nk, 12)
+        grads_per_ell.append(jnp.transpose(g, (1, 0)))  # (12, Nk)
+    out = jnp.stack(grads_per_ell, axis=1)              # (12, N_ell, Nk)
+    s8_scale = sigma8_z ** _CROSS_S8_POWERS_A
+    return out / s8_scale[:, None, None]
+
+
+@partial(jax.jit, static_argnums=(0,), static_argnames=("ells",))
+def _dPcross_d_nuisance_B_jit(
+    ps_model: PowerSpectrum1Loop,
+    k: jnp.ndarray,
+    pk_data: dict,
+    fid_params: dict,
+    nuis_vec: jnp.ndarray,
+    sigma8_z: float,
+    ells: tuple[int, ...],
+) -> jnp.ndarray:
+    """Vectorized cross-spectrum nuisance derivatives for side B."""
+    grads_per_ell = []
+    for ell in ells:
+        def _f(v):
+            p = _build_cross_nuis_params_B(v, fid_params)
+            return ps_model.get_pk_ell_pair(
+                k, ell, pk_data, p, add_stochasticity=False,
+            )
+        g = jax.jacfwd(_f)(nuis_vec)
+        grads_per_ell.append(jnp.transpose(g, (1, 0)))
+    out = jnp.stack(grads_per_ell, axis=1)
+    s8_scale = sigma8_z ** _CROSS_S8_POWERS_B
+    return out / s8_scale[:, None, None]
+
+
+def dPcross_dtheta_autodiff_all_jit(
+    ps_model: PowerSpectrum1Loop,
+    k: jnp.ndarray,
+    pk_data: dict,
+    fiducial_params: dict,
+    sigma8_z: float,
+    ells: tuple[int, ...] = (0, 2, 4),
+) -> np.ndarray:
+    """Drop-in vectorized cross-spectrum derivatives for both sides.
+
+    Returns a stacked array of shape ``(2, N_nuis, N_ell, Nk)`` — axis 0
+    is side index ('A'=0, 'B'=1), axis 1 indexes ``NUISANCE_NAMES``.
+
+    Replaces 24 small eager `jacfwd` calls per tracer pair (12 per side)
+    with 2 fused JIT'd kernels.
+    """
+    vec_A = _pack_cross_nuisance(fiducial_params, "A")
+    vec_B = _pack_cross_nuisance(fiducial_params, "B")
+    out_A = _dPcross_d_nuisance_A_jit(
+        ps_model, k, pk_data, fiducial_params, vec_A, sigma8_z, tuple(ells),
+    )
+    out_B = _dPcross_d_nuisance_B_jit(
+        ps_model, k, pk_data, fiducial_params, vec_B, sigma8_z, tuple(ells),
+    )
+    return np.asarray(jnp.stack([out_A, out_B], axis=0))
 
 
 # ---------------------------------------------------------------------------
