@@ -49,7 +49,7 @@ python scripts/run_sensitivity.py                # legacy r_sigma_v sweep
 |--------|---------|
 | `cosmo.py` | `FiducialCosmology` — P_lin via cosmopower-jax; sigma8 from emulator; H, D, f from `ps_1loop_jax.background`. `make_plin_func()` and `make_growth_rate_func()` return pure JAX functions for end-to-end autodiff. Planck 2018 fiducial. |
 | `surveys.py` | Load n(z) from `survey_specs/*.txt`. `Survey` dataclass with nbar_eff, z_eff, volume. `SurveyGroup` manages PFS + multiple DESI tracers. `b1_of_z` callables are module-level functions / `functools.partial` so `Survey` objects are picklable (required for multiprocessing). |
-| `config.py` | `ForecastConfig` — all tuneable knobs: kmin/kmax/dk, z-bins, areas, r_sigma_v, f_shared_elg=0.05, backend choices. YAML loader. |
+| `config.py` | `ForecastConfig` — all tuneable knobs: kmin/kmax/dk, z-bins, areas, r_sigma_v=0.75, f_shared_elg=0.05 (legacy only), marginalize_cross_stoch=True, backend choices. YAML loader. |
 
 ### EFT parameters
 
@@ -99,7 +99,7 @@ python scripts/run_sensitivity.py                # legacy r_sigma_v sweep
 ## Key conventions
 
 - **EFT parameterization**: Chudaykin, Ivanov & Philcox (2025, arXiv:2511.20757, Table I).
-- **Cross-shot noise**: Zero for different populations. For PFS x DESI-ELG: `f_shared / nbar_DESI` where f_shared = n_shared / nbar_PFS = 0.05 (fiducial; results are insensitive to f_shared in [0, 1]).
+- **Cross-stochasticity**: Following Ebina & White (2024, arXiv:2401.13166), every cross-pair carries two free stochastic parameters — `Pshot_cross` (constant) and `a2_cross` ((kμ)² term) — with fiducial 0 and broad Gaussian priors of width matching the auto-spectrum stochastic priors. Controlled by `cfg.marginalize_cross_stoch` (default `True`). When `False`, the legacy fixed-fiducial path is restored: cross-shot for PFS×DESI-ELG is `f_shared / nbar_DESI` with `f_shared = n_shared / nbar_PFS = 0.05`, no cross-stoch free parameters.
 - **Asymmetric kmax**: `kmax_PFS = kmax_DESI / r_sigma_v`. Default r_sigma_v = 0.75.
 - **Units**: k in h/Mpc, P(k) in (Mpc/h)^3, volumes in (Mpc/h)^3.
 - **Precision**: `jax.config.update('jax_enable_x64', True)` — float64 throughout.

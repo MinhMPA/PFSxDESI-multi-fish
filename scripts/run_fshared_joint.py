@@ -1,10 +1,21 @@
 #!/usr/bin/env python
-"""Sweep f_shared in the joint Fisher pipeline to confirm result is insensitive.
+"""Legacy sweep of f_shared (cross-shot fraction) in the joint Fisher.
 
-Runs DESI+PFS joint Fisher with f_shared ∈ {0, 0.05, 0.5, 1.0} and reports
-σ(fσ8), σ(Mν), σ(Ωm). The fiducial value is f_shared = 0.05; the sweep
-confirms that varying it across [0, 1] moves the headline by less than
-~1 pp on σ(fσ8) and σ(Mν).
+This sweep exercises the LEGACY cross-stochasticity treatment where
+the PFS×DESI-ELG cross-shot is fixed at f_shared/nbar_DESI-ELG and
+no cross-stoch parameter is marginalized. The current default
+(cfg.marginalize_cross_stoch=True) makes f_shared inert because the
+fiducial cross-shot in the covariance is set to zero and the
+cross-stochastic Lagrangian is instead marginalized via free
+Pshot_cross / a2_cross parameters per cross-pair (Ebina & White
+2024). This script forces marginalize_cross_stoch=False so the
+sweep produces a meaningful sensitivity diagnostic.
+
+Reports σ(fσ8), σ(Mν), σ(Ωm) at f_shared ∈ {0, 0.025, 0.05, 0.075, 0.10}.
+With cross-stoch marginalization disabled, varying f_shared across
+[0, 0.1] moves the headline σ by less than ~1 pp on σ(fσ8) and
+σ(Mν) — confirming that the catalog-overlap fraction itself is not
+the driver of the multi-tracer information.
 """
 from __future__ import annotations
 
@@ -28,6 +39,9 @@ from scripts.run_joint_fisher import ZBINS
 
 def main():
     cfg = ForecastConfig.from_yaml("configs/default.yaml")
+    # Legacy diagnostic: disable the cross-stoch marginalization so
+    # f_shared has a measurable effect on the cov.
+    cfg.marginalize_cross_stoch = False
     cosmo = FiducialCosmology(backend=cfg.cosmo_backend)
     from ps_1loop_jax import PowerSpectrum1Loop
     ps = PowerSpectrum1Loop(do_irres=False)
