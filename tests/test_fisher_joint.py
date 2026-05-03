@@ -323,6 +323,79 @@ def test_pfs_kmax_zero_recovers_desi_only(cosmo, ps, cfg, sg):
         )
 
 
+def test_zbin_param_names_includes_cross_stoch():
+    """zbin_param_names must append CROSS_STOCH_NAMES per cross-pair when
+    `marginalize_cross_stoch=True`, in canonical sorted-pair order, and
+    must NOT append them when False."""
+    from pfsfog.fisher_joint import zbin_param_names
+    from pfsfog.eft_params import (
+        COSMO_NAMES, NUISANCE_NAMES, CROSS_STOCH_NAMES,
+    )
+
+    tn = ["DESI-ELG", "DESI-LRG", "PFS-ELG"]
+    zb = (0.8, 1.0)
+
+    names_off = zbin_param_names(tn, zb, marginalize_cross_stoch=False)
+    expected_off = (
+        len(COSMO_NAMES) + len(NUISANCE_NAMES) * len(tn)
+    )
+    assert len(names_off) == expected_off
+
+    names_on = zbin_param_names(tn, zb, marginalize_cross_stoch=True)
+    n_pairs_cross = len(tn) * (len(tn) - 1) // 2
+    expected_on = expected_off + n_pairs_cross * len(CROSS_STOCH_NAMES)
+    assert len(names_on) == expected_on
+
+    # Cross-stoch entries appear after all per-tracer nuisance entries,
+    # in canonical (sorted-pair) order, and use both CROSS_STOCH_NAMES.
+    cs_entries = names_on[expected_off:]
+    assert cs_entries == [
+        "Pshot_cross_DESI-ELGxDESI-LRG_z0.80-1.00",
+        "a2_cross_DESI-ELGxDESI-LRG_z0.80-1.00",
+        "Pshot_cross_DESI-ELGxPFS-ELG_z0.80-1.00",
+        "a2_cross_DESI-ELGxPFS-ELG_z0.80-1.00",
+        "Pshot_cross_DESI-LRGxPFS-ELG_z0.80-1.00",
+        "a2_cross_DESI-LRGxPFS-ELG_z0.80-1.00",
+    ]
+
+
+def test_marginalize_cross_stoch_false_recovers_legacy(cosmo, ps, cfg, sg):
+    """With cfg.marginalize_cross_stoch=False, build_zbin_fisher must
+    produce the legacy (pre-Ebina-White) Fisher: no cross-stoch columns
+    and a non-zero fiducial cross-shot in the covariance equal to
+    f_shared_elg / nbar_DESI-ELG for the PFS×DESI-ELG cross.
+    """
+    from dataclasses import replace
+    from pfsfog.fisher_joint import build_zbin_fisher
+    from pfsfog.eft_params import (
+        COSMO_NAMES, NUISANCE_NAMES, CROSS_STOCH_NAMES,
+    )
+
+    zbin = (1.0, 1.2)
+    active = sg.active_with_pfs_truncation(*zbin)
+    V = sg.V_overlap(*zbin)
+    cs = {("DESI-ELG", "PFS-ELG"):
+          cfg.f_shared_elg / active["DESI-ELG"].nbar_eff(*zbin)}
+
+    cfg_legacy = replace(cfg, marginalize_cross_stoch=False)
+    F_legacy, names_legacy = build_zbin_fisher(
+        zbin, active, V, cosmo, ps, cfg_legacy, cross_shot=cs,
+    )
+    Nt = len(active)
+    expected_dim = len(COSMO_NAMES) + Nt * len(NUISANCE_NAMES)
+    assert F_legacy.shape == (expected_dim, expected_dim)
+    assert all(not n.startswith(tuple(c + "_" for c in CROSS_STOCH_NAMES))
+               for n in names_legacy)
+
+    # And: with marginalize_cross_stoch=True (default) the matrix is
+    # bigger by exactly N_cross_pairs × N_CROSS_STOCH columns.
+    F_marg, names_marg = build_zbin_fisher(
+        zbin, active, V, cosmo, ps, cfg, cross_shot=cs,
+    )
+    n_cross = Nt * (Nt - 1) // 2
+    assert F_marg.shape[0] == expected_dim + n_cross * len(CROSS_STOCH_NAMES)
+
+
 def test_assemble_kmax_mask_inert_when_uniform():
     """``_assemble_fisher_with_cosmo`` must produce identical Fisher when
     every pair shares the same kmax — i.e. the asymmetric-kmax masking

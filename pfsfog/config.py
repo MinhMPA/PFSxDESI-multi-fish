@@ -40,8 +40,20 @@ class ForecastConfig:
     kmax_cross_overlap: float | None = None  # kmax for P^AB; None → kmax_pfs
 
     # Shared catalog fraction for PFS-ELG × DESI-ELG cross-shot noise.
-    # Results are insensitive to this value in [0, 1] (see f_shared sweep).
+    # Only consulted when ``marginalize_cross_stoch=False`` — when
+    # marginalization is enabled (the conservative default) the
+    # fiducial cross-shot in the covariance is set to zero and the
+    # cross-stochasticity is treated via free Fisher parameters
+    # ``Pshot_cross`` / ``a2_cross`` (see Ebina & White 2024).
     f_shared_elg: float = 0.05
+
+    # Cross-stochasticity treatment in the joint Fisher.
+    # True (default): set fiducial cross-shot to zero in the covariance
+    # and add free ``Pshot_cross`` + ``a2_cross`` parameters per cross-pair
+    # per z-bin, marginalized via broad priors (CROSS_STOCH_PRIOR_SIGMA).
+    # False: legacy behavior — use ``f_shared_elg`` as a fixed fiducial
+    # cross-shot in the covariance, no cross-stochastic free parameters.
+    marginalize_cross_stoch: bool = True
 
     # Nonlinear scale for stochasticity
     k_nl: float = 0.7           # h/Mpc

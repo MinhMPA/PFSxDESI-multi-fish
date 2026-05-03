@@ -35,6 +35,25 @@ NUISANCE_NAMES: list[str] = [
 # Shared cosmological parameters
 COSMO_NAMES: list[str] = ["fsigma8", "Mnu", "Omegam"]
 
+# Per-cross-pair stochastic parameters (Ebina & White 2024,
+# arXiv:2401.13166, Eq. 3.7). A cross-spectrum P^{AB} between two
+# galaxy populations carries intrinsic stochasticity beyond shared
+# catalog members, parameterized as
+#     P_stoch^{AB}(k,μ) = (1/√(n_A n_B))
+#                         [Pshot_cross + a2_cross (k/k_NL)² μ²]
+# with Pshot_cross and a2_cross dimensionless. To be conservative,
+# the joint Fisher sets the fiducial values to zero (i.e. independent
+# populations) but marginalizes over them with broad priors of the
+# same width as the auto-spectrum stochastic priors.
+CROSS_STOCH_NAMES: list[str] = ["Pshot_cross", "a2_cross"]
+
+# Broad prior widths for the cross-stochastic terms.
+# Match the auto-spectrum Pshot / a2 widths from EFTPriors below.
+CROSS_STOCH_PRIOR_SIGMA: dict[str, float] = {
+    "Pshot_cross": 1.0,
+    "a2_cross": 1.0,
+}
+
 
 # ---------------------------------------------------------------------------
 # Dataclasses
