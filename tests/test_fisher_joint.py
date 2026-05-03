@@ -252,6 +252,141 @@ def test_run_joint_fisher_parallel_matches_sequential(cosmo, ps, cfg, sg):
         )
 
 
+def test_pfs_kmax_zero_recovers_desi_only(cosmo, ps, cfg, sg):
+    """If PFS pairs (auto + PFS×DESI cross) are masked out everywhere by
+    setting their kmax below the kmin floor, the joint Fisher's
+    cosmology block must reduce to the DESI-only joint Fisher.
+
+    This is the strongest end-to-end consistency check on the
+    asymmetric-kmax masking machinery: it confirms that *zero* PFS
+    information is admitted when kmax_PFS < kmin, regardless of the
+    presence of PFS nuisance columns in the joint parameter space.
+    """
+    from dataclasses import replace
+    zbins = [(1.0, 1.2), (1.2, 1.4)]   # two PFS-active z-bins
+
+    # Reference: DESI-only joint Fisher.
+    res_desi = run_joint_fisher(
+        cfg, cosmo, ps, sg, include_pfs=False, zbins=zbins,
+    )
+
+    # Joint with PFS, but kmax_PFS = kmax_cross = 0.001 < kmin = 0.01.
+    cfg_masked = replace(
+        cfg, kmax_pfs_overlap=0.001, kmax_cross_overlap=0.001,
+    )
+
+    # The driver's marginalized_sigma uses np.linalg.inv, which fails
+    # because PFS-ELG b1·σ8 has only the (flat) prior in this scenario.
+    # Bypass and use pinv to extract σ on the cosmology directions.
+    from pfsfog.fisher_joint import (
+        volume_partitioned_zbin_fisher, combine_zbins_heterogeneous,
+    )
+    from pfsfog.fisher import FisherResult
+    from pfsfog.eft_params import (
+        COSMO_PRIOR_SIGMA, NUISANCE_NAMES, broad_priors,
+    )
+    per_zbin = []
+    for zb in zbins:
+        F, names = volume_partitioned_zbin_fisher(
+            zb, sg, cosmo, ps, cfg_masked, include_pfs=True,
+        )
+        per_zbin.append((F, names))
+    fr_raw = combine_zbins_heterogeneous(per_zbin, "DESI+PFS, PFS masked")
+    prior_diag = np.zeros(len(fr_raw.param_names))
+    for i, pn in enumerate(fr_raw.param_names):
+        if pn in COSMO_PRIOR_SIGMA:
+            prior_diag[i] = 1.0 / COSMO_PRIOR_SIGMA[pn] ** 2
+        else:
+            for nuis in NUISANCE_NAMES:
+                if pn.startswith(nuis + "_"):
+                    s = broad_priors().sigma_dict()[nuis]
+                    if s is not None:
+                        prior_diag[i] = 1.0 / s ** 2
+                    break
+    fr_masked = FisherResult(
+        F=fr_raw.F + np.diag(prior_diag),
+        param_names=fr_raw.param_names,
+        z_bin=fr_raw.z_bin,
+        survey_name=fr_raw.survey_name,
+        kmax=fr_raw.kmax,
+    )
+    Finv = np.linalg.pinv(fr_masked.F, rcond=1e-12)
+    names = fr_masked.param_names
+    sig_masked = {cp: float(np.sqrt(Finv[names.index(cp), names.index(cp)]))
+                  for cp in COSMO_NAMES}
+
+    for cp in COSMO_NAMES:
+        np.testing.assert_allclose(
+            sig_masked[cp], res_desi.sigma[cp], rtol=1e-9,
+            err_msg=(f"σ({cp}) when PFS pairs are masked out should equal "
+                     f"DESI-only σ({cp}) to 1e-9 relative precision."),
+        )
+
+
+def test_assemble_kmax_mask_inert_when_uniform():
+    """``_assemble_fisher_with_cosmo`` must produce identical Fisher when
+    every pair shares the same kmax — i.e. the asymmetric-kmax masking
+    is a no-op in the symmetric case (pair_kmax=None vs pair_kmax larger
+    than k.max()).
+
+    This pins that the masking machinery doesn't perturb the
+    symmetric-kmax code path; only when at least one pair has a
+    different kmax does the masked-submatrix Fisher differ.
+    """
+    from pfsfog.fisher_joint import _assemble_fisher_with_cosmo
+    from pfsfog.eft_params import COSMO_NAMES, NUISANCE_NAMES
+
+    rng = np.random.default_rng(0)
+
+    # Two fake tracers, three pairs total (two autos + one cross), three ells.
+    tracer_names = ["A", "B"]
+    pairs = [("A", "A"), ("B", "B"), ("A", "B")]
+    Nell = 3
+    Nk = 12
+    k = np.linspace(0.01, 0.20, Nk)
+    dk = k[1] - k[0]
+    ells = (0, 2, 4)
+
+    N_COSMO = len(COSMO_NAMES)
+    N_NUIS = len(NUISANCE_NAMES)
+
+    # Random nonzero derivatives + an SPD covariance per k-bin.
+    derivs_auto = {}
+    for tn in tracer_names:
+        nuis_arr = rng.standard_normal((N_NUIS, Nell, Nk))
+        cosmo_arr = rng.standard_normal((N_COSMO, Nell, Nk))
+        derivs_auto[tn] = (nuis_arr, cosmo_arr)
+    derivs_cross = {("A", "B"): rng.standard_normal((2, N_NUIS, Nell, Nk))}
+
+    Nobs = len(pairs) * Nell
+    cov_mt = np.empty((Nk, Nobs, Nobs))
+    for ik in range(Nk):
+        a = rng.standard_normal((Nobs, Nobs))
+        cov_mt[ik] = a @ a.T + np.eye(Nobs)   # SPD
+
+    F_none = _assemble_fisher_with_cosmo(
+        tracer_names, pairs, derivs_auto, derivs_cross, cov_mt, k, dk,
+        z_bin=(0.8, 1.0), ells=ells, pair_kmax=None,
+    )
+    # Uniform pair_kmax above k.max() → all observables active at every k.
+    F_uniform = _assemble_fisher_with_cosmo(
+        tracer_names, pairs, derivs_auto, derivs_cross, cov_mt, k, dk,
+        z_bin=(0.8, 1.0), ells=ells,
+        pair_kmax=np.full(len(pairs), k.max() + 1.0),
+    )
+    np.testing.assert_array_equal(F_none, F_uniform)
+
+    # And: a tighter pair_kmax that excludes the last few k-bins for
+    # one pair should produce a *different* (smaller) Fisher.
+    tight = np.full(len(pairs), k.max() + 1.0)
+    tight[2] = k[Nk // 2]   # cross pair: drop top half of modes
+    F_tight = _assemble_fisher_with_cosmo(
+        tracer_names, pairs, derivs_auto, derivs_cross, cov_mt, k, dk,
+        z_bin=(0.8, 1.0), ells=ells, pair_kmax=tight,
+    )
+    assert not np.allclose(F_tight, F_none)
+
+
 @pytest.mark.slow
 def test_run_broad_baseline_parallel_matches_sequential(cosmo, ps, cfg, sg):
     """run_broad_baseline(parallel=True) must match the sequential path."""

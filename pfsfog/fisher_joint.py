@@ -166,10 +166,34 @@ def build_zbin_fisher(
     h = cosmo.params["h"]
     pk_data = cosmo.pk_data(z_eff)
     ells = (0, 2, 4)
-    k = np.arange(cfg.kmin, cfg.kmax_desi_overlap + cfg.dk / 2, cfg.dk)
 
     tracer_names = sorted(active_tracers.keys())
     Nt = len(tracer_names)
+
+    # Asymmetric kmax. Each (tracer, tracer) pair has its own kmax — PFS
+    # tolerates higher k than DESI because its FoG damping scale σ_v is
+    # smaller (σ_v,PFS = r_sigma_v · σ_v,DESI). The k-grid is built up
+    # to the largest kmax across all pairs; per-pair masking is then
+    # applied inside `_assemble_fisher_with_cosmo` so that a (pair, ell)
+    # observable contributes Fisher information only over modes where
+    # both sides of the pair are trustworthy.
+    has_pfs_in_zbin = any("PFS" in tn for tn in tracer_names)
+    kmax_desi = cfg.kmax_desi_overlap
+    kmax_pfs = cfg.compute_kmax_pfs() if has_pfs_in_zbin else kmax_desi
+    kmax_cross = cfg.compute_kmax_cross() if has_pfs_in_zbin else kmax_desi
+
+    def _pair_kmax(a: str, b: str) -> float:
+        a_pfs = "PFS" in a
+        b_pfs = "PFS" in b
+        if a == b:
+            return kmax_pfs if a_pfs else kmax_desi
+        # cross: PFS×DESI uses kmax_cross; DESI×DESI uses kmax_desi
+        if a_pfs ^ b_pfs:
+            return kmax_cross
+        return kmax_pfs if a_pfs else kmax_desi
+
+    kmax_global = max(kmax_desi, kmax_pfs, kmax_cross)
+    k = np.arange(cfg.kmin, kmax_global + cfg.dk / 2, cfg.dk)
 
     # Reference b1 for PFS counterterm scaling: prefer DESI-ELG if present.
     b1_ref = 1.3
@@ -195,6 +219,7 @@ def build_zbin_fisher(
     for i, a in enumerate(tracer_names):
         for j in range(i + 1, Nt):
             pairs.append((a, tracer_names[j]))
+    pair_kmax = np.array([_pair_kmax(a, b) for (a, b) in pairs])
 
     pkmu_funcs = _build_pkmu_funcs(
         active_tracers, fids, ps1l_params, nbars, ps, pk_data,
@@ -235,7 +260,7 @@ def build_zbin_fisher(
 
     F = _assemble_fisher_with_cosmo(
         tracer_names, pairs, derivs_auto, derivs_cross, cov, k,
-        cfg.dk, zbin, ells,
+        cfg.dk, zbin, ells, pair_kmax=pair_kmax,
     )
     param_names = zbin_param_names(tracer_names, zbin)
     return F, param_names
@@ -243,7 +268,7 @@ def build_zbin_fisher(
 
 def _assemble_fisher_with_cosmo(
     tracer_names, pairs, derivs_auto, derivs_cross, cov_mt, k, dk,
-    z_bin, ells,
+    z_bin, ells, pair_kmax=None,
 ):
     """Like ``multi_tracer_fisher_general`` but populates the cosmology block.
 
@@ -256,6 +281,12 @@ def _assemble_fisher_with_cosmo(
     and ``cosmo_arr`` has shape ``(N_COSMO, N_ell, Nk)`` (COSMO_NAMES
     order). ``derivs_cross[pair_key]`` is a numpy array of shape
     ``(2, N_nuis, N_ell, Nk)`` with axis 0 the side index (A=0, B=1).
+
+    ``pair_kmax`` (optional, shape ``(Npairs,)``) is the per-pair maximum
+    k each pair contributes information up to. At each k-bin the active
+    observable subset is selected and the covariance is inverted on that
+    submatrix only. If ``pair_kmax`` is ``None``, all pairs are active at
+    all k bins (symmetric-kmax fallback, matches the pre-asymmetric path).
     """
     Nt = len(tracer_names)
     Nell = len(ells)
@@ -308,17 +339,35 @@ def _assemble_fisher_with_cosmo(
                         cross_arr[is_, :, il, :].T
                     )
 
+    # Per-(observable, k) active mask. Each observable is a (pair, ell)
+    # combo; an observable is active at k iff k <= pair_kmax[pair_idx].
+    # When `pair_kmax` is None the mask is all True (symmetric-kmax mode).
+    if pair_kmax is None:
+        obs_active_per_k = np.ones((Nk, Nobs), dtype=bool)
+    else:
+        # Repeat each pair's kmax across its Nell observables.
+        obs_kmax = np.repeat(np.asarray(pair_kmax, dtype=float), Nell)
+        # +1e-12 tolerance so a k-bin exactly at kmax stays active.
+        obs_active_per_k = k[:, None] <= (obs_kmax[None, :] + 1e-12)
+
     F = np.zeros((Np, Np))
     for ik in range(Nk):
-        eigvals = np.linalg.eigvalsh(cov_mt[ik])
+        active = obs_active_per_k[ik]
+        if not np.any(active):
+            continue
+        cov_active = cov_mt[ik][np.ix_(active, active)]
+        try:
+            eigvals = np.linalg.eigvalsh(cov_active)
+        except np.linalg.LinAlgError:
+            continue   # singular cov (e.g. degenerate k-bin); skip
         if np.any(eigvals <= 0):
             continue
         try:
-            cov_inv = np.linalg.inv(cov_mt[ik])
+            cov_inv = np.linalg.inv(cov_active)
         except np.linalg.LinAlgError:
             continue
-        DtCinv = D[ik].T @ cov_inv
-        F += DtCinv @ D[ik] * dk
+        D_active = D[ik][active, :]
+        F += D_active.T @ cov_inv @ D_active * dk
 
     return F
 
