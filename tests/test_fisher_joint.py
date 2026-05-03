@@ -252,6 +252,70 @@ def test_run_joint_fisher_parallel_matches_sequential(cosmo, ps, cfg, sg):
         )
 
 
+def test_assemble_kmax_mask_inert_when_uniform():
+    """``_assemble_fisher_with_cosmo`` must produce identical Fisher when
+    every pair shares the same kmax — i.e. the asymmetric-kmax masking
+    is a no-op in the symmetric case (pair_kmax=None vs pair_kmax larger
+    than k.max()).
+
+    This pins that the masking machinery doesn't perturb the
+    symmetric-kmax code path; only when at least one pair has a
+    different kmax does the masked-submatrix Fisher differ.
+    """
+    from pfsfog.fisher_joint import _assemble_fisher_with_cosmo
+    from pfsfog.eft_params import COSMO_NAMES, NUISANCE_NAMES
+
+    rng = np.random.default_rng(0)
+
+    # Two fake tracers, three pairs total (two autos + one cross), three ells.
+    tracer_names = ["A", "B"]
+    pairs = [("A", "A"), ("B", "B"), ("A", "B")]
+    Nell = 3
+    Nk = 12
+    k = np.linspace(0.01, 0.20, Nk)
+    dk = k[1] - k[0]
+    ells = (0, 2, 4)
+
+    N_COSMO = len(COSMO_NAMES)
+    N_NUIS = len(NUISANCE_NAMES)
+
+    # Random nonzero derivatives + an SPD covariance per k-bin.
+    derivs_auto = {}
+    for tn in tracer_names:
+        nuis_arr = rng.standard_normal((N_NUIS, Nell, Nk))
+        cosmo_arr = rng.standard_normal((N_COSMO, Nell, Nk))
+        derivs_auto[tn] = (nuis_arr, cosmo_arr)
+    derivs_cross = {("A", "B"): rng.standard_normal((2, N_NUIS, Nell, Nk))}
+
+    Nobs = len(pairs) * Nell
+    cov_mt = np.empty((Nk, Nobs, Nobs))
+    for ik in range(Nk):
+        a = rng.standard_normal((Nobs, Nobs))
+        cov_mt[ik] = a @ a.T + np.eye(Nobs)   # SPD
+
+    F_none = _assemble_fisher_with_cosmo(
+        tracer_names, pairs, derivs_auto, derivs_cross, cov_mt, k, dk,
+        z_bin=(0.8, 1.0), ells=ells, pair_kmax=None,
+    )
+    # Uniform pair_kmax above k.max() → all observables active at every k.
+    F_uniform = _assemble_fisher_with_cosmo(
+        tracer_names, pairs, derivs_auto, derivs_cross, cov_mt, k, dk,
+        z_bin=(0.8, 1.0), ells=ells,
+        pair_kmax=np.full(len(pairs), k.max() + 1.0),
+    )
+    np.testing.assert_array_equal(F_none, F_uniform)
+
+    # And: a tighter pair_kmax that excludes the last few k-bins for
+    # one pair should produce a *different* (smaller) Fisher.
+    tight = np.full(len(pairs), k.max() + 1.0)
+    tight[2] = k[Nk // 2]   # cross pair: drop top half of modes
+    F_tight = _assemble_fisher_with_cosmo(
+        tracer_names, pairs, derivs_auto, derivs_cross, cov_mt, k, dk,
+        z_bin=(0.8, 1.0), ells=ells, pair_kmax=tight,
+    )
+    assert not np.allclose(F_tight, F_none)
+
+
 @pytest.mark.slow
 def test_run_broad_baseline_parallel_matches_sequential(cosmo, ps, cfg, sg):
     """run_broad_baseline(parallel=True) must match the sequential path."""
