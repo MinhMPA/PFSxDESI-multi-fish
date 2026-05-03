@@ -356,7 +356,10 @@ def _assemble_fisher_with_cosmo(
         if not np.any(active):
             continue
         cov_active = cov_mt[ik][np.ix_(active, active)]
-        eigvals = np.linalg.eigvalsh(cov_active)
+        try:
+            eigvals = np.linalg.eigvalsh(cov_active)
+        except np.linalg.LinAlgError:
+            continue   # singular cov (e.g. degenerate k-bin); skip
         if np.any(eigvals <= 0):
             continue
         try:
