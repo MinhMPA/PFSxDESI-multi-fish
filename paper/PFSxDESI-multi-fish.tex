@@ -120,13 +120,12 @@ footprint, with the
 overlap at \(0.6<z<1.6\) contributing up to 4 tracers (PFS-ELG,
 DESI-ELG, DESI-LRG, DESI-QSO).
 DESI's internal LRG\,$\times$\,ELG\,$\times$\,QSO multi-tracer
-self-calibration alone tightens \(\sigma(f\se)\) by 33\%,
+self-calibration alone improves \(\sigma(f\se)\) by 33\%,
 \(\sigma(\Mnu)\) by 80\%, and \(\sigma(\Omega_m)\) by 49\% over
 a single-tracer broad-prior baseline at \(\kmax=0.20\iMpch\).
-Adding the PFS overlap on top further tightens \(\sigma(f\se)\) by
-9\%, \(\sigma(\Mnu)\) by 24\%, and \(\sigma(\Omega_m)\) by 9\%,
-after marginalizing over residual cross-population
-stochasticity~\cite{Ebina:2024ojt}.
+Adding the PFS overlap on top further tightens these by
+9\%, 24\%, and 9\% respectively, after marginalizing over residual
+cross-population stochasticity~\cite{Ebina:2024ojt}.
 A parameter importance decomposition reveals that the dominant driver
 is the calibration of the \(b_1\se\) prior---constrained from a flat
 prior to \(\sigma\approx 0.13\) by the joint multi-tracer Fisher---which
@@ -232,7 +231,7 @@ complementary route to extending the usable \(k\)-range.}.
 This paper is organized as follows. \Cref{sec:method} describes the
 joint multi-tracer, multi-survey Fisher framework.
 \Cref{sec:fisher} details the survey specifications and EFT
-parameterization. \Cref{sec:results} presents the headline cosmology
+parameterization. \Cref{sec:results} presents the cosmology
 constraints, the per-redshift diagnostic, and sensitivity tests. We
 discuss implications in \cref{sec:discussion} and conclude in
 \cref{sec:conclusions}.
@@ -334,7 +333,7 @@ priors. This avoids assuming a particular value of
 \(f_{\rm shared}\) for the same-population PFS-ELG\(\,\times\,\)DESI-ELG
 cross while bracketing any unmodelled cross-stochasticity for the
 cross-population pairs. We verify in \cref{sec:results_sensitivity}
-that the impact on the headline cosmology constraints is small:
+that the impact on the cosmology constraints is small:
 relative to a legacy treatment that fixes
 \(f_{\rm shared}=0.05\) and zero residual cross-stochasticity, the
 conservative marginalization widens \(\sigma(f\se)\) by 2.7\%,
@@ -385,7 +384,7 @@ constraints is small at our fiducial \(\rsv\) (sub-percent on
 \(\sigma(f\se,\Mnu,\Om)\); see \cref{sec:results_sensitivity}); the
 gain accrues mostly to per-redshift PFS-ELG nuisance constraints
 (notably the FoG counterterm \(\ctilde\) at \(z>1.2\)), with the
-headline cosmology being almost insensitive to the precise PFS
+cosmology constraints being almost insensitive to the precise PFS
 scale cut.
 
 
@@ -663,8 +662,8 @@ adaptive finite-difference numerical derivatives in
 \subsection{Analysis scenarios and benchmarks}
 \label{sec:scenarios}
 
-Our headline forecast is a single joint multi-tracer Fisher
-analysis over the full DESI footprint. At each redshift bin, the
+We forecast with a single joint multi-tracer Fisher
+over the full DESI footprint. At each redshift bin, the
 Fisher decomposes as
 \be
 \label{eq:volume_partition}
@@ -796,10 +795,10 @@ shell, where the three DESI tracers contribute. Cosmology
 \((f\se,\,\Mnu,\,\Om)\) is shared globally; nuisance parameters
 are unique per (tracer, redshift bin) and marginalized in one
 pass. \Cref{tab:dr2_samples} lists the DR2 sample properties.
-\Cref{fig:full_area} and \cref{tab:headline} present the headline
-numbers. Adding the PFS overlap to the DESI-only joint baseline
-tightens \(\sigma(f\se)\) by 9\%, \(\sigma(\Mnu)\) by 24\%, and
-\(\sigma(\Om)\) by 9\% at \(\kmax=0.20\iMpch\).
+\Cref{fig:full_area} and \cref{tab:headline} present the
+cosmology forecasts. Adding the PFS overlap to the DESI-only joint
+baseline improves \(\sigma(f\se)\) by 9\%, \(\sigma(\Mnu)\) by 24\%,
+and \(\sigma(\Om)\) by 9\% at \(\kmax=0.20\iMpch\).
 
 \begin{table}[t]
 \centering
@@ -859,10 +858,9 @@ joint Fisher, adding the PFS-ELG sample in the
 $1{,}200\;\text{deg}^2$ overlap at $0.6<z<1.6$, providing
 PFS$\times$DESI cross-spectra. The DESI-internal multi-tracer
 self-calibration captures most of the gain over broad
-single-tracer; adding PFS tightens further by 9\% on
+single-tracer; adding PFS improves the constraints by 9\% on
 $\sigma(f\se)$, 24\% on $\sigma(\Mnu)$, and 9\% on
-$\sigma(\Om)$. The headline numbers are given in
-\cref{tab:headline}.
+$\sigma(\Om)$. The values are given in \cref{tab:headline}.
 Horizontal lines indicate the SBP benchmarks from the DESI~DR1 re-analyses:
 power-spectrum-level SBP (dashed)~\cite{DESI:2025wzd}
 and field-level SBP (dotted)~\cite{Chudaykin:2026nls}.
@@ -895,7 +893,7 @@ parameters \(\Pshot^{XY}\) and \(a_2^{XY}\) for every cross-pair
 \(XY\) are set to fiducial zero and marginalized over with broad
 priors~\cite{Ebina:2024ojt}; the conservative treatment costs
 \(\sim\!1\)~pp on the PFS-unique improvement $\Delta\%$ and is
-included in the headline numbers above.}
+included in the values above.}
 \label{tab:headline}
 \end{table}
 
@@ -907,7 +905,7 @@ included in the headline numbers above.}
 the legacy two-stage pipeline: how much of the gap between broad
 priors and perfect nuisance knowledge a single-tracer DESI-ELG
 analysis with PFS-calibrated priors recovers, in each
-redshift bin. The cosmology constraints in the headline (\cref{tab:headline})
+redshift bin. The cosmology constraints in \cref{tab:headline}
 come from the joint Fisher with shared cosmology and so do not
 factorize per redshift bin; this figure remains a useful
 diagnostic of where the multi-tracer information most efficiently
@@ -930,7 +928,7 @@ diagnostic: $(\sigma_{\rm broad}-\sigma_{\rm cal})/(\sigma_{\rm
 broad}-\sigma_{\rm fixed})$, where $\sigma_{\rm broad}$ uses
 broad nuisance priors, $\sigma_{\rm cal}$ uses
 multi-tracer-calibrated priors per $z$-bin, and $\sigma_{\rm
-fixed}$ fixes nuisance to fiducial values. The headline cosmology
+fixed}$ fixes nuisance to fiducial values. The cosmology
 constraints come from the joint Fisher with shared cosmology and
 do not factorize per $z$-bin; this figure is a diagnostic of
 where the multi-tracer information most efficiently reduces
@@ -949,7 +947,7 @@ PFS-induced improvement: the FoG velocity ratio
 \(\rsv=\sigma_v^{\PFS}/\sigma_v^{\DESI}\) (which sets the PFS FoG
 counterterm fiducial \(\ctilde^{\PFS}\propto \rsv^4\) and the
 asymmetric scale cut \(\kmax^{\PFS}\propto \rsv^{-1}\)) and the
-cross-stochastic marginalization scheme. The headline cosmology
+cross-stochastic marginalization scheme. The cosmology
 constraints turn out to be remarkably insensitive to both.
 
 Sweeping \(\rsv\) over the physically plausible range
@@ -980,7 +978,7 @@ Red: symmetric $\kmax^{\PFS}=\kmax^{\DESI}$. The flat red curve shows
 that counterterm rescaling alone has no impact; the entire $\rsv$
 dependence comes from the asymmetric scale cut extending the PFS
 auto- and PFS\(\times\)DESI cross-spectra to higher~$k$. The
-headline joint-Fisher constraints are stable in $\rsv$ to better
+joint-Fisher constraints are stable in $\rsv$ to better
 than 0.5\,\% on every cosmology $\sigma$.}
 \label{fig:sensitivity}
 \end{figure}
@@ -1120,7 +1118,7 @@ data themselves imply.
 The PFS-induced improvement is stable across the natural variations
 of the analysis. The \(f_{\rm shared}\) insensitivity shown in
 \cref{sec:results_sensitivity} confirms that the cross-shot noise
-prescription does not drive the headline. The PFS contribution is
+prescription does not drive the cosmology forecast. The PFS contribution is
 concentrated at \(0.6<z<1.6\) where the four-tracer multi-tracer
 configuration is active; truncating PFS above \(z=1.6\), where
 DESI-QSO is the only available partner with a low number density,
@@ -1187,10 +1185,11 @@ budget~\cite{Ivanov:2023qzb,Bakx:2025pop}.
 \label{sec:conclusions}
 %-------------------------------------------------------------------
 
-We have presented a joint multi-tracer Fisher analysis of the
-PFS--DESI overlap, treating cross-survey calibration as part of a
+We have presented a joint multi-tracer Fisher analysis across the
+DESI footprint with the PFS--DESI overlap contributing in
+\(0.6<z<1.6\), treating cross-survey calibration as part of a
 single Fisher across the partitioned footprint rather than as a
-separate prior-export step. Our main findings are:
+separate prior-export step. We summarize:
 
 \begin{enumerate}
 \item The volume-partitioned joint Fisher
