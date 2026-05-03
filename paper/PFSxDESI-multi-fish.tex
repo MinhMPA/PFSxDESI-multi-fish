@@ -95,7 +95,7 @@
 \newcommand{\rsv}{r_{\sigma_v}}
 \newcommand{\nbar}{\bar{n}}
 
-\title{Multi-tracers, multi-surveys: a joint Fisher analysis of PFS$\times$DESI}
+\title{Multi-tracers, multi-surveys: a joint Fisher analysis of DESI+PFS}
 \author[a,b,c]{Nhat-Minh Nguyen (Nguyễn Nhật Minh)\orcidlink{0000-0002-2542-7233}}
 \affiliation[a]{Center for Data-Driven Discovery, Kavli IPMU (WPI), UTIAS, The University of Tokyo, Kashiwa, Chiba 277-8583, Japan}
 \affiliation[b]{Kavli IPMU (WPI), UTIAS, The University of Tokyo, 5-1-5 Kashiwanoha, Kashiwa, Chiba 277-8583, Japan}
@@ -209,9 +209,11 @@ parameter degeneracies~\cite{McDonald:2008sh}. The second is cross-survey: in th
 Spectrograph (PFS) Cosmology Program~\cite{Takada:2014pfs}, an additional ELG sample
 with distinct selection and shot noise contributes auto- and
 cross-spectra that the DESI-internal analysis cannot access.
-Cross-spectra between disjoint galaxy populations carry no shared-object
-shot noise by construction, cleanly separating signal from
-stochastic contamination.
+Cross-spectra between disjoint galaxy populations carry no
+shared-object shot noise by construction; the residual
+cross-stochasticity from halo-bias and occupation
+correlations is treated as a marginalized free parameter
+following Ebina \& White~\cite{Ebina:2024ojt}.
 We treat the two channels in a single volume-partitioned Fisher
 \(F = F_{\rm overlap}(1{,}200\,\text{deg}^2) + F_{\rm
 nonoverlap}(12{,}800\,\text{deg}^2)\) covering \(0.4<z<2.1\) with
