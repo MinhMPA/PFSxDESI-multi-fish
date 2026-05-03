@@ -42,6 +42,8 @@ from .derivatives import (
 from .eft_params import (
     COSMO_NAMES,
     COSMO_PRIOR_SIGMA,
+    CROSS_STOCH_NAMES,
+    CROSS_STOCH_PRIOR_SIGMA,
     NUISANCE_NAMES,
     broad_priors,
     tracer_fiducials,
@@ -65,30 +67,57 @@ def _zbin_label(zbin: tuple[float, float]) -> str:
     return f"z{zbin[0]:.2f}-{zbin[1]:.2f}"
 
 
+def _cross_pair_label(a: str, b: str) -> str:
+    """Canonical pair label (sorted) so PFS×DESI matches DESI×PFS."""
+    a_, b_ = (a, b) if a < b else (b, a)
+    return f"{a_}x{b_}"
+
+
 def zbin_param_names(
     tracer_names: list[str],
     zbin: tuple[float, float],
+    marginalize_cross_stoch: bool = True,
 ) -> list[str]:
-    """Local per-z-bin parameter names: cosmo first, then nuisance per tracer."""
+    """Local per-z-bin parameter names: cosmo, per-tracer nuisance, and
+    (when ``marginalize_cross_stoch=True``) per-cross-pair stochastic
+    parameters following Ebina & White (2024).
+    """
     label = _zbin_label(zbin)
     names = list(COSMO_NAMES)
     for tn in tracer_names:
         for n in NUISANCE_NAMES:
             names.append(f"{n}_{tn}_{label}")
+    if marginalize_cross_stoch:
+        Nt = len(tracer_names)
+        for i in range(Nt):
+            for j in range(i + 1, Nt):
+                pair_label = _cross_pair_label(tracer_names[i], tracer_names[j])
+                for cs in CROSS_STOCH_NAMES:
+                    names.append(f"{cs}_{pair_label}_{label}")
     return names
 
 
 def joint_param_names(
     zbins: list[tuple[float, float]],
     active_per_zbin: list[list[str]],
+    marginalize_cross_stoch: bool = True,
 ) -> list[str]:
-    """Global joint-Fisher parameter names: cosmo + per-(tracer, z-bin) nuisance."""
+    """Global joint-Fisher parameter names: cosmo + per-(tracer, z-bin) nuisance
+    + (optional) per-(cross-pair, z-bin) stochastic.
+    """
     names = list(COSMO_NAMES)
     for zb, active in zip(zbins, active_per_zbin):
         label = _zbin_label(zb)
         for tn in active:
             for n in NUISANCE_NAMES:
                 names.append(f"{n}_{tn}_{label}")
+        if marginalize_cross_stoch:
+            Nt = len(active)
+            for i in range(Nt):
+                for j in range(i + 1, Nt):
+                    pair_label = _cross_pair_label(active[i], active[j])
+                    for cs in CROSS_STOCH_NAMES:
+                        names.append(f"{cs}_{pair_label}_{label}")
     return names
 
 
@@ -149,15 +178,24 @@ def build_zbin_fisher(
     ps,
     cfg,
     cross_shot: dict | None = None,
+    marginalize_cross_stoch: bool | None = None,
 ) -> tuple[np.ndarray, list[str]]:
     """Build the per-z-bin multi-tracer Fisher with cosmology in the matrix.
 
     Refactored from ``run_overlap_step1`` so the same assembly logic powers
     both the overlap and the non-overlap volume calls.
 
+    When ``marginalize_cross_stoch=True`` (the conservative default,
+    following Ebina & White 2024), each cross-pair (a,b) gains two
+    free stochastic parameters — ``Pshot_cross`` (constant) and
+    ``a2_cross`` ((kμ)² term) — with fiducial 0 and broad priors of
+    width matching the auto-spectrum stochastic priors. The fiducial
+    cross-shot in the covariance is therefore set to zero (any non-zero
+    cross_shot dict from the caller is ignored when this flag is True).
+
     Returns ``(F, param_names)`` where ``param_names`` follows
     ``zbin_param_names`` ordering: ``[fσ8, Mν, Ωm,
-    nuis_tracer1_zbin..., nuis_tracer2_zbin..., ...]``.
+    nuis_tracer1_zbin..., ..., Pshot_cross_axb_zbin, a2_cross_axb_zbin, ...]``.
     """
     zlo, zhi = zbin
     z_eff = 0.5 * (zlo + zhi)
@@ -166,6 +204,9 @@ def build_zbin_fisher(
     h = cosmo.params["h"]
     pk_data = cosmo.pk_data(z_eff)
     ells = (0, 2, 4)
+
+    if marginalize_cross_stoch is None:
+        marginalize_cross_stoch = getattr(cfg, "marginalize_cross_stoch", True)
 
     tracer_names = sorted(active_tracers.keys())
     Nt = len(tracer_names)
@@ -226,9 +267,13 @@ def build_zbin_fisher(
         s8, f_z, h, pairs,
     )
 
+    # When the conservative cross-stochasticity prescription is enabled,
+    # the cross-shot fiducial in the covariance is zero — the cross-stoch
+    # parameters live in the Fisher D matrix instead.
+    cov_cross_shot = None if marginalize_cross_stoch else cross_shot
     cov = multi_tracer_cov_general(
         tracer_names, pkmu_funcs, nbars, k, volume, cfg.dk, ells,
-        cross_shot=cross_shot,
+        cross_shot=cov_cross_shot,
     )
 
     # Auto-spectrum derivatives: nuisance + cosmology, both JIT'd & vectorized.
@@ -258,23 +303,60 @@ def build_zbin_fisher(
             ps, jnp.array(k), pk_data, cross_params, s8, ells=ells,
         )
 
+    # Cross-stochastic derivatives (Ebina & White 2024 Eq. 3.7).
+    # Per cross-pair (a,b) with a≠b, two new free parameters:
+    #   Pshot_cross : constant cross shot noise → ∂P_ℓ/∂P = δ_{ℓ,0}/√(n_a n_b)
+    #   a2_cross    : (kμ)² stochastic         → ∂P_ℓ/∂a₂ =
+    #                 (k/k_NL)²/√(n_a n_b) · {1/3, 2/3, 0} for ℓ ∈ {0,2,4}
+    # Fiducial 0 (independent populations); marginalized via broad priors.
+    cross_stoch_derivs: dict[tuple[str, str], np.ndarray] | None
+    if marginalize_cross_stoch:
+        k_arr = np.asarray(k)
+        cross_stoch_derivs = {}
+        for (a, b) in pairs:
+            if a == b:
+                continue
+            inv_nab = 1.0 / np.sqrt(nbars[a] * nbars[b])
+            kkn2 = (k_arr / cfg.k_nl) ** 2
+            # axis 0: cross-stoch param index (matches CROSS_STOCH_NAMES order)
+            arr = np.zeros((len(CROSS_STOCH_NAMES), len(ells), len(k_arr)))
+            # Pshot_cross: only the monopole picks it up
+            i_P = CROSS_STOCH_NAMES.index("Pshot_cross")
+            i_a2 = CROSS_STOCH_NAMES.index("a2_cross")
+            for il, ell in enumerate(ells):
+                if ell == 0:
+                    arr[i_P, il, :] = inv_nab
+                    arr[i_a2, il, :] = inv_nab * kkn2 * (1.0 / 3.0)
+                elif ell == 2:
+                    arr[i_a2, il, :] = inv_nab * kkn2 * (2.0 / 3.0)
+                # ell == 4 → both stay 0 (only k⁰ and k²μ² contribute)
+            cross_stoch_derivs[(a, b)] = arr
+    else:
+        cross_stoch_derivs = None
+
     F = _assemble_fisher_with_cosmo(
         tracer_names, pairs, derivs_auto, derivs_cross, cov, k,
         cfg.dk, zbin, ells, pair_kmax=pair_kmax,
+        cross_stoch_derivs=cross_stoch_derivs,
     )
-    param_names = zbin_param_names(tracer_names, zbin)
+    param_names = zbin_param_names(
+        tracer_names, zbin,
+        marginalize_cross_stoch=marginalize_cross_stoch,
+    )
     return F, param_names
 
 
 def _assemble_fisher_with_cosmo(
     tracer_names, pairs, derivs_auto, derivs_cross, cov_mt, k, dk,
-    z_bin, ells, pair_kmax=None,
+    z_bin, ells, pair_kmax=None, cross_stoch_derivs=None,
 ):
     """Like ``multi_tracer_fisher_general`` but populates the cosmology block.
 
     Parameter ordering: ``[fσ8, Mν, Ωm,
-    NUISANCE_NAMES × tracer_0, NUISANCE_NAMES × tracer_1, ...]`` —
-    matches ``zbin_param_names``.
+    NUISANCE_NAMES × tracer_0, NUISANCE_NAMES × tracer_1, ...,
+    CROSS_STOCH_NAMES × cross_pair_0, CROSS_STOCH_NAMES × cross_pair_1, ...]``
+    where the cross_pair block is appended only when
+    ``cross_stoch_derivs`` is provided. Matches ``zbin_param_names``.
 
     ``derivs_auto[tn]`` is a ``(nuis_arr, cosmo_arr)`` tuple where
     ``nuis_arr`` has shape ``(N_nuis, N_ell, Nk)`` (NUISANCE_NAMES order)
@@ -287,6 +369,12 @@ def _assemble_fisher_with_cosmo(
     observable subset is selected and the covariance is inverted on that
     submatrix only. If ``pair_kmax`` is ``None``, all pairs are active at
     all k bins (symmetric-kmax fallback, matches the pre-asymmetric path).
+
+    ``cross_stoch_derivs`` (optional dict[pair_key, (N_CS, N_ell, Nk)])
+    introduces ``len(CROSS_STOCH_NAMES)`` extra free parameters per
+    cross-pair following Ebina & White 2024 — fiducial 0, marginalized
+    over via broad priors applied by the caller. If ``None``, no
+    cross-stoch columns are added.
     """
     Nt = len(tracer_names)
     Nell = len(ells)
@@ -297,9 +385,22 @@ def _assemble_fisher_with_cosmo(
 
     N_COSMO = len(COSMO_NAMES)
     N_NUIS = len(NUISANCE_NAMES)
-    Np = N_COSMO + Nt * N_NUIS
+    Np_base = N_COSMO + Nt * N_NUIS
+
+    # Cross-stoch parameter accounting (in pair iteration order).
+    if cross_stoch_derivs is not None:
+        N_CS = len(CROSS_STOCH_NAMES)
+        cross_pair_order = [(a, b) for (a, b) in pairs if a != b]
+        N_cs_extra = len(cross_pair_order) * N_CS
+    else:
+        cross_pair_order = []
+        N_CS = 0
+        N_cs_extra = 0
+    Np = Np_base + N_cs_extra
 
     tracer_idx = {name: i for i, name in enumerate(tracer_names)}
+    cs_pair_offset = {pair: Np_base + i * N_CS
+                      for i, pair in enumerate(cross_pair_order)}
 
     D = np.zeros((Nk, Nobs, Np))
 
@@ -338,6 +439,16 @@ def _assemble_fisher_with_cosmo(
                     D[:, obs_offset + il, col_lo:col_lo + N_NUIS] += (
                         cross_arr[is_, :, il, :].T
                     )
+
+            # Cross-stoch columns: only this pair's observable carries them.
+            if cross_stoch_derivs is not None:
+                cs_arr = cross_stoch_derivs.get(pair_key)
+                if cs_arr is not None:
+                    cs_lo = cs_pair_offset[(pA, pB)]
+                    for il in range(Nell):
+                        D[:, obs_offset + il, cs_lo:cs_lo + N_CS] = (
+                            cs_arr[:, il, :].T
+                        )
 
     # Per-(observable, k) active mask. Each observable is a (pair, ell)
     # combo; an observable is active at k iff k <= pair_kmax[pair_idx].
@@ -447,6 +558,43 @@ def volume_partitioned_zbin_fisher(
 # ---------------------------------------------------------------------------
 
 
+def _broad_prior_diag(param_names: list[str]) -> np.ndarray:
+    """Build the broad-prior diagonal for a joint-Fisher parameter list.
+
+    Recognizes three parameter categories by name prefix:
+      - cosmology (matches COSMO_PRIOR_SIGMA)
+      - per-tracer nuisance (12 NUISANCE_NAMES, broad_priors())
+      - per-cross-pair stochastic (CROSS_STOCH_NAMES, CROSS_STOCH_PRIOR_SIGMA)
+
+    Parameters with flat priors (e.g. b1_sigma8) get 0.0 in the diagonal.
+    """
+    nuis_widths = broad_priors().sigma_dict()
+    out = np.zeros(len(param_names))
+    for i, pn in enumerate(param_names):
+        if pn in COSMO_PRIOR_SIGMA:
+            out[i] = 1.0 / COSMO_PRIOR_SIGMA[pn] ** 2
+            continue
+        # Cross-stoch first (longer / more specific names) so they don't
+        # accidentally match a NUISANCE_NAMES prefix.
+        matched = False
+        for cs in CROSS_STOCH_NAMES:
+            if pn.startswith(cs + "_"):
+                s = CROSS_STOCH_PRIOR_SIGMA.get(cs)
+                if s is not None:
+                    out[i] = 1.0 / s ** 2
+                matched = True
+                break
+        if matched:
+            continue
+        for nuis in NUISANCE_NAMES:
+            if pn.startswith(nuis + "_"):
+                s = nuis_widths[nuis]
+                if s is not None:
+                    out[i] = 1.0 / s ** 2
+                break
+    return out
+
+
 def combine_zbins_heterogeneous(
     per_zbin_results: list[tuple[np.ndarray, list[str]]],
     survey_name: str = "joint",
@@ -552,20 +700,8 @@ def run_joint_fisher(
     )
 
     if add_cosmo_priors:
-        prior_diag = np.zeros(len(fr.param_names))
-        for i, pn in enumerate(fr.param_names):
-            if pn in COSMO_PRIOR_SIGMA:
-                prior_diag[i] = 1.0 / COSMO_PRIOR_SIGMA[pn] ** 2
-            else:
-                # Broad nuisance prior (None for b1_sigma8 → 0)
-                for nuis in NUISANCE_NAMES:
-                    if pn.startswith(nuis + "_"):
-                        s = broad_priors().sigma_dict()[nuis]
-                        if s is not None:
-                            prior_diag[i] = 1.0 / s ** 2
-                        break
         fr = FisherResult(
-            F=fr.F + np.diag(prior_diag),
+            F=fr.F + np.diag(_broad_prior_diag(fr.param_names)),
             param_names=fr.param_names,
             z_bin=fr.z_bin,
             survey_name=fr.survey_name,
@@ -648,19 +784,8 @@ def run_broad_baseline(
     )
 
     if add_cosmo_priors:
-        prior_diag = np.zeros(len(fr.param_names))
-        for i, pn in enumerate(fr.param_names):
-            if pn in COSMO_PRIOR_SIGMA:
-                prior_diag[i] = 1.0 / COSMO_PRIOR_SIGMA[pn] ** 2
-            else:
-                for nuis in NUISANCE_NAMES:
-                    if pn.startswith(nuis + "_"):
-                        s = broad_priors().sigma_dict()[nuis]
-                        if s is not None:
-                            prior_diag[i] = 1.0 / s ** 2
-                        break
         fr = FisherResult(
-            F=fr.F + np.diag(prior_diag),
+            F=fr.F + np.diag(_broad_prior_diag(fr.param_names)),
             param_names=fr.param_names,
             z_bin=fr.z_bin,
             survey_name=fr.survey_name,
