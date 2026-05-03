@@ -830,8 +830,9 @@ multi-tracer calibration leverage available in the data: with
 LRG, ELG, and QSO sharing the full
 \(14{,}000\;\text{deg}^2\) footprint at \(0.8<z<1.6\), the
 DESI-internal cross-correlations break the
-\(b_1\sigma_8\) degeneracy via the McDonald--Seljak
-mechanism~\cite{McDonald:2008sh}. Adding PFS to the
+\(b_1\sigma_8\) degeneracy via cosmic-variance cancellation in the
+bias ratios extracted from
+cross-spectra~\cite{Seljak:2008xr,McDonald:2008sh}. Adding PFS to the
 \(1{,}200\;\text{deg}^2\) overlap further tightens the
 calibration through a fourth, low-bias ELG sample with distinct
 selection and shot noise. The PFS-induced improvement is largest
@@ -1022,12 +1023,13 @@ compensated by an increase in \(b_1\) (Fisher correlation
 \(-0.99\)); with a flat \(b_1\) prior this degeneracy fully
 propagates into the marginalized \(\sigma(\Mnu)\)
 (\cref{fig:fisher_contours}, red ellipse). Multi-tracer
-cross-correlations break this degeneracy at fixed signal: the
-McDonald--Seljak mechanism~\cite{McDonald:2008sh} extracts
-bias \emph{ratios} \(b_1^X/b_1^Y\) cosmic-variance-free from any
-pair of tracers in the same volume, while the \(k\)-dependent
-EFT shape information~\cite{Rubira:2025scu} pins down individual
-\(b_1\se\) values. The DESI-only joint analysis already exploits
+cross-correlations break this degeneracy at fixed signal: cross-spectra
+between two tracers in the same volume see the same density field, so
+their amplitude ratio determines the bias ratio
+\(b_1^X/b_1^Y\) cosmic-variance-free in the high-density
+limit~\cite{Seljak:2008xr,McDonald:2008sh}, and the \(k\)-dependent
+EFT shape information at one-loop pins down the individual
+\(b_1\se\) values~\cite{Mergulhao:2023zso,Rubira:2025scu}. The DESI-only joint analysis already exploits
 this through its three bias-distinct tracers in the full
 \(14{,}000\;\text{deg}^2\) footprint, collapsing the broad-prior
 ellipse to the blue contour in \cref{fig:fisher_contours}.
@@ -1042,6 +1044,37 @@ because the marginalized \(\Mnu\) constraint inherits the
 residual \(b_1\se\) posterior width, and that posterior contracts
 most where PFS adds new cross-spectra (\(z<1.6\)).
 
+The diagnostic chain is direct in our Fisher results.
+\emph{(i) Localization.} Restricting the per-z-bin Fisher to a
+single bin reveals that
+\(\sigma(\Mnu)_{\rm DESI\,\,joint} =
+  \sigma(\Mnu)_{\rm broad\,\,single\text{-}tracer}\)
+to numerical precision in the four bins where only one DESI
+tracer is active (\(z<0.8\) LRG-only and \(z>1.6\) QSO-only); the
+33\%/80\%/49\% improvement on \((\sigma(f\se),\sigma(\Mnu),\sigma(\Om))\)
+appears \emph{exclusively} in the four bins at \(0.8<z<1.6\)
+where two or three bias-distinct DESI tracers coexist (per-bin
+\(\Delta\sigma(\Mnu)\) of 67\%--85\%).
+\emph{(ii) Correlation collapse.} The Fisher correlation
+\(\rho(\Mnu, b_1\se)\) at \(z\!=\![0.8,1.0]\) drops from
+\(\{+0.95, +0.82, +0.45\}\) for \(\{\)LRG, ELG, QSO\(\}\) in the
+broad single-tracer baseline to \(\{+0.39, -0.07, -0.07\}\) in
+the DESI-only joint scenario, confirming that the
+cosmic-variance-cancelled bias-ratio determination from
+cross-spectra is the operative mechanism rather than any
+broadband-shape gain.
+\emph{(iii) Data dominance.} Loosening the Gaussian cosmology
+prior on \(\Mnu\) from \(\sigma_{\rm prior}=5\,\text{eV}\) to
+\(10^6\,\text{eV}\) changes \(\sigma(\Mnu)\) by \({<}1\%\) in
+both the broad single-tracer and DESI joint scenarios---the
+constraint is fully data-driven. Empirically, Zhao et
+al.~\cite{Zhao:2024eboss} reported the same qualitative
+behavior with eBOSS DR16 LRG\(\times\)ELG (18--27\% on
+\(\sigma(\se)\), depending on the cross-stochastic treatment),
+which is consistent with our DESI-internal multi-tracer baseline
+once the larger DR2 footprint and three bias-distinct tracers
+are accounted for.
+
 \begin{figure}[t]
 \centering
 \includegraphics[width=\textwidth]{\figurespath/fisher_contours.png}
@@ -1053,9 +1086,9 @@ multi-tracer information); the near-perfect \(b_1\)--\(\Mnu\)
 degeneracy fully propagates into the marginalized \(\Mnu\)
 contour. Blue: DESI-only joint Fisher with internal
 LRG\,$\times$\,ELG\,$\times$\,QSO multi-tracer cross-correlations
-across the full \(14{,}000\;\text{deg}^2\) footprint; the
-McDonald--Seljak mechanism breaks the \(b_1\se\) degeneracy from
-data, collapsing the contour. Green: DESI+PFS joint Fisher,
+across the full \(14{,}000\;\text{deg}^2\) footprint; cosmic-variance
+cancellation in cross-spectrum bias ratios breaks the \(b_1\se\)
+degeneracy from data, collapsing the contour. Green: DESI+PFS joint Fisher,
 adding the PFS-ELG sample in the \(1{,}200\;\text{deg}^2\)
 overlap; the 4-tracer cross-correlations further tighten
 \(b_1\se\) and \(\Mnu\). The DESI-internal multi-tracer
