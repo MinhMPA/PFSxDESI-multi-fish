@@ -112,9 +112,9 @@ N-body simulations and halo-occupation-distribution (HOD) models.
 We propose data-driven multi-tracer priors as a model-independent
 alternative: cross-spectra between bias-distinct galaxy populations
 calibrate the EFT bias and stochastic parameters from data alone,
-through two complementary channels---internal to a single survey
-(among its different tracers) and across overlapping surveys (between
-tracers from different instruments)---combined in a single
+through two complementary channels internal to a single survey
+(among its different tracer populations) and across overlapping surveys
+(between tracers from different surveys), combined in a single
 volume-partitioned joint Fisher.
 %
 We forecast across the \(14{,}000\;\text{deg}^2\) Dark Energy
@@ -122,24 +122,24 @@ Spectroscopic Instrument (DESI) footprint, with the
 \(\sim\!1{,}200\;\text{deg}^2\) Prime Focus Spectrograph (PFS) overlap
 at \(0.6<z<1.6\) contributing up to 4 tracers (PFS-ELG, DESI-ELG,
 DESI-LRG, DESI-QSO).
-The internal-DESI channel---LRG, ELG, and QSO across the full
-footprint---does the bulk of the work, improving \(\sigma(f\se)\) by
+The internal-DESI channel, combining LRG, ELG, and QSO across the full
+footprint, provides the dominant gain, improving \(\sigma(f\se)\) by
 33\%, \(\sigma(\Mnu)\) by 80\%, and \(\sigma(\Omega_m)\) by 49\% over
-a single-tracer broad-prior baseline at \(\kmax=0.20\iMpch\). Adding
-the PFS\(\,\times\,\)DESI overlap channel on top further tightens these
-by 9\%, 24\%, and 9\% respectively, after marginalizing over residual
-cross-population stochasticity~\cite{Ebina:2024ojt}.
+a single-tracer broad-prior baseline at \(\kmax=0.20\iMpch\).
+Adding the PFS\(\,\times\,\)DESI overlap channel on top further
+tightens these by 9\%, 24\%, and 9\%, respectively, after marginalizing
+over residual cross-population stochasticity.
 A parameter importance decomposition reveals that the dominant driver
-in both channels is the calibration of the \(b_1\se\) prior---%
-constrained from a flat prior to \(\sigma\approx 0.13\) by the joint
-multi-tracer Fisher---which breaks the
-\(b_1\sigma_8\)--\(f\se\) degeneracy intrinsic to single-tracer
-analyses.
-Data-driven multi-tracer priors parallel the SBP approach, which
+in both channels is calibration of the \(b_1\se\) prior, which is
+tightened from a flat prior to \(\sigma\approx 0.13\) by the joint
+multi-tracer Fisher and breaks the \(b_1\sigma_8\)--\(f\se\)
+degeneracy intrinsic to single-tracer analyses.
+The multi-tracer multi-survey approach parallels the SBP approach, which
 tightens \(b_1\) through HOD model assumptions; the two are
 model-independent consistency checks on each other, and the framework
 generalizes to arbitrary combinations of overlapping spectroscopic
-surveys. Code is available at this repository
+surveys.
+Code is available at this repository
 \github{https://github.com/MinhMPA/PFSxDESI-multi-fish}.
 }
 
