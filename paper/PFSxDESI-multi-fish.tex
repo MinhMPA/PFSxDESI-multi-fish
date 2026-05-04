@@ -109,13 +109,13 @@ parameters per tracer per redshift bin is the dominant systematic cost
 in full-shape galaxy power spectrum analyses.
 Simulation-based priors (SBP) tighten these parameters but rely on
 N-body simulations and halo-occupation-distribution (HOD) models.
-We propose data-driven multi-tracer priors as a model-independent
-alternative: cross-spectra between bias-distinct galaxy populations
-calibrate the EFT bias and stochastic parameters from data alone,
-through two complementary channels internal to a single survey
-(among its different tracer populations) and across overlapping surveys
-(between tracers from different surveys), combined in a single
-volume-partitioned joint Fisher.
+We propose a data-driven multi-tracer Fisher analysis as a
+model-independent alternative: cross-spectra between bias-distinct
+galaxy populations calibrate the EFT bias and stochastic parameters
+from data alone, through two complementary channels---internal to a
+single survey (among its different tracer populations) and across
+overlapping surveys (between tracers from different surveys)---combined
+in a single volume-partitioned joint Fisher.
 %
 We forecast across the \(14{,}000\;\text{deg}^2\) Dark Energy
 Spectroscopic Instrument (DESI) footprint, with the
@@ -123,7 +123,7 @@ Spectroscopic Instrument (DESI) footprint, with the
 at \(0.6<z<1.6\) contributing up to 4 tracers (PFS-ELG, DESI-ELG,
 DESI-LRG, DESI-QSO).
 The internal-DESI channel, combining LRG, ELG, and QSO across the full
-footprint, provides the dominant gain, improving \(\sigma(f\se)\) by
+footprint, provides the bulk of the gain, improving \(\sigma(f\se)\) by
 33\%, \(\sigma(\Mnu)\) by 80\%, and \(\sigma(\Omega_m)\) by 49\% over
 a single-tracer broad-prior baseline at \(\kmax=0.20\iMpch\).
 Adding the PFS\(\,\times\,\)DESI overlap channel on top further
@@ -140,8 +140,8 @@ galaxy populations rather than HOD-modeled mocks; it thus provides a
 model-independent cross-check on the HOD assumptions underlying
 SBP-driven \(b_1\sigma_8\) shifts. The framework extends without
 modification to any number of overlapping spectroscopic surveys.
-Code is available at this repository
-\github{https://github.com/MinhMPA/PFSxDESI-multi-fish}.
+Code is available at
+\href{https://github.com/MinhMPA/PFSxDESI-multi-fish}{\faGithub\ MinhMPA/PFSxDESI-multi-fish}.
 }
 
 
@@ -205,7 +205,7 @@ model-independent cross-check on the SBP-driven \(\se\) shift.
 
 Multi-tracer Fisher forecasts have established parameter-degeneracy breaking beyond the single-tracer reach~\cite{Alarcon:2016bkr,Mergulhao:2021kip,Mergulhao:2023zso,Rubira:2025scu,Qin:2025nkk}.
 % [CITE-NEEDED: individual attribution for Alarcon:2016bkr, Mergulhao:2021kip, Mergulhao:2023zso, Rubira:2025scu, Qin:2025nkk]
-Zhao et al.~\cite{Zhao:2024eboss} realized this with eBOSS DR16, jointly analyzing LRGs and ELGs and improving \(\sigma(\se)\) by 18--27\%, with the spread set by the treatment of LRG--ELG cross-stochasticity. The cross-stochasticity treatment is the dominant modeling choice: even for disjoint tracer catalogs with no shared-object shot noise, residual cross-stochasticity from halo-bias and occupation correlations is a free function~\cite{Ebina:2024ojt}.
+Zhao et al.~\cite{Zhao:2024eboss} realized this with eBOSS DR16, jointly analyzing LRGs and ELGs and improving \(\sigma(\se)\) by 18--27\%, with the spread set by the treatment of LRG--ELG cross-stochasticity. The cross-stochasticity treatment is the leading modeling choice: even for disjoint tracer catalogs with no shared-object shot noise, residual cross-stochasticity from halo-bias and occupation correlations is a free function~\cite{Ebina:2024ojt}.
 
 In this paper we forecast a joint multi-tracer Fisher that combines
 two channels of data-driven multi-tracer priors. The internal-DESI
@@ -734,18 +734,21 @@ distinct---simulation-based rather than data-driven multi-tracer
 priors---and we discuss the comparison in \cref{sec:discussion}.
 
 
-\subsection{Transferability assumption}
+\subsection{HOD-uniformity assumption on shared per-tracer nuisance parameters}
 \label{sec:transferability}
 
-The calibration transfers from overlap to full area if and only if
-DESI-ELG in the overlap has the same HOD---and therefore the same
-EFT parameters---as DESI-ELG outside the overlap. Since the DESI target selection
-is spatially uniform by construction, this holds to the extent that
-imaging systematics do not induce spatial variation in the ELG
-population; the DESI imaging-systematics pipeline is designed to
-control this~\cite{DESI:2025zgx}. We state this as an explicit
+The volume-partitioned Fisher shares per-(tracer, redshift bin)
+nuisance parameters between the overlap and non-overlap regions of
+each DESI tracer. This is well-defined only if DESI-LRG, DESI-ELG,
+and DESI-QSO each have the same HOD---and therefore the same EFT
+parameters---in the overlap and non-overlap regions of the footprint.
+Because the DESI target selection is spatially uniform by construction,
+this holds to the extent that imaging systematics do not induce
+spatial variation in the tracer populations; the DESI
+imaging-systematics pipeline is designed to control
+this~\cite{DESI:2025zgx}. We state HOD uniformity as an explicit
 assumption and note that a violation would manifest as a detectable
-mismatch between the calibrated and in-situ posteriors.
+mismatch when the per-region Fishers are evaluated separately.
 
 
 %-------------------------------------------------------------------
@@ -871,9 +874,9 @@ cross-spectra~\cite{Seljak:2008xr,McDonald:2008sh}. Adding PFS to the
 \(1{,}200\;\text{deg}^2\) overlap channel further tightens the
 joint Fisher through a fourth, low-bias ELG sample with distinct
 selection and shot noise. The PFS-induced improvement is largest
-for \(\sigma(\Mnu)\) (\(+24\,\text{pp}\)), modest but meaningful
-for \(\sigma(f\se)\) (\(+9\,\text{pp}\)) and \(\sigma(\Om)\)
-(\(+9\,\text{pp}\)). For context, power-spectrum-level SBPs on
+for \(\sigma(\Mnu)\) (\(23.6\%\)), modest but meaningful for
+\(\sigma(f\se)\) (\(8.9\%\)) and \(\sigma(\Om)\) (\(9.4\%\)). For
+context, power-spectrum-level SBPs on
 DESI~DR1~\cite{DESI:2025wzd} achieved \(\sim\!23\%\) on
 \(\sigma(\se)\).
 
@@ -958,8 +961,9 @@ reduces nuisance-parameter uncertainty.
 
 \(\Mnu\) achieves the highest calibration efficiency
 (\(\sim\!60\%\)), because the neutrino mass constraint is most
-sensitive to the amplitude-related stochastic parameters that the
-joint multi-tracer calibration tightens. \(f\se\) efficiency rises with redshift
+sensitive to \(b_1\se\), whose prior the joint multi-tracer
+Fisher tightens via cosmic-variance cancellation in the bias
+ratios---as detailed in \cref{sec:discussion}. \(f\se\) efficiency rises with redshift
 (38\% at \(z\sim 0.9\) to 47\% at \(z\sim 1.5\)), reflecting the PFS
 growing \(\nbar\) advantage at higher \(z\). \(\Om\) is flat at
 \(\sim\!35\%\)---it is primarily shape-constrained and less sensitive
@@ -993,7 +997,7 @@ PFS-induced improvement: the FoG velocity ratio
 counterterm fiducial \(\ctilde^{\PFS}\propto \rsv^4\) and the
 asymmetric scale cut \(\kmax^{\PFS}\propto \rsv^{-1}\)) and the
 cross-stochastic marginalization scheme. The cosmology
-constraints turn out to be remarkably insensitive to both.
+constraints turn out to be insensitive to both.
 
 Sweeping \(\rsv\) over the physically plausible range
 \([0.5,\,1.0]\) in the joint Fisher changes
@@ -1231,10 +1235,11 @@ budget~\cite{Ivanov:2023qzb,Bakx:2025pop}.
 %-------------------------------------------------------------------
 
 We have presented a joint multi-tracer Fisher analysis across the
-DESI footprint with the PFS--DESI overlap contributing in
-\(0.6<z<1.6\), treating cross-survey calibration as part of a
-single Fisher across the partitioned footprint rather than as a
-separate prior-export step. We summarize:
+DESI footprint, with the PFS--DESI overlap region contributing in
+\(0.6<z<1.6\) through the PFS\(\times\)DESI cross-spectrum channel.
+Throughout this section, ``PFS--DESI'' refers to the geographic
+overlap footprint and ``PFS\(\times\)DESI'' to the cross-spectrum
+channel. We summarize:
 
 \begin{enumerate}
 \item The volume-partitioned joint Fisher
@@ -1274,7 +1279,7 @@ separate prior-export step. We summarize:
   data-driven channel offers an independent handle on whether
   SBP-driven \(\se\) shifts reflect new physics or HOD systematics.
 
-\item The framework generalizes naturally to N overlapping
+\item The framework extends directly to N overlapping
   spectroscopic surveys. For N footprints, the union partitions
   into up to \(2^N{-}1\) disjoint regions, one per non-empty
   subset of surveys; each region carries a multi-tracer Fisher
@@ -1594,7 +1599,7 @@ sufficient \(k\)-dependent information to constrain \(b_2\) and
 \(b_{\G_2}\) without theoretical priors from gravitational evolution.
 The more notable \(13.8\%\) improvement on \(\sigma(\Om)\) reflects
 the \(\Om\)-sensitivity of the \(b_2\) loop integrals, but this is
-small compared to the 8--22\% gain from adding the PFS overlap to the
+small compared to the 9--24\% gain from adding the PFS overlap to the
 DESI-only joint Fisher.
 
 
