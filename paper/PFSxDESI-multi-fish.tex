@@ -481,11 +481,15 @@ and is complementary to both.
 \label{sec:fisher}
 %-------------------------------------------------------------------
 
-To forecast the constraints from the PFS--DESI overlap, we construct
-multi-tracer and single-tracer Fisher matrices using the one-loop
-EFTofLSS. We describe the survey specifications, the EFT
-parameterization, the covariance and derivative computation, and the
-analysis scenarios below.
+We forecast cosmological constraints from a joint multi-tracer
+Fisher over the full \(14{,}000\;\text{deg}^2\) DESI footprint, with
+two information channels combined in a single analysis: the
+internal-DESI channel from LRG, ELG, and QSO multi-tracer
+cross-correlations everywhere, and the PFS\(\times\)DESI overlap
+channel from the additional PFS-ELG auto- and cross-spectra in the
+\(1{,}200\;\text{deg}^2\) overlap. Below we specify the surveys, the
+EFT parameterization, the covariance and derivative computation, and
+the configurations we report.
 
 
 \subsection{Survey specifications}
@@ -657,6 +661,10 @@ shot noise \(\delta_{XY}/\nbar_X\). The cross-stochastic terms
 Fisher \emph{derivative matrix} as additional free parameters
 with broad priors (\cref{sec:cross_power}); their fiducial values
 are zero, so they do not appear in the covariance evaluation here.
+This covariance, evaluated jointly over auto- and cross-spectra of
+the four tracers, is what makes the per-bin nuisance constraints
+data-driven multi-tracer priors rather than externally imposed
+Gaussian widths.
 The \(\mu\)-integrals are evaluated with 20-point Gauss--Legendre
 quadrature. The signal contribution is computed from the one-loop
 EFTofLSS model~\cite{Chudaykin:2020aoj} using the FFTLog
@@ -684,46 +692,46 @@ adaptive finite-difference numerical derivatives in
 \cref{app:derivatives}.
 
 
-\subsection{Analysis scenarios and benchmarks}
+\subsection{Analysis configurations}
 \label{sec:scenarios}
 
-We forecast with a single joint multi-tracer Fisher
-over the full DESI footprint. At each redshift bin, the
-Fisher decomposes as
+We report three configurations, each a single Fisher analysis over
+the full \(14{,}000\;\text{deg}^2\) DESI footprint with
+\(\kmax=0.20\iMpch\). The single-tracer broad baseline forecasts
+each DESI tracer independently with the conservative broad priors of
+\cref{tab:eft_params}; this is the reference against which the joint
+analyses are reported. The DESI-only joint configuration combines
+DESI-LRG, DESI-ELG, and DESI-QSO into one multi-tracer Fisher across
+the full footprint, exposing the internal-DESI channel through
+bias-ratio and RSD information in the auto- and cross-spectra alone.
+The DESI+PFS joint configuration adds PFS-ELG within the
+\(1{,}200\;\text{deg}^2\) overlap, opening the PFS\(\times\)DESI
+overlap channel through the additional auto- and cross-spectra
+available where the four tracers coexist. Both joint configurations
+decompose at each redshift bin as
 \be
 \label{eq:volume_partition}
 F_z = F_z^{\rm overlap}(V_{\rm overlap})
     + F_z^{\rm nonoverlap}(V_{\rm nonoverlap}),
 \ee
-where \(V_{\rm overlap}=1{,}200\;\text{deg}^2\) carries up to four
-tracers (PFS-ELG plus three DESI tracers, restricted to
-\(z<1.6\) for PFS) and
-\(V_{\rm nonoverlap}=12{,}800\;\text{deg}^2\) carries the three
-DESI tracers only. The two regions are treated as independent
-under the Gaussian-covariance approximation (which neglects
-super-sample covariance), so their Fishers add; see
+with \(V_{\rm overlap}=1{,}200\;\text{deg}^2\) carrying up to four
+tracers (PFS-ELG plus three DESI tracers, restricted to \(z<1.6\) for
+PFS) and \(V_{\rm nonoverlap}=12{,}800\;\text{deg}^2\) carrying the
+three DESI tracers only. The two regions are treated as independent
+under the Gaussian-covariance approximation---which neglects
+super-sample covariance---so their Fishers add; see
 \cref{sec:joint_fisher} for discussion of the SSC approximation.
-We combine the per-redshift Fishers with shared cosmological
-parameters \((f\se,\,\Mnu,\,\Om)\) and per-(tracer, \(z\)-bin)
-nuisance parameters, then marginalize over all nuisance in one
-pass. All scenarios use \(\kmax=0.20\iMpch\). The two
-configurations we report are:
-\begin{itemize}
-\item \textbf{DESI-only joint}: PFS-ELG removed everywhere; the
-  multi-tracer Fisher uses LRG, ELG, and QSO across the full
-  \(14{,}000\;\text{deg}^2\) footprint. This is the strongest
-  baseline DESI can construct internally without any cross-survey
-  input.
-\item \textbf{DESI+PFS joint}: as above, plus the
-  PFS-ELG sample contributing in the \(1{,}200\;\text{deg}^2\)
-  overlap, providing PFS\(\times\)DESI cross-spectra and the
-  PFS auto-spectrum.
-\end{itemize}
-We also overlay horizontal reference lines at the published
-improvement ratios from the PS-level SBP of Zhang et al.\
-\cite{DESI:2025wzd} (23\% on \(\sigma(\se)\)) and the field-level
-SBP of Chudaykin et al.\ \cite{Chudaykin:2026nls} (50\% on
-\(\sigma(\se)\)).
+Per-redshift Fishers are combined across all bins with shared
+cosmological parameters \((f\se,\,\Mnu,\,\Om)\) and per-(tracer,
+\(z\)-bin) nuisance parameters, marginalized in one pass.
+
+In the results figures we overlay published improvement ratios from
+the PS-level SBP of Zhang et al.\ \cite{DESI:2025wzd} (23\% on
+\(\sigma(\se)\)) and the field-level SBP of Chudaykin et al.\
+\cite{Chudaykin:2026nls} (50\% on \(\sigma(\se)\)) as complementary
+reference points; the SBP route is methodologically
+distinct---simulation-based rather than data-driven multi-tracer
+priors---and we discuss the comparison in \cref{sec:discussion}.
 
 
 \subsection{Transferability assumption}
