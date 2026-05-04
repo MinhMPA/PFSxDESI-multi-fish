@@ -288,11 +288,20 @@ without relying on simulation assumptions.
 \subsection{Cross-power constraints on nuisance parameters}
 \label{sec:cross_power}
 
-The multi-tracer analysis of overlapping surveys provides exactly
-this---it isolates bias and stochastic parameters from the
-cross-spectrum between independent galaxy populations.
-The approach exploits the different stochastic
-properties of distinct galaxy populations~\citep[e.g.,][]{Seljak:2008xr,McDonald:2008sh,Mergulhao:2021kip,Mergulhao:2023zso,Rubira:2025scu}.
+Two channels relax the nuisance prior in the present analysis.
+The internal-DESI channel uses LRG\(\,\times\,\)ELG\(\,\times\,\)QSO
+cross-spectra over the full DESI footprint to isolate bias and
+stochastic parameters from cross-spectra between independent
+populations. The PFS\(\,\times\,\)DESI overlap channel adds
+PFS-ELG cross-spectra in the \(1{,}200\;\text{deg}^2\) footprint,
+contributing tracers with the lowest \(b_1\) in the joint
+analysis. The approach exploits the different stochastic
+properties of distinct galaxy populations: cosmic-variance
+cancellation in cross-spectrum bias ratios was developed in
+Refs.~\cite{Seljak:2008xr,McDonald:2008sh}, extended to the
+EFTofLSS multi-tracer setting in Refs.~\cite{Mergulhao:2021kip,Mergulhao:2023zso},
+and applied to the joint constraint of bias and stochastic
+parameters in Ref.~\cite{Rubira:2025scu}.
 The auto-power spectrum of tracer \(X\) at multipole \(\ell\) can be written schematically as
 \be
 \label{eqn:auto}
@@ -356,7 +365,7 @@ the largest impact on \(\Mnu\) reflecting the \((k\mu)^2\) cross-stochastic
 term partially sharing the broadband-shape geometry with the
 neutrino mass signature.
 
-The key observation is that jointly fitting the auto-spectra
+Jointly fitting the auto-spectra
 \(P_\ell^{XX}\), \(P_\ell^{YY}\) and the cross-spectrum
 \(P_\ell^{XY}\) at each \(k\) over-determines the system. The
 deterministic signal is shared (up to bias ratios), while the
@@ -373,10 +382,14 @@ benefit less from the cross spectrum~\cite{Zhao:2024eboss}. The one-loop bias st
 \subsection{Asymmetric scale cuts}
 \label{sec:asymmetric_kmax}
 
-PFS-ELGs reside in host halos of relatively lower mass than those of
-DESI-ELGs or DESI-LRGs~\cite{PFS-CO-target:inprep} and consequently
-have lower virial velocity dispersion, $\sigma_v$. In the EFT framework,
-this translates into a smaller FoG counterterm,
+Auto- and cross-spectra are masked per-pair: an observable
+contributes at \(k\)-bin \(k_i\) only when every tracer entering
+it satisfies \(k_i < k_{\max}^{\rm tracer}\) (see
+\cref{app:fisher_checks} for the implementation). PFS-ELGs reside
+in host halos of relatively lower mass than those of DESI-ELGs or
+DESI-LRGs~\cite{PFS-CO-target:inprep} and consequently have lower
+virial velocity dispersion, $\sigma_v$. In the EFT framework, this
+translates into a smaller FoG counterterm,
 \(\ctilde^{\PFS} = \ctilde^{\DESI\text{-ELG}} \times \rsv^4\), where
 \(\rsv \equiv \sigma_{v,\PFS}/\sigma_{v,\DESI}\). A smaller \(\ctilde\)
 extends the perturbative range of validity~\cite{Rubira:2025scu},
@@ -388,11 +401,7 @@ allowing the one-loop EFT model to remain valid to higher \(k\). Since
 \ee
 For our fiducial \(\rsv=0.75\), this gives
 \(\kmax^{\PFS}\approx 0.27\iMpch\) when \(\kmax^{\DESI}=0.20\iMpch\).
-The convention is enforced in the joint Fisher by per-pair
-masking of the observable subset at each \(k\)-bin: an
-auto- or cross-spectrum observable contributes only over modes
-where every tracer entering it is below its own \(\kmax\) (see
-\cref{app:fisher_checks} for the implementation). The empirical impact of
+The empirical impact of
 extending PFS to \(\kmax^{\PFS}=0.27\iMpch\) on the cosmology
 constraints is small at our fiducial \(\rsv\) (sub-percent on
 \(\sigma(f\se,\Mnu,\Om)\); see \cref{sec:results_sensitivity}); the
@@ -403,11 +412,10 @@ scale cut.
 
 
 \subsection{Joint Fisher across the partitioned footprint}
-\label{sec:prior_export}
+\label{sec:joint_fisher}
 
-Rather than calibrating priors in the overlap and exporting them
-to a separate cosmology Fisher, we work with a single joint
-multi-tracer Fisher across the full DESI footprint. The
+The joint multi-tracer Fisher operates across the full DESI
+footprint with the volume partitioned by tracer availability. The
 \(14{,}000\;\text{deg}^2\) DESI volume splits naturally into the
 \(1{,}200\;\text{deg}^2\) PFS--DESI overlap and the
 \(12{,}800\;\text{deg}^2\) DESI-only complement. At each redshift
@@ -433,8 +441,8 @@ parameters. The final cosmological constraints come from
 inverting the joint Fisher and reading off the marginalized
 diagonals.
 
-The volume partition is bookkeeping for the natural joint
-analysis: cross-spectra and the PFS auto-spectrum enter only in
+The volume partition reflects tracer availability:
+cross-spectra and the PFS auto-spectrum enter only in
 \(V_{\rm overlap}\) (where PFS has data), while DESI auto- and
 cross-spectra enter in both regions with their respective
 volumes. Because every observable is counted in exactly one of
@@ -448,21 +456,24 @@ nonoverlap})\) to numerical precision (see \cref{app:fisher_checks}).
 \label{sec:sbp_comparison}
 
 SBPs~\cite{Ivanov:2024hgq,Zhang:2024thl,Chudaykin:2026nls} encode
-the full joint distribution of EFT parameters from HOD mocks and
-achieve tighter constraints than diagonal Gaussian priors, but their
-accuracy is bounded by the fidelity of the galaxy--halo connection
-model. Cross-calibration trades this model dependence for a volume
-limitation: the overlap constrains \(b_1\), \(\Pshot\), and
-\(b_{\G_2}\) model-independently, while SBPs tighten the counterterms
-and \(k\)-dependent stochasticity that the overlap volume cannot
-reach. The two are complementary---and because they constrain the
-same parameters through independent mechanisms, they serve as
-mutual consistency checks (\cref{sec:discussion}).
+the full joint distribution of EFT parameters from HOD mocks,
+tightening \(\sigma(\se)\) by 23--50\% relative to broad Gaussian
+nuisance priors, but their accuracy is bounded by the fidelity of
+the galaxy--halo connection model. The joint multi-tracer Fisher
+trades model dependence for a volume limitation: the data-driven
+multi-tracer priors constrain \(b_1\), \(\Pshot\), and
+\(b_{\G_2}\) without HOD assumptions, while SBPs additionally
+constrain the counterterms and \(k\)-dependent stochasticity that
+the cross-spectrum geometry constrains less effectively. The two
+are complementary---and because they constrain the same parameters
+through independent mechanisms, they serve as mutual consistency
+checks (\cref{sec:discussion}).
 The power-spectrum-level SBP of Zhang et al.~\cite{DESI:2025wzd}
-(\(\sim\!23\%\) on \(\sigma(\se)\)) is the fair comparison for our
-work; the field-level SBP of Chudaykin et
-al.~\cite{Chudaykin:2026nls} (\(\sim\!50\%\)) breaks degeneracies
-inaccessible to two-point statistics.
+(\(\sim\!23\%\) on \(\sigma(\se)\)) addresses the same observable
+as the present analysis and provides the closest cross-check; the
+field-level SBP of Chudaykin et al.~\cite{Chudaykin:2026nls}
+(\(\sim\!50\%\)) accesses information beyond two-point statistics
+and is complementary to both.
 
 
 %-------------------------------------------------------------------
@@ -691,7 +702,7 @@ tracers (PFS-ELG plus three DESI tracers, restricted to
 DESI tracers only. The two regions are treated as independent
 under the Gaussian-covariance approximation (which neglects
 super-sample covariance), so their Fishers add; see
-\cref{sec:prior_export} for discussion of the SSC approximation.
+\cref{sec:joint_fisher} for discussion of the SSC approximation.
 We combine the per-redshift Fishers with shared cosmological
 parameters \((f\se,\,\Mnu,\,\Om)\) and per-(tracer, \(z\)-bin)
 nuisance parameters, then marginalize over all nuisance in one
