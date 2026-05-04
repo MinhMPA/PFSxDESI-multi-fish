@@ -1240,29 +1240,30 @@ separate prior-export step. We summarize:
 \item The volume-partitioned joint Fisher
   \(F=F_{\rm overlap}(1{,}200\,\text{deg}^2)
    + F_{\rm nonoverlap}(12{,}800\,\text{deg}^2)\)
-  combines the DESI internal multi-tracer self-calibration over
-  the full footprint with the PFS-DESI cross-survey channel in the
-  overlap, with cosmology shared globally and nuisance parameters
-  unique per (tracer, redshift bin). The framework avoids the
-  auto-spectra double-counting inherent to a two-stage
-  calibration-then-cosmology pipeline.
+  combines the internal-DESI channel over the full footprint with
+  the PFS\(\times\)DESI overlap channel in the
+  \(1{,}200\;\text{deg}^2\) intersection, with cosmology shared
+  globally and nuisance parameters unique per (tracer, redshift
+  bin). The single-Fisher construction avoids the auto-spectra
+  double-counting that a two-stage prior-export pipeline incurs.
 
 \item The bulk of the multi-tracer information comes from
   bias-distinct tracers in the same volume: DESI-LRG, DESI-ELG, and
   DESI-QSO already span a wide range of \(b_1\) at \(0.4<z<2.1\),
-  so DESI alone reaches \(\sigma(f\se)=0.014\),
-  \(\sigma(\Mnu)=0.14\,\text{eV}\), and
-  \(\sigma(\Om)=0.016\) at \(\kmax=0.20\iMpch\) without any
+  so DESI alone reaches \(\sigma(f\se)=0.0145\),
+  \(\sigma(\Mnu)=0.141\,\text{eV}\), and
+  \(\sigma(\Om)=0.0157\) at \(\kmax=0.20\iMpch\) without any
   cross-survey input.
 
 \item Adding PFS to the \(1{,}200\;\text{deg}^2\) overlap further
-  tightens \(\sigma(f\se)\) by 9\%, \(\sigma(\Mnu)\) by 24\%, and
-  \(\sigma(\Om)\) by 9\%---reaching
-  \(\sigma(f\se)=0.013\), \(\sigma(\Mnu)=0.108\,\text{eV}\),
-  \(\sigma(\Om)=0.014\). The largest fractional gain is on
-  \(\sigma(\Mnu)\), driven by the calibration of \(b_1\se\) for the
-  DESI-ELG sample, where PFS-ELG provides a fourth, low-bias ELG
-  partner with distinct selection and shot noise.
+  tightens \(\sigma(f\se)\) by 8.9\%, \(\sigma(\Mnu)\) by 23.6\%,
+  and \(\sigma(\Om)\) by 9.4\%---reaching
+  \(\sigma(f\se)=0.0132\), \(\sigma(\Mnu)=0.108\,\text{eV}\),
+  \(\sigma(\Om)=0.0143\). The largest fractional gain is on
+  \(\sigma(\Mnu)\), driven by the joint-Fisher tightening of
+  \(b_1\se\) for the DESI-ELG sample, where PFS-ELG provides a
+  fourth, low-bias ELG partner with distinct selection and shot
+  noise.
 
 \item The joint analysis is not a replacement for simulation-based
   priors but a model-independent companion. Multi-tracer
@@ -1280,7 +1281,7 @@ separate prior-export step. We summarize:
   built from whichever tracers are active there, and all region
   Fishers add in a common parameter space (cosmology shared
   globally, nuisance unique per (tracer, redshift bin)). This
-  naturally accommodates upcoming multi-survey configurations
+  accommodates upcoming multi-survey configurations
   such as PFS\(\times\)DESI\(\times\)Euclid\(\times\)Roman in
   partial overlaps, where every disjoint sub-region contributes
   the multi-tracer combination available within it. Beyond the
