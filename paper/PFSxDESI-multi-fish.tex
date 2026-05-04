@@ -1468,8 +1468,9 @@ We verify the assembled Fisher matrix against five checks:
   survey volume because Fourier modes in disjoint volumes are
   uncorrelated. For the DESI-only configuration with all three
   DESI tracers active in the bin \(z=[1.0,\,1.2]\), we verify the
-  volume partition
-  \(F(V_{\rm overlap})+F(V_{\rm nonoverlap})=F(V_{\rm full})\)
+  volume partition underlying the internal-DESI and
+  PFS\(\times\)DESI overlap channels,
+  \(F(V_{\rm overlap})+F(V_{\rm nonoverlap})=F(V_{\rm full})\),
   to relative tolerance \(10^{-9}\)
   (\(V_{\rm overlap}=1{,}200\,\text{deg}^2\),
    \(V_{\rm nonoverlap}=12{,}800\,\text{deg}^2\),
@@ -1486,8 +1487,10 @@ We verify the assembled Fisher matrix against five checks:
 \item \textbf{Scenario ordering.}
   The marginalized constraints obey
   \(\sigma_{\rm DESI+PFS}\leq\sigma_{\rm DESI\text{-}only}\)
-  for all cosmological parameters: adding PFS to the joint Fisher
-  can only tighten or preserve the constraints, never weaken them.
+  for all cosmological parameters: adding the PFS\(\times\)DESI
+  overlap channel to the internal-DESI channel in the joint
+  multi-tracer Fisher can only tighten or preserve the
+  constraints, never weaken them.
 
 \item \textbf{Cosmic-variance-free limit.}
   In the linear-bias Kaiser model with 2 tracers of different
@@ -1520,8 +1523,8 @@ Blue: single-tracer \(\sigma^2(P_m)/P_m^2\) (marginalized over
 Orange: multi-tracer result (marginalized over \(b_A\) and \(b_B\)).
 Dashed grey: the cosmic-variance-free floor \(2/N_{\rm modes}\).
 The single-tracer error saturates due to the \(b\)--\(f\) degeneracy;
-the multi-tracer error converges to the floor, confirming the
-cancellation of cosmic variance.
+the multi-tracer error converges to the floor, confirming
+cosmic-variance cancellation in cross-spectrum bias ratios.
 Parameters: \(b_A=1\), \(b_B=2\), \(f=0.8\), \(P_m=10^3\;(\Mpch)^3\),
 \(k=0.1\iMpch\), \(\Delta k=0.01\iMpch\),
 \(V=10^9\;(\Mpch)^3\).}
@@ -1549,7 +1552,8 @@ Orange: marginalized over nuisance parameters with broad priors.
 The gap quantifies the information lost to nuisance
 marginalization at each scale.
 For \(\Mnu\), the loss exceeds 3 orders of magnitude---this is
-the cost that data-driven multi-tracer priors aim to recover.}
+the cost that the joint multi-tracer Fisher recovers via
+data-driven multi-tracer priors on the nuisance sector.}
 \label{fig:fisher_info}
 \end{figure}
 
