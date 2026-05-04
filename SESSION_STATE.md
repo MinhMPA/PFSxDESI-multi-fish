@@ -5,7 +5,7 @@
 > existing `CLAUDE.md` (project-level instructions) and
 > `pfsfog/README.md` (architecture).
 
-Last updated: **2026-05-04** at commit `0aa170b` on branch `master`.
+Last updated: **2026-05-05** at commit `d3cb1ba` on branch `master`.
 
 ---
 
@@ -131,6 +131,73 @@ Apply them on every future edit unless the user explicitly redirects:
   `DESI:2016fyo`, `Bakx:2025pop`, `Rogers:2023ezo`, `Piras:2023aub`,
   `FernandezGarcia:2025rso`). Not introduced in this work-stream;
   flag if a reviewer complains.
+
+## 2026-05-05 narrative revision (subagent-driven)
+
+A multi-phase narrative revision swept the manuscript on 2026-05-05.
+The plan and audit reports live at
+`docs/superpowers/plans/2026-05-05-narrative-revision-multi-tracer-framing.md`
+and `docs/superpowers/plans/2026-05-05-audits/`.
+
+What changed:
+
+- **Framing.** The paper had carried residual language from an earlier
+  *prior-export* framing (multi-survey calibration in the overlap →
+  export to the non-overlap, parallel to SBPs). The revision retired
+  those residues across §1, §2, §3, §4, §6, and the appendices and
+  installed a *joint multi-tracer Fisher* framing with two channels:
+  (a) DESI single-tracer broad-prior baseline, (b) the internal-DESI
+  channel (LRG×ELG×QSO across 14,000 deg², 33/80/49% improvement over
+  (a)), and (c) the PFS×DESI overlap channel adding 8.9/23.6/9.4% on
+  top of (b). The chain is now visible in the abstract, results table,
+  and conclusions with consistent percentages.
+- **Canonical noun phrases** (used everywhere the body talks about the
+  mechanism): "data-driven multi-tracer priors" (umbrella),
+  "internal-DESI channel" / "PFS×DESI overlap channel" (the two
+  channels), "joint multi-tracer Fisher" (the estimator),
+  "cosmic-variance cancellation in cross-spectrum bias ratios"
+  (the technical mechanism — never "McDonald-Seljak mechanism").
+- **§3.5 scenarios** now describes all three of (a)/(b)/(c) in flowing
+  prose (was only (b)/(c) as an itemize).
+- **Tab. headline** gained an (a) baseline row so the chain is visible
+  in one place.
+- **§3.7** retitled from "Transferability assumption" to an
+  HOD-uniformity assumption framing, and extended from DESI-ELG alone
+  to all three DESI tracers.
+- **σ(Mν) diagnostic chain (§5.1)** untouched (GUARDED). It now
+  serves as the load-bearing response to the σ(Mν)=80% reviewer
+  question with three internal checks (per-z-bin localization,
+  ρ collapse, data dominance) plus a Zhao+ eBOSS empirical anchor.
+- **Citation rebalancing.** No new bib entries added; existing keys
+  re-paired. Two 5-cite stacks in §1 were split into per-work prose
+  attribution (DESI-DR1 reanalyses; multi-tracer Fisher forecasts).
+  Seljak:2008xr is now consistently paired with McDonald:2008sh
+  wherever cosmic-variance cancellation is invoked.
+- **Promotional language removed** throughout: "headline", "main
+  result", "novel", and floaty hedges. The label `\label{tab:headline}`
+  is preserved (cref renders as "Tab. 1"; word never reaches the
+  reader).
+
+σ values are unchanged from the pre-revision state: DESI-only joint
+σ(fσ8, Mν, Ωm) = 0.0145, 0.141, 0.0157; DESI+PFS joint
+σ = 0.0132, 0.108, 0.0143. Numbers were not touched in this revision —
+only the framing and noun phrases around them.
+
+PDF: 27 pages (one more than pre-revision because of the 5-cite stack
+splits in §1), `pdflatex` clean, `verify_bib` clean for entries used
+by the revised text, latex-paper-en `check_format` PASS.
+
+Commits applied this revision:
+- `1ecb92d` revise §1 Introduction
+- `9f2f27d` revise §2 Methodology (including `sec:prior_export` rename)
+- `868d9ab` revise §3 Setup
+- `7bec74a` revise §4 Results
+- (no §5 commit — Phase A audit returned PASS; Phase D D3 PASS)
+- `828939b` revise §6 Conclusions
+- `2641034` revise appendices
+- `109b373` polish: cold-read findings (D1+D2+D3+D4)
+- `d3cb1ba` refs: rebalance citations after narrative revision
+Plus this SESSION_STATE.md log commit.
 
 ## Quick orientation files
 
