@@ -781,10 +781,10 @@ enabled by the zero-stochastic cross-spectrum. The tidal bias
 \(b_{\G_2}\se^2\) tightens by \(3\text{--}6\times\) (from \(\sigma=5\)
 to \(\sigma\approx 0.8\text{--}1.8\)), driven by its distinct
 \(\mu\)-dependence in the one-loop power spectrum.
-As we show in \cref{sec:discussion}, the \(b_1\se\) calibration
-is the dominant driver of the cosmological improvement, because
-\(\Mnu\) is nearly perfectly degenerate with \(b_1\) in the
-single-tracer Fisher.
+As we show in \cref{sec:discussion}, the joint-Fisher tightening
+of \(b_1\se\) is the dominant driver of the cosmological
+improvement, because \(\Mnu\) is nearly perfectly degenerate with
+\(b_1\) in the single-tracer Fisher.
 The \(k\)-dependent stochastic terms \(a_0\) and \(a_2\) remain
 prior-dominated (96--99\% of broad)---they scale as \(k^2\) and are
 degenerate with the counterterms \(c_0\) and \(c_2\). The FoG
@@ -818,9 +818,9 @@ $k^2$/$k^4$ contributions (\cref{sec:discussion}).}
 \subsection{Full-area DESI constraints}
 \label{sec:results_full_area}
 
-We now combine the cross-survey overlap calibration with the
-DESI internal multi-tracer self-calibration over the full
-\(14{,}000\;\text{deg}^2\) footprint, in a single joint Fisher
+We now combine the PFS\(\times\)DESI overlap channel with the
+internal-DESI channel over the full
+\(14{,}000\;\text{deg}^2\) footprint in a single joint Fisher
 analysis. The volume splits into the
 \(1{,}200\;\text{deg}^2\) PFS--DESI overlap, where up to four
 tracers contribute, and the \(12{,}800\;\text{deg}^2\) DESI-only
@@ -829,9 +829,12 @@ shell, where the three DESI tracers contribute. Cosmology
 are unique per (tracer, redshift bin) and marginalized in one
 pass. \Cref{tab:dr2_samples} lists the DR2 sample properties.
 \Cref{fig:full_area} and \cref{tab:headline} present the
-cosmology forecasts. Adding the PFS overlap to the DESI-only joint
-baseline improves \(\sigma(f\se)\) by 9\%, \(\sigma(\Mnu)\) by 24\%,
-and \(\sigma(\Om)\) by 9\% at \(\kmax=0.20\iMpch\).
+cosmology forecasts. The internal-DESI channel tightens the broad
+single-tracer baseline (\(\sigma(f\se,\Mnu,\Om)=0.0216,\,0.688,\,0.0306\))
+by 33\%, 80\%, and 49\%; adding the PFS\(\times\)DESI overlap
+channel further improves \(\sigma(f\se)\) by 8.9\%,
+\(\sigma(\Mnu)\) by 23.6\%, and \(\sigma(\Om)\) by 9.4\% at
+\(\kmax=0.20\iMpch\).
 
 \begin{table}[t]
 \centering
@@ -857,16 +860,16 @@ broad priors. LRG2 overlaps one calibration bin $z=[0.6,0.8]$; the
 remaining samples average priors over 2--4 overlap bins.}
 \label{tab:dr2_samples}
 \end{table}
-The DESI-only joint Fisher already captures most of the
-multi-tracer calibration leverage available in the data: with
+The internal-DESI channel already captures most of the
+multi-tracer information available in the data: with
 LRG, ELG, and QSO sharing the full
 \(14{,}000\;\text{deg}^2\) footprint at \(0.8<z<1.6\), the
 DESI-internal cross-correlations break the
 \(b_1\sigma_8\) degeneracy via cosmic-variance cancellation in the
 bias ratios extracted from
 cross-spectra~\cite{Seljak:2008xr,McDonald:2008sh}. Adding PFS to the
-\(1{,}200\;\text{deg}^2\) overlap further tightens the
-calibration through a fourth, low-bias ELG sample with distinct
+\(1{,}200\;\text{deg}^2\) overlap channel further tightens the
+joint Fisher through a fourth, low-bias ELG sample with distinct
 selection and shot noise. The PFS-induced improvement is largest
 for \(\sigma(\Mnu)\) (\(+24\,\text{pp}\)), modest but meaningful
 for \(\sigma(f\se)\) (\(+9\,\text{pp}\)) and \(\sigma(\Om)\)
@@ -907,21 +910,30 @@ owing to a downward $\se$ shift that opens room for larger $\Mnu$.}
 \centering
 \begin{tabular}{lrrrrrr}
 \hline
-Scenario & $\sigma(f\se)$ & $\Delta\%$ & $\sigma(\Mnu)$ [eV] & $\Delta\%$ & $\sigma(\Om)$ & $\Delta\%$ \\
+Configuration & $\sigma(f\se)$ & $\Delta\%$ & $\sigma(\Mnu)$ [eV] & $\Delta\%$ & $\sigma(\Om)$ & $\Delta\%$ \\
 \hline
-DESI-only joint     & 0.0145 & ---     & 0.141  & ---     & 0.0157 & ---     \\
-DESI+PFS joint      & 0.0132 & $-8.9$  & 0.108  & $-23.6$ & 0.0143 & $-9.4$  \\
+DESI single-tracer broad & 0.0216 & ---     & 0.688  & ---     & 0.0306 & ---     \\
+DESI-only joint          & 0.0145 & $-33$   & 0.141  & $-80$   & 0.0157 & $-49$   \\
+DESI+PFS joint           & 0.0132 & $-8.9$  & 0.108  & $-23.6$ & 0.0143 & $-9.4$  \\
 \hline
 \end{tabular}
-\caption{Headline cosmology constraints from the joint multi-tracer
+\caption{Cosmology constraints from the joint multi-tracer
 Fisher analysis ($\kmax=0.20\iMpch$, combined over 8 $z$-bins
-covering $0.4<z<2.1$). \emph{DESI-only joint} is the multi-tracer
+covering $0.4<z<2.1$). \emph{DESI single-tracer broad} forecasts
+each DESI tracer independently with the conservative broad priors
+of \cref{tab:eft_params} and is the reference baseline against
+which the joint configurations are reported.
+\emph{DESI-only joint} is the multi-tracer
 Fisher across the full $14{,}000\;\text{deg}^2$ DESI footprint
-with LRG, ELG, and QSO; \emph{DESI+PFS joint} adds PFS-ELG in
+with LRG, ELG, and QSO, exposing the internal-DESI channel;
+\emph{DESI+PFS joint} adds PFS-ELG in
 the $1{,}200\;\text{deg}^2$ overlap at $0.6<z<1.6$ via the
 volume-partitioned Fisher
 $F = F_{\rm overlap}(1{,}200\,\text{deg}^2) + F_{\rm
-nonoverlap}(12{,}800\,\text{deg}^2)$. Cross-stochastic
+nonoverlap}(12{,}800\,\text{deg}^2)$, opening the
+PFS\(\times\)DESI overlap channel. The $\Delta\%$ column reports
+the improvement over the preceding row: DESI-only joint vs broad
+baseline, and DESI+PFS joint vs DESI-only joint. Cross-stochastic
 parameters \(\Pshot^{XY}\) and \(a_2^{XY}\) for every cross-pair
 \(XY\) are set to fiducial zero and marginalized over with broad
 priors~\cite{Ebina:2024ojt}; the conservative treatment costs
