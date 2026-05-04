@@ -107,34 +107,38 @@
 Marginalizing over roughly 12 effective-field-theory (EFT) nuisance
 parameters per tracer per redshift bin is the dominant systematic cost
 in full-shape galaxy power spectrum analyses.
-Simulation-based priors (SBP) can tighten these parameters but rely on
+Simulation-based priors (SBP) tighten these parameters but rely on
 N-body simulations and halo-occupation-distribution (HOD) models.
-We propose multi-survey priors: a data-driven alternative that
-calibrates EFT parameters from the joint multi-tracer analysis of
-overlapping spectroscopic surveys.
+We propose data-driven multi-tracer priors as a model-independent
+alternative: cross-spectra between bias-distinct galaxy populations
+calibrate the EFT bias and stochastic parameters from data alone,
+through two complementary channels---internal to a single survey
+(among its different tracers) and across overlapping surveys (between
+tracers from different instruments)---combined in a single
+volume-partitioned joint Fisher.
 %
-We perform a joint Fisher forecast across the
-\(14{,}000\;\text{deg}^2\) Dark Energy Spectroscopic Instrument (DESI)
-footprint, with the
-\(\sim\!1{,}200\;\text{deg}^2\) Prime Focus Spectrograph (PFS)
-overlap at \(0.6<z<1.6\) contributing up to 4 tracers (PFS-ELG,
-DESI-ELG, DESI-LRG, DESI-QSO).
-DESI's internal LRG\,$\times$\,ELG\,$\times$\,QSO multi-tracer
-self-calibration alone improves \(\sigma(f\se)\) by 33\%,
-\(\sigma(\Mnu)\) by 80\%, and \(\sigma(\Omega_m)\) by 49\% over
-a single-tracer broad-prior baseline at \(\kmax=0.20\iMpch\).
-Adding the PFS overlap on top further tightens these by
-9\%, 24\%, and 9\% respectively, after marginalizing over residual
+We forecast across the \(14{,}000\;\text{deg}^2\) Dark Energy
+Spectroscopic Instrument (DESI) footprint, with the
+\(\sim\!1{,}200\;\text{deg}^2\) Prime Focus Spectrograph (PFS) overlap
+at \(0.6<z<1.6\) contributing up to 4 tracers (PFS-ELG, DESI-ELG,
+DESI-LRG, DESI-QSO).
+The internal-DESI channel---LRG, ELG, and QSO across the full
+footprint---does the bulk of the work, improving \(\sigma(f\se)\) by
+33\%, \(\sigma(\Mnu)\) by 80\%, and \(\sigma(\Omega_m)\) by 49\% over
+a single-tracer broad-prior baseline at \(\kmax=0.20\iMpch\). Adding
+the PFS\(\,\times\,\)DESI overlap channel on top further tightens these
+by 9\%, 24\%, and 9\% respectively, after marginalizing over residual
 cross-population stochasticity~\cite{Ebina:2024ojt}.
 A parameter importance decomposition reveals that the dominant driver
-is the calibration of the \(b_1\se\) prior---constrained from a flat
-prior to \(\sigma\approx 0.13\) by the joint multi-tracer Fisher---which
-breaks the \(b_1\sigma_8\)--\(f\se\) degeneracy intrinsic to
-single-tracer analyses.
-Multi-survey prior calibration parallels the SBP approach, which tightens
-\(b_1\) through HOD model assumptions; multi-survey priors provide a
-model-independent consistency check on these assumptions and
-generalize to arbitrary combinations of overlapping spectroscopic
+in both channels is the calibration of the \(b_1\se\) prior---%
+constrained from a flat prior to \(\sigma\approx 0.13\) by the joint
+multi-tracer Fisher---which breaks the
+\(b_1\sigma_8\)--\(f\se\) degeneracy intrinsic to single-tracer
+analyses.
+Data-driven multi-tracer priors parallel the SBP approach, which
+tightens \(b_1\) through HOD model assumptions; the two are
+model-independent consistency checks on each other, and the framework
+generalizes to arbitrary combinations of overlapping spectroscopic
 surveys. Code is available at this repository
 \github{https://github.com/MinhMPA/PFSxDESI-multi-fish}.
 }
@@ -1128,9 +1132,9 @@ costs negligible information.
 \subsection{Complementarity with simulation-based priors and
 implications for \(\Mnu\)}
 
-As established in \cref{sec:sbp_comparison}, multi-survey priors
-and SBPs constrain the same parameters through independent
-mechanisms. This independence makes them a direct cross-check on
+As established in \cref{sec:sbp_comparison}, data-driven
+multi-tracer priors and SBPs constrain the same parameters through
+independent mechanisms. This independence makes them a direct cross-check on
 the \(S_8\) tension. Chudaykin et
 al.~\cite{Chudaykin:2026nls} report that field-level SBPs shift
 \(\se\) downward by \(\sim\!2\sigma\) relative to conservative
@@ -1503,7 +1507,7 @@ Orange: marginalized over nuisance parameters with broad priors.
 The gap quantifies the information lost to nuisance
 marginalization at each scale.
 For \(\Mnu\), the loss exceeds 3 orders of magnitude---this is
-the cost that multi-survey priors aim to recover.}
+the cost that data-driven multi-tracer priors aim to recover.}
 \label{fig:fisher_info}
 \end{figure}
 
