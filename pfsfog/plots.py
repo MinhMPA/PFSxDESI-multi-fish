@@ -257,7 +257,7 @@ def fig4_calibration_efficiency(scenario_results, z_bins, out_dir: Path):
         ax.plot(z_mids, effs, marker=markers[cp], label=labels[cp], lw=1.5)
 
     ax.set_xlabel(r"$z_\mathrm{eff}$")
-    ax.set_ylabel("Calibration efficiency")
+    ax.set_ylabel("Information efficiency")
     ax.set_ylim(-0.05, 1.05)
     ax.axhline(1.0, ls=":", color="gray", lw=0.5)
     ax.axhline(0.0, ls=":", color="gray", lw=0.5)

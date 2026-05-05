@@ -35,7 +35,7 @@ These scripts implement the original two-stage architecture (Step 1 overlap cali
 | `fig_fisher_info_density.py` | `fisher_info_density.{pdf,png}` | Fig. A3 |
 | `fig_cov_validation.py` | `cov_gl_vs_wigner3j.png` | Fig. A4 |
 
-For Figs. 1, 2, 3 (per-z-bin nuisance, headline cosmology bars, calibration efficiency), use the notebook `notebooks/figures.ipynb`. Each figure has a separate compute and plot cell, so plot tweaks don't trigger expensive recomputation.
+For Figs. 1, 2, 3 (per-$z$-bin nuisance, cosmology constraints, information efficiency), use the notebook `notebooks/figures.ipynb`. Each figure has a separate compute and plot cell, so plot tweaks don't trigger expensive recomputation.
 
 ## Obsolete scripts
 
