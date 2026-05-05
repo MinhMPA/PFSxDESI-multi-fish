@@ -265,20 +265,13 @@ absorb UV sensitivity of the loop integrals; and 3 stochastic
 amplitudes (\(\Pshot\), \(a_0\), \(a_2\)) that parameterize departures
 from Poisson shot noise.
 
-In a real Markov chain Monte Carlo (MCMC) analysis, the counterterms and stochastic amplitudes
-enter the model linearly or quadratically and are marginalized
-analytically~\cite{Chudaykin:2020aoj}. Their Gaussian priors therefore
-propagate directly into the marginalized posterior on cosmological
-parameters; broader nuisance priors therefore mean weaker cosmological
-constraints, regardless of the sampler used.
-
-The cost is substantial. As noted in the Introduction,
-tightening nuisance priors from conservative to HOD-informed
-improves \(\sigma(\se)\) by 23--50\% depending on whether
-power-spectrum-level or field-level SBPs are
-used~\cite{DESI:2025wzd,Chudaykin:2026nls}. The nuisance prior
-is the dominant bottleneck. The question is how to tighten it
-without relying on simulation assumptions.
+The cost of marginalizing over these priors is substantial: their
+widths propagate directly into the marginalized cosmology posterior,
+and tightening them from conservative to HOD-informed improves
+\(\sigma(\se)\) by 23--50\% depending on whether power-spectrum-level
+or field-level SBPs are used~\cite{DESI:2025wzd,Chudaykin:2026nls}.
+The nuisance prior is the dominant bottleneck. The question is how
+to tighten it without relying on simulation assumptions.
 
 
 \subsection{Cross-power constraints on nuisance parameters}
