@@ -203,7 +203,7 @@ populations rather than HOD mocks, provides a
 model-independent cross-check on the SBP-driven \(\se\) shift.
 
 Multi-tracer Fisher forecasts have established parameter-degeneracy breaking beyond the single-tracer reach. Alarcon, Eriksen \& Gaztañaga~\cite{Alarcon:2016bkr} forecasted multi-tracer cosmological constraints from overlapping spectroscopic surveys at the linear-bias level. Mergulhão et al.~\cite{Mergulhao:2021kip,Mergulhao:2023zso} extended the multi-tracer formalism to the EFTofLSS at one loop, first in real space and then in redshift space with realistic tracers. Rubira \& Conteddu~\cite{Rubira:2025scu} pushed beyond linear theory and demonstrated the joint multi-tracer constraint of bias and stochastic parameters, and Qin et al.~\cite{Qin:2025nkk} applied a joint J-PAS\(\times\)PFS Fisher to dark energy and neutrino-mass forecasts.
-Zhao et al.~\cite{Zhao:2024eboss} realized this with eBOSS DR16, jointly analyzing LRGs and ELGs and improving \(\sigma(\se)\) by 18--27\%, with the spread set by the treatment of LRG--ELG cross-stochasticity. The cross-stochasticity treatment is the leading modeling choice: even for disjoint tracer catalogs with no shared-object shot noise, residual cross-stochasticity from halo-bias and occupation correlations is a free function~\cite{Ebina:2024ojt}.
+Zhao et al.~\cite{Zhao:2024eboss} realized this with eBOSS DR16, jointly analyzing LRGs and ELGs and improving \(\sigma(\se)\) by 18--27\%, with the spread set by the treatment of LRG--ELG cross-stochasticity. The cross-stochasticity treatment is the leading modeling choice: even for disjoint tracer catalogs with no shared-object shot noise, residual cross-stochasticity from halo-bias and halo-occupation correlations is a free function~\cite{Ebina:2024ojt}.
 
 In this paper we forecast a joint multi-tracer Fisher that combines
 two channels of data-driven multi-tracer priors. The internal-DESI
@@ -218,7 +218,7 @@ fourth tracer over \(\sim\!1{,}200\;\text{deg}^2\)~\cite{Takada:2014pfs}---the P
 Cross-spectrum stochasticity has two physically distinct
 contributions: Poissonian shared-object shot noise---zero by
 construction for disjoint galaxy populations---and the
-non-Poissonian halo-exclusion and occupation stochasticity, which
+non-Poissonian halo-bias and halo-occupation stochasticity, which
 is non-zero in general and is treated as a marginalized free
 parameter following Ebina \& White~\cite{Ebina:2024ojt}.
 We treat the two channels in a single volume-partitioned Fisher
@@ -322,7 +322,7 @@ exploited by the multi-tracer combination, and the
 cross-stochastic Lagrangian follows the parameterization of Ebina \&
 White~\cite{Ebina:2024ojt}. The constant cross-shot \(\Pshot^{XY}\)
 captures any shared-catalog contamination plus residual
-correlations from halo bias / occupation~\citep[e.g.,][]{Mergulhao:2021kip,Mergulhao:2023zso};
+correlations from halo-bias and halo-occupation~\citep[e.g.,][]{Mergulhao:2021kip,Mergulhao:2023zso};
 the \((k\mu)^2\) term \(a_2^{XY}\) absorbs scale- and angle-dependent
 cross-stochasticity that survives the cancellation between independent
 populations. For shared-catalog cases such as
@@ -334,7 +334,7 @@ with \(f_{\rm shared}\equiv n_{\rm shared}/\nbar_{\PFS}\).
 For different populations---PFS-ELG\(\,\times\,\)%
 DESI-LRG, PFS-ELG\(\,\times\,\)DESI-QSO, etc.---there is no shared
 shot-noise contribution, but residual cross-stochasticity from
-halo-bias and occupation correlations is non-zero in general.
+halo-bias and halo-occupation correlations is non-zero in general.
 
 Following the conservative prescription of Ebina \&
 White~\cite{Ebina:2024ojt}, we set the fiducial values of every
