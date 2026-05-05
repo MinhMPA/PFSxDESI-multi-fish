@@ -722,7 +722,7 @@ priors---and we discuss the comparison in \cref{sec:discussion}.
 
 
 \subsection{HOD-uniformity assumption}
-\label{sec:transferability}
+\label{sec:hod_uniformity}
 
 The volume-partitioned Fisher shares per-tracer, per-$z$-bin EFT
 parameters between the overlap and non-overlap regions of each DESI
@@ -1211,7 +1211,8 @@ mock suites---Uchuu-LRG~\cite{FernandezGarcia:2025rso},
 Uchuu-ELG~\cite{Vaisakh:inprep}, and Mucho
 Uchuu~\cite{Ishiyama:inprep} on the DESI side, and PFS galaxy
 mocks~\cite{PFS-CO-mock:inprep} on the PFS side---will anchor
-the EFT fiducials and test the transferability assumption.
+the EFT fiducials and test the HOD-uniformity assumption
+(\cref{sec:hod_uniformity}).
 Finally, the bispectrum, survey window functions, super-sample
 covariance, and non-Gaussian covariance are omitted but would
 each modify the information
@@ -1238,8 +1239,8 @@ channel. We summarize:
   the PFS\(\times\)DESI overlap channel in the
   \(1{,}200\;\text{deg}^2\) intersection, with cosmology shared
   globally and nuisance parameters unique per tracer, per
-  redshift bin. The single-Fisher construction avoids the auto-spectra
-  double-counting that a two-stage prior-export pipeline incurs.
+  redshift bin. The single-Fisher construction avoids any
+  auto-spectra double-counting between the two regions.
 
 \item The bulk of the multi-tracer information comes from
   bias-distinct tracers in the same volume: DESI-LRG, DESI-ELG, and
