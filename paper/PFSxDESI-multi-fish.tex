@@ -721,21 +721,24 @@ distinct---simulation-based rather than data-driven multi-tracer
 priors---and we discuss the comparison in \cref{sec:discussion}.
 
 
-\subsection{HOD-uniformity assumption on shared per-tracer nuisance parameters}
+\subsection{HOD-uniformity assumption}
 \label{sec:transferability}
 
-The volume-partitioned Fisher shares per-(tracer, redshift bin)
-nuisance parameters between the overlap and non-overlap regions of
-each DESI tracer. This is well-defined only if DESI-LRG, DESI-ELG,
-and DESI-QSO each have the same HOD, hence the same EFT
-parameters, in the overlap and non-overlap regions of the footprint.
-Because the DESI target selection is spatially uniform by construction,
-this holds to the extent that imaging systematics do not induce
-spatial variation in the tracer populations; the DESI
-imaging-systematics pipeline is designed to control
-this~\cite{DESI:2025zgx}. We state HOD uniformity as an explicit
-assumption and note that a violation would manifest as a detectable
-mismatch when the per-region Fishers are evaluated separately.
+The volume-partitioned Fisher shares per-(tracer, redshift bin) EFT
+parameters between the overlap and non-overlap regions of each DESI
+tracer. This is consistent only if each tracer has the same HOD ---
+and therefore the same EFT parameters --- in both regions. DESI
+targets are drawn from a heterogeneous combination of input imaging
+surveys with distinct photometric systems, and the PFS\,--\,DESI
+overlap covers only part of the full footprint, so the overlap and
+non-overlap regions of each tracer need not sample identical imaging
+subsets; the leading selection-induced variations are removed at the
+catalog level by imaging-systematic weights~\cite{DESI:2025zgx}. We
+treat cross-region HOD uniformity as a working assumption, with the
+residual variation expected to be small relative to the broad EFT
+priors. A violation would manifest as a detectable mismatch when the
+per-region Fishers are evaluated separately, providing an empirical
+route to test the assumption when DESI data become available.
 
 
 %-------------------------------------------------------------------
