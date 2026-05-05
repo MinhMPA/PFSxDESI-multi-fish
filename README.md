@@ -1,19 +1,19 @@
-# Joint multi-tracer Fisher forecast: PFS × DESI
+# Multi-tracers, multi-surveys: a joint Fisher analysis of DESI+PFS
 
 Joint multi-tracer Fisher analysis for full-shape galaxy power spectrum
 forecasts. Across the 14,000 deg² DESI footprint plus the 1,200 deg²
 PFS overlap at 0.6 < z < 1.6, the framework pools Fisher information
 from all auto- and cross-spectra into a single joint Fisher with
-shared cosmology and per-(tracer, z-bin) nuisance parameters,
+shared cosmology and per-tracer, per-redshift-bin nuisance parameters,
 marginalized in one pass.
 
-**Paper**: [Nhat-Minh Nguyen (2026), arXiv:2604.25171, *"Multi-tracers, multi-surveys: a joint Fisher analysis of PFS×DESI"*](https://arxiv.org/abs/2604.25171).
+**Paper**: [Nhat-Minh Nguyen (2026), arXiv:2604.25171, *"Multi-tracers, multi-surveys: a joint Fisher analysis of DESI+PFS"*](https://arxiv.org/abs/2604.25171).
 
 ## Key results
 
-- Compared to the **single-tracer analysis with broad priors** (the legacy DESI-DR1 baseline), the DESI+PFS joint Fisher tightens σ(fσ₈) by ~42%, σ(Mν) by ~85%, σ(Ωm) by ~55% at kmax = 0.20 h/Mpc.
-- The bulk of this improvement comes from **DESI's own internal multi-tracer self-calibration** (LRG × ELG × QSO across the full footprint). Adding the PFS overlap on top contributes a unique +8% on σ(fσ₈), +22% on σ(Mν), and +9% on σ(Ωm).
-- The dominant mechanism is b₁σ₈ calibration via the McDonald–Seljak cosmic-variance-free bias-ratio extraction, which breaks the b₁σ₈–Mν degeneracy intrinsic to single-tracer redshift-space analyses.
+- Compared to the **single-tracer analysis with broad priors** (the legacy DESI-DR1 baseline), the DESI+PFS joint Fisher tightens σ(fσ₈) by ~39%, σ(Mν) by ~84%, σ(Ωm) by ~53% at kmax = 0.20 h/Mpc.
+- The bulk of this improvement comes from **DESI's own internal multi-tracer self-calibration** (LRG × ELG × QSO across the full footprint). Adding the PFS overlap on top contributes a unique 8.9% on σ(fσ₈), 23.6% on σ(Mν), and 9.4% on σ(Ωm).
+- The dominant mechanism is b₁σ₈ tightening via cosmic-variance cancellation in cross-spectrum bias ratios, which breaks the b₁σ₈–fσ₈ degeneracy intrinsic to single-tracer redshift-space analyses; the σ(Mν) gain follows downstream because Mν is highly correlated with b₁σ₈ in the single-tracer Fisher.
 - The joint Fisher is not a replacement for simulation-based priors but a model-independent companion — particularly relevant as an independent cross-check on the S8 tension.
 
 ## Structure
@@ -23,7 +23,7 @@ pfsfog/              Fisher forecast pipeline (Python/JAX)
 survey_specs/        PFS and DESI n(z) tables
 configs/             YAML configuration files
 scripts/             Analysis and figure-generation scripts (legacy in scripts/_obsolete/)
-tests/               130 unit tests + 2 slow-marked parallel-equivalence tests
+tests/               137 unit tests + 2 slow-marked parallel-equivalence tests
 notebooks/           Jupyter notebook for interactive figure reproduction
 paper/               LaTeX draft, bibliography, and figures
 ```
@@ -78,7 +78,7 @@ pip install -e .     # installs pfsfog + remaining deps (numpy, scipy, matplotli
 ### 5. Verify
 
 ```bash
-pytest tests/ -q                          # 130 tests, ~12 min (sequential default)
+pytest tests/ -q                          # 137 tests, ~12 min (sequential default)
 pytest tests/ -q -m slow -v               # 2 parallel-vs-sequential equivalence tests, ~12 min
 ```
 
@@ -119,12 +119,16 @@ All settings are in `configs/default.yaml`:
 kmin: 0.01           # h/Mpc
 kmax: 0.20           # h/Mpc (full-area analysis)
 dk: 0.005            # bin width
-z_bins: [[0.8,1.0], [1.0,1.2], [1.2,1.4], [1.4,1.6]]
+z_bins: [[0.8,1.0], [1.0,1.2], [1.2,1.4], [1.4,1.6]]   # legacy overlap pipeline only
 r_sigma_v: 0.75      # sigma_v,PFS / sigma_v,DESI
 overlap_area_deg2: 1200.0
 desi_area_deg2: 14000.0
 cosmo_backend: cosmopower   # or "clax" for Boltzmann solver
 ```
+
+The 8-bin schedule covering 0.4 ≤ z ≤ 2.1 used by the joint-Fisher
+driver is defined in `scripts/run_joint_fisher.py::ZBINS`, not in the
+YAML.
 
 Override from Python:
 
@@ -161,9 +165,13 @@ Each run creates a timestamped directory:
 ```
 results/YYYYMMDD_HHMMSS/
 ├── summary.csv               # sigma per scenario x parameter
-├── priors/                    # calibrated prior JSON files
+├── priors/                    # tightened nuisance-prior JSON files (legacy two-stage CLI only)
 └── figures/                   # publication PDFs + PNGs
 ```
+
+`run_joint_fisher.py` writes `summary.csv` and figure outputs only;
+the `priors/` subdirectory is produced by the legacy two-stage
+pipeline (`pfsfog.cli`/`cli_multitrace`).
 
 ## License
 
