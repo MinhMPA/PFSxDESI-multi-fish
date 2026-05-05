@@ -225,7 +225,7 @@ We treat the two channels in a single volume-partitioned Fisher
 \(F = F_{\rm overlap}(1{,}200\,\text{deg}^2) + F_{\rm
 nonoverlap}(12{,}800\,\text{deg}^2)\) covering \(z\in[0.4,2.1]\) with
 shared cosmological parameters \((f\se,\Mnu,\Om)\) and
-per-tracer, per-redshift nuisance parameters, marginalized in one
+per-tracer, per-$z$-bin nuisance parameters, marginalized in one
 pass.
 
 The internal-DESI channel covers \(z\in[0.4,2.1]\) with three tracers
@@ -242,7 +242,7 @@ This paper is organized as follows. \Cref{sec:method} describes the
 joint multi-tracer, multi-survey Fisher framework.
 \Cref{sec:fisher} details the survey specifications and EFT
 parameterization. \Cref{sec:results} presents the cosmology
-constraints, the per-redshift diagnostic, and sensitivity tests. We
+constraints, the per-$z$-bin diagnostic, and sensitivity tests. We
 discuss implications in \cref{sec:discussion} and conclude in
 \cref{sec:conclusions}.
 
@@ -396,7 +396,7 @@ constraints is small at our fiducial \(\rsv\) (sub-percent on
 \(\sigma(f\se,\Mnu,\Om)\); see \cref{sec:results_sensitivity}),
 because the internal-DESI channel already saturates the multi-tracer
 cosmology information at \(\kmax^{\DESI}=0.20\iMpch\). The gain from
-the asymmetric scale cut therefore accrues mostly to per-redshift
+the asymmetric scale cut therefore accrues mostly to per-$z$-bin
 PFS-ELG nuisance constraints (notably the FoG counterterm
 \(\ctilde\) at \(z>1.2\)).
 
@@ -424,9 +424,9 @@ forecasts; SSC and other higher-order covariance
 terms~\cite{Wadekar:2019rdu,Sugiyama:2019ike} are sub-leading at
 our scale cuts and are omitted here along with the bispectrum and
 survey window contributions (\cref{sec:discussion}).
-We combine the per-redshift Fishers across the 8 redshift bins
+We combine the per-$z$-bin Fishers across the 8 redshift bins
 covering \(z\in[0.4,2.1]\) with shared cosmological parameters
-\((f\se,\,\Mnu,\,\Om)\) and per-tracer, per-redshift nuisance
+\((f\se,\,\Mnu,\,\Om)\) and per-tracer, per-$z$-bin nuisance
 parameters. The final cosmological constraints come from
 inverting the joint Fisher and reading off the marginalized
 diagonals.
@@ -710,7 +710,7 @@ under the Gaussian-covariance approximation---which neglects
 super-sample covariance---so their Fishers add; see
 \cref{sec:joint_fisher} for discussion of the SSC approximation.
 Per-redshift Fishers are combined across all bins with shared
-cosmological parameters \((f\se,\,\Mnu,\,\Om)\) and per-tracer, per-redshift nuisance parameters, marginalized in one pass.
+cosmological parameters \((f\se,\,\Mnu,\,\Om)\) and per-tracer, per-$z$-bin nuisance parameters, marginalized in one pass.
 
 \Cref{fig:full_area} overlays published improvement ratios from the
 PS-level SBP of Zhang et al.~\cite{DESI:2025wzd} (23\% on
@@ -724,7 +724,7 @@ priors---and we discuss the comparison in \cref{sec:discussion}.
 \subsection{HOD-uniformity assumption}
 \label{sec:transferability}
 
-The volume-partitioned Fisher shares per-tracer, per-redshift EFT
+The volume-partitioned Fisher shares per-tracer, per-$z$-bin EFT
 parameters between the overlap and non-overlap regions of each DESI
 tracer. This is consistent only if each tracer has the same HOD, hence the same EFT parameters, in both regions. DESI
 targets are drawn from a heterogeneous combination of input imaging
@@ -752,7 +752,7 @@ on the overlap and non-overlap subsamples of each DESI tracer---providing an emp
 
 To make the multi-tracer information explicit, we project the
 joint Fisher per DESI tracer per redshift bin and compare
-the resulting per-z-bin nuisance \(\sigma\) values with the
+the resulting per-$z$-bin nuisance \(\sigma\) values with the
 conservative broad
 priors~\cite{Chudaykin:2025lww,DESI:2024jxi}.
 \Cref{fig:calibrated_vs_broad} shows the comparison for the six
@@ -940,7 +940,7 @@ included in the values above.}
 \subsection{Calibration efficiency}
 \label{sec:results_efficiency}
 
-\Cref{fig:efficiency} shows the per-redshift-bin diagnostic from
+\Cref{fig:efficiency} shows the per-$z$-bin diagnostic from
 the legacy two-stage pipeline: how much of the gap between broad
 priors and perfect nuisance knowledge a single-tracer DESI-ELG
 analysis with PFS-calibrated priors recovers, in each
@@ -963,7 +963,7 @@ to amplitude nuisance parameters.
 \begin{figure}[t]
 \centering
 \includegraphics[width=0.65\textwidth]{\figurespath/calibration_efficiency.png}
-\caption{Calibration efficiency per $z$-bin from a per-redshift
+\caption{Calibration efficiency per $z$-bin from a per-$z$-bin
 diagnostic: $(\sigma_{\rm broad}-\sigma_{\rm cal})/(\sigma_{\rm
 broad}-\sigma_{\rm fixed})$, where $\sigma_{\rm broad}$ uses
 broad nuisance priors, $\sigma_{\rm cal}$ uses
@@ -1083,7 +1083,7 @@ residual \(b_1\se\) posterior width, and that posterior contracts
 most where PFS adds new cross-spectra (\(z<1.6\)).
 
 The diagnostic chain is direct in our Fisher results.
-\emph{(i) Localization.} Restricting the per-z-bin Fisher to a
+\emph{(i) Localization.} Restricting the per-$z$-bin Fisher to a
 single bin reveals that
 \(\sigma(\Mnu)_{\rm DESI\,\,joint} =
   \sigma(\Mnu)_{\rm broad\,\,single\text{-}tracer}\)
