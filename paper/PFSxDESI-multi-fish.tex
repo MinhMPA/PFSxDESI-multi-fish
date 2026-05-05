@@ -120,7 +120,7 @@ in a single volume-partitioned joint Fisher.
 We forecast across the \(14{,}000\;\text{deg}^2\) Dark Energy
 Spectroscopic Instrument (DESI) footprint, with the
 \(\sim\!1{,}200\;\text{deg}^2\) Prime Focus Spectrograph (PFS) overlap
-at \(0.6<z<1.6\) contributing up to 4 tracers (PFS-ELG, DESI-ELG,
+at \(z\in[0.6,1.6]\) contributing up to 4 tracers (PFS-ELG, DESI-ELG,
 DESI-LRG, DESI-QSO).
 The internal-DESI channel (combining LRG, ELG, and QSO across the full
 footprint) provides the bulk of the gain, improving \(\sigma(f\se)\) by
@@ -223,14 +223,14 @@ is non-zero in general and is treated as a marginalized free
 parameter following Ebina \& White~\cite{Ebina:2024ojt}.
 We treat the two channels in a single volume-partitioned Fisher
 \(F = F_{\rm overlap}(1{,}200\,\text{deg}^2) + F_{\rm
-nonoverlap}(12{,}800\,\text{deg}^2)\) covering \(0.4<z<2.1\) with
+nonoverlap}(12{,}800\,\text{deg}^2)\) covering \(z\in[0.4,2.1]\) with
 shared cosmological parameters \((f\se,\Mnu,\Om)\) and
 per-tracer, per-redshift nuisance parameters, marginalized in one
 pass.
 
-The internal-DESI channel covers \(0.4<z<2.1\) with three tracers
+The internal-DESI channel covers \(z\in[0.4,2.1]\) with three tracers
 (LRG, ELG, QSO) and the full DESI footprint. The PFS\,$\times$\,DESI
-overlap channel covers \(0.6<z<1.6\) with up to four tracers (PFS-ELG
+overlap channel covers \(z\in[0.6,1.6]\) with up to four tracers (PFS-ELG
 plus DESI-LRG, DESI-ELG, DESI-QSO) and ten auto- and cross-spectra per
 redshift bin. Weaker finger-of-god (FoG) contamination in PFS samples
 motivates an asymmetric scale cut,
@@ -425,7 +425,7 @@ terms~\cite{Wadekar:2019rdu,Sugiyama:2019ike} are sub-leading at
 our scale cuts and are omitted here along with the bispectrum and
 survey window contributions (\cref{sec:discussion}).
 We combine the per-redshift Fishers across the 8 redshift bins
-covering \(0.4<z<2.1\) with shared cosmological parameters
+covering \(z\in[0.4,2.1]\) with shared cosmological parameters
 \((f\se,\,\Mnu,\,\Om)\) and per-tracer, per-redshift nuisance
 parameters. The final cosmological constraints come from
 inverting the joint Fisher and reading off the marginalized
@@ -483,39 +483,46 @@ the shared \(\sim\!1{,}200\;\text{deg}^2\) footprint.
 \paragraph{DESI.}
 The Dark Energy Spectroscopic Instrument~\cite{DESI:2016fyo} covers
 \(14{,}000\;\text{deg}^2\) with 3 galaxy samples relevant to this
-analysis. The LRG sample covers \(0.4<z<1.1\) with
+analysis. The LRG sample covers \(z\in[0.4,1.1]\) with
 \(\nbar\sim 5\times 10^{-4}\Mpchcubed\) and \(b_1(z)=1.7/D(z)\)---the
 highest bias of the 3, providing strong contrast with PFS. The QSO
 sample extends to \(z\sim 2.1\) but has low density
 (\(\nbar\sim 3\times 10^{-5}\Mpchcubed\)) and \(b_1(z)=1.2/D(z)\).
-The ELG sample~\cite{DESI:2025zgx} spans \(0.8<z<1.6\) with peak
+The ELG sample~\cite{DESI:2025zgx} spans \(z\in[0.8,1.6]\) with peak
 \(\nbar\sim 10^{-3}\Mpchcubed\) and \(b_1(z)=0.84/D(z)\)---the
 lowest bias of the 3 and the same-population partner of PFS-ELG.
 
 \paragraph{PFS.}
 The Subaru Prime Focus Spectrograph~\cite{Takada:2014pfs} will survey
 \(\sim\!1{,}200\;\text{deg}^2\) with an ELG sample spanning
-\(0.6<z<2.4\), reaching \(\sim\!1\;\text{mag}\) deeper in [OII] flux
+\(z\in[0.6,2.4]\), reaching \(\sim\!1\;\text{mag}\) deeper in [OII] flux
 than DESI and achieving peak \(\nbar\sim 9\times 10^{-4}\Mpchcubed\) at
 \(z\sim 1\). Here, we assume the linear bias to be \(b_1(z)=0.9+0.4z\)~\cite{Orsi:2010obl}.
 
 \paragraph{Overlap geometry.}
 The joint redshift coverage determines which tracers overlap in
-each bin. PFS-ELG (\(0.6<z<2.4\)) overlaps with DESI-LRG
-(\(0.4<z<1.1\)) at \(0.6<z<1.1\), with DESI-ELG
-(\(0.8<z<1.6\)) at \(0.8<z<1.6\), and with DESI-QSO
-(\(0.8<z<2.1\)) at \(0.8<z<1.6\) (we truncate at
-\(z=1.6\) where DESI-ELG ends).
-We rebin the overlap into 5 matched redshift bins:
-\(z=[0.6,\,0.8]\), \([0.8,\,1.0]\), \([1.0,\,1.2]\),
-\([1.2,\,1.4]\), and \([1.4,\,1.6]\).
+each bin. PFS-ELG (\(z\in[0.6,2.4]\)) overlaps with DESI-LRG
+(\([0.4,1.1]\)) at \(z\in[0.6,1.1]\), with DESI-ELG
+(\([0.8,1.6]\)) at \(z\in[0.8,1.6]\), and with DESI-QSO
+(\([0.8,2.1]\)) at \(z\in[0.8,1.6]\). We truncate the
+analysis at \(z=1.6\) where the DESI-ELG sample ends: above
+this redshift only PFS-ELG\,\(\times\)\,DESI-QSO would survive
+as a cross-pair, and the low DESI-QSO number density renders
+the additional information marginal (we verify this in
+\cref{sec:results_sensitivity}).
+We rebin the overlap into 5 matched redshift bins,
+\([0.6,0.8]\), \([0.8,1.0]\), \([1.0,1.2]\), \([1.2,1.4]\),
+and \([1.4,1.6]\). Throughout, \([z_{\min},z_{\max}]\) denotes
+the bin spanning the stated redshift range; the open/closed
+distinction at adjacent edges is immaterial here since
+number-density and bias integrals are continuous in \(z\).
 Number densities are volume-weighted averages from
 fine-binned \(n(z)\) tables (\(\Delta z=0.01\)); bias parameters are evaluated
 at the volume-weighted effective redshift.
-\Cref{tab:surveys} summarizes the survey properties per bin. At
-\(z=[0.6,\,0.8]\), only PFS-ELG and DESI-LRG overlap
+\Cref{tab:surveys} summarizes the survey properties per bin. In
+\([0.6,0.8]\), only PFS-ELG and DESI-LRG overlap
 (\(N_t=2\), \(N_{\rm spec}=3\)).
-At \(z=[0.8,\,1.0]\) and \([1.0,\,1.2]\), all 4 tracers overlap (\(N_t=4\), \(N_{\rm spec}=10\)); the LRG sample drops
+In \([0.8,1.0]\) and \([1.0,1.2]\), all 4 tracers overlap (\(N_t=4\), \(N_{\rm spec}=10\)); the LRG sample drops
 out above \(z=1.1\), leaving 3 tracers in the remaining bins.
 
 \begin{table}[t]
@@ -539,7 +546,7 @@ Number densities $\nbar$ in units of
 $10^{-4}\,h^3\,\text{Mpc}^{-3}$ are volume-weighted averages from
 fine-binned $n(z)$ tables. $N_t$ is the number of overlapping tracers;
 $N_{\rm spec} = N_t(N_t{+}1)/2$ is the number of auto- and
-cross-spectra. At $z=[0.6,\,0.8]$, only PFS-ELG and DESI-LRG
+cross-spectra. In $[0.6,0.8]$, only PFS-ELG and DESI-LRG
 overlap; the LRG sample drops out above $z=1.1$.
 Volumes and distances assume the Planck 2018
 cosmology~\cite{Planck:2018params}.}
@@ -841,14 +848,14 @@ Number densities $\nbar$ are volume-weighted averages from fine-binned
 $n(z)$ tables; $b_1$ values are evaluated at the effective redshift; $V$ values assume the full $14{,}000\;\text{deg}^2$ footprint and
 Planck 2018 cosmology.
 LRG1 lies entirely below the PFS redshift range ($z<0.6$) and uses
-broad priors. LRG2 overlaps one calibration bin $z=[0.6,0.8]$; the
+broad priors. LRG2 overlaps one calibration bin $[0.6,0.8]$; the
 remaining samples average priors over 2--4 overlap bins.}
 \label{tab:dr2_samples}
 \end{table}
 The internal-DESI channel already captures most of the
 multi-tracer information available in the data: with
 LRG, ELG, and QSO sharing the full
-\(14{,}000\;\text{deg}^2\) footprint at \(0.8<z<1.6\), the
+\(14{,}000\;\text{deg}^2\) footprint at \(z\in[0.8,1.6]\), the
 DESI-internal cross-correlations break the
 \(b_1\sigma_8\) degeneracy via cosmic-variance cancellation in the
 bias ratios extracted from
@@ -869,14 +876,14 @@ DESI~DR1~\cite{DESI:2025wzd} achieved \(\sim\!23\%\) on
 ($\kmax=0.20\iMpch$). Marginalized $1\sigma$ uncertainties on
 $f\se$ (left panel), $\Mnu$ (middle panel), and $\Om$ (right
 panel) from the $14{,}000\;\text{deg}^2$ DESI footprint,
-combining all 8 redshift bins covering $0.4<z<2.1$, for three
+combining all 8 redshift bins covering $z\in[0.4,2.1]$, for three
 scenarios. Red: DESI single-tracer analysis with broad
 nuisance priors (legacy reference, no multi-tracer
 information). Blue: DESI-only joint Fisher with internal
 LRG\,$\times$\,ELG\,$\times$\,QSO multi-tracer
 cross-correlations across the full footprint. Green: DESI+PFS
 joint Fisher, adding the PFS-ELG sample in the
-$1{,}200\;\text{deg}^2$ overlap at $0.6<z<1.6$, providing
+$1{,}200\;\text{deg}^2$ overlap at $z\in[0.6,1.6]$, providing
 PFS$\times$DESI cross-spectra. The DESI-internal multi-tracer
 self-calibration captures most of the gain over broad
 single-tracer; adding PFS improves the constraints by 9\% on
@@ -904,7 +911,7 @@ DESI+PFS joint           & 0.0132 & $-8.9$  & 0.108  & $-23.6$ & 0.0143 & $-9.4$
 \end{tabular}
 \caption{Cosmology constraints from the joint multi-tracer
 Fisher analysis ($\kmax=0.20\iMpch$, combined over 8 $z$-bins
-covering $0.4<z<2.1$). \emph{DESI single-tracer broad} forecasts
+covering $z\in[0.4,2.1]$). \emph{DESI single-tracer broad} forecasts
 each DESI tracer independently with the conservative broad priors
 of \cref{tab:eft_params} and is the reference baseline against
 which the joint configurations are reported.
@@ -912,7 +919,7 @@ which the joint configurations are reported.
 Fisher across the full $14{,}000\;\text{deg}^2$ DESI footprint
 with LRG, ELG, and QSO, exposing the internal-DESI channel;
 \emph{DESI+PFS joint} adds PFS-ELG in
-the $1{,}200\;\text{deg}^2$ overlap at $0.6<z<1.6$ via the
+the $1{,}200\;\text{deg}^2$ overlap at $z\in[0.6,1.6]$ via the
 volume-partitioned Fisher
 $F = F_{\rm overlap}(1{,}200\,\text{deg}^2) + F_{\rm
 nonoverlap}(12{,}800\,\text{deg}^2)$, opening the
@@ -1081,7 +1088,7 @@ single bin reveals that
 to numerical precision in the four bins where only one DESI
 tracer is active (\(z<0.8\) LRG-only and \(z>1.6\) QSO-only); the
 33\%/80\%/49\% improvement on \((\sigma(f\se),\sigma(\Mnu),\sigma(\Om))\)
-appears \emph{exclusively} in the four bins at \(0.8<z<1.6\)
+appears \emph{exclusively} in the four bins at \(z\in[0.8,1.6]\)
 where two or three bias-distinct DESI tracers coexist (per-bin
 \(\Delta\sigma(\Mnu)\) of 67\%--85\%).
 \emph{(ii) Correlation collapse.} The Fisher correlation
@@ -1126,8 +1133,8 @@ self-calibration is doing the heavy lifting on the
 PFS contributes the residual tightening that yields the 24\%
 improvement on \(\sigma(\Mnu)\) reported in
 \cref{tab:headline}. \(b_1\se\) shown for DESI-ELG at the
-representative bin \(z=[0.8,\,1.0]\); cosmology shared globally
-across the 8 redshift bins covering \(0.4<z<2.1\).}
+representative bin \([0.8,1.0]\); cosmology shared globally
+across the 8 redshift bins covering \(z\in[0.4,2.1]\).}
 \label{fig:fisher_contours}
 \end{figure}
 
@@ -1150,7 +1157,7 @@ The PFS-induced improvement is stable across the natural variations
 of the analysis. The \(f_{\rm shared}\) insensitivity shown in
 \cref{sec:results_sensitivity} confirms that the cross-shot noise
 prescription does not drive the cosmology forecast. The PFS contribution is
-concentrated at \(0.6<z<1.6\) where the four-tracer multi-tracer
+concentrated at \(z\in[0.6,1.6]\) where the four-tracer multi-tracer
 configuration is active; truncating PFS above \(z=1.6\), where
 DESI-QSO is the only available partner with a low number density,
 costs negligible information.
@@ -1218,7 +1225,7 @@ budget~\cite{Ivanov:2023qzb,Bakx:2025pop}.
 
 We have presented a joint multi-tracer Fisher analysis across the
 DESI footprint, with the PFS--DESI overlap region contributing in
-\(0.6<z<1.6\) through the PFS\(\times\)DESI cross-spectrum channel.
+\(z\in[0.6,1.6]\) through the PFS\(\times\)DESI cross-spectrum channel.
 Throughout this section, ``PFS--DESI'' refers to the geographic
 overlap footprint and ``PFS\(\times\)DESI'' to the cross-spectrum
 channel. We summarize:
@@ -1236,7 +1243,7 @@ channel. We summarize:
 
 \item The bulk of the multi-tracer information comes from
   bias-distinct tracers in the same volume: DESI-LRG, DESI-ELG, and
-  DESI-QSO already span a wide range of \(b_1\) at \(0.4<z<2.1\),
+  DESI-QSO already span a wide range of \(b_1\) at \(z\in[0.4,2.1]\),
   so DESI alone reaches \(\sigma(f\se)=0.0145\),
   \(\sigma(\Mnu)=0.141\,\text{eV}\), and
   \(\sigma(\Om)=0.0157\) at \(\kmax=0.20\iMpch\) without any
@@ -1454,7 +1461,7 @@ We verify the assembled Fisher matrix against five checks:
   covariance), the per-bin multi-tracer Fisher is linear in the
   survey volume because Fourier modes in disjoint volumes are
   uncorrelated. For the DESI-only configuration with all three
-  DESI tracers active in the bin \(z=[1.0,\,1.2]\), we verify the
+  DESI tracers active in the bin \([1.0,1.2]\), we verify the
   volume partition underlying the internal-DESI and
   PFS\(\times\)DESI overlap channels,
   \(F(V_{\rm overlap})+F(V_{\rm nonoverlap})=F(V_{\rm full})\),
