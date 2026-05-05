@@ -104,42 +104,7 @@
 \keywords{galaxy surveys, redshift surveys, galaxy clustering, power spectrum, cosmological parameters from LSS, neutrino masses from cosmology}
 
 \abstract{%
-Marginalizing over roughly 12 effective-field-theory (EFT) nuisance
-parameters per tracer per redshift bin is the dominant systematic cost
-in full-shape galaxy power spectrum analyses.
-Simulation-based priors (SBP) tighten these parameters but rely on
-N-body simulations and halo-occupation-distribution (HOD) models.
-We propose a data-driven multi-tracer Fisher analysis as a
-model-independent alternative: cross-spectra between bias-distinct
-galaxy populations calibrate the EFT bias and stochastic parameters
-from data alone, through two complementary channels---internal to a
-single survey (among its different tracer populations) and across
-overlapping surveys (between tracers from different surveys)---combined
-in a single volume-partitioned joint Fisher.
-%
-We forecast across the \(14{,}000\;\text{deg}^2\) Dark Energy
-Spectroscopic Instrument (DESI) footprint, with the
-\(\sim\!1{,}200\;\text{deg}^2\) Prime Focus Spectrograph (PFS) overlap
-at \(z\in[0.6,1.6]\) contributing up to 4 tracers (PFS-ELG, DESI-ELG,
-DESI-LRG, DESI-QSO).
-The internal-DESI channel (combining LRG, ELG, and QSO across the full
-footprint) provides the bulk of the gain, improving \(\sigma(f\se)\) by
-33\%, \(\sigma(\Mnu)\) by 80\%, and \(\sigma(\Omega_m)\) by 49\% over
-a single-tracer broad-prior baseline at \(\kmax=0.20\iMpch\).
-Adding the PFS\(\,\times\,\)DESI overlap channel on top further
-tightens these by 9\%, 24\%, and 9\%, respectively, after marginalizing
-over residual cross-population stochasticity.
-A parameter importance decomposition reveals that the dominant driver
-in both channels is the calibration of the \(b_1\se\) prior, which is
-tightened from a flat prior to \(\sigma\approx 0.13\) by the joint
-multi-tracer Fisher and breaks the \(b_1\sigma_8\)--\(f\se\)
-degeneracy intrinsic to single-tracer analyses.
-The multi-tracer multi-survey approach targets the same \(b_1\)
-calibration as SBPs but draws it from cross-spectra between observed
-galaxy populations rather than HOD mocks; it thus provides a
-model-independent cross-check on the HOD assumptions underlying
-SBP-driven \(b_1\sigma_8\) shifts. The framework extends without
-modification to any number of overlapping spectroscopic surveys.
+Marginalizing over roughly 12 effective-field-theory (EFT) nuisance parameters per tracer per redshift bin is a dominant systematic cost in full-shape galaxy power spectrum analyses. Simulation-based priors (SBP) tighten these parameters but rely on N-body simulations and halo-occupation-distribution (HOD) models. We propose a multi-tracer Fisher analysis as a model-independent alternative: cross-spectra between galaxy populations calibrate EFT bias and stochastic parameters from data alone, through two channels---within a survey and across overlapping surveys---combined in a volume-partitioned joint Fisher. We forecast across the $14{,}000\;\mathrm{deg}^2$ Dark Energy Spectroscopic Instrument (DESI) footprint, including the $\sim\!1{,}200\;\mathrm{deg}^2$ Prime Focus Spectrograph (PFS) overlap at $z\in[0.6,1.6]$ with up to 4 tracers (PFS-ELG, DESI-ELG, DESI-LRG, DESI-QSO). The internal-DESI channel (LRG, ELG, and QSO over the full footprint) provides most of the gain, improving $\sigma(f\sigma_8)$ by 33\%, $\sigma(M_\nu)$ by 80\%, and $\sigma(\Omega_m)$ by 49\% over a single-tracer broad-prior baseline at $k_{\rm max}=0.20\,h\,\mathrm{Mpc}^{-1}$. Adding the PFS$\,\times\,$DESI overlap further tightens these by 9\%, 24\%, and 9\%, respectively, after marginalizing over residual cross-population stochasticity. A parameter-importance decomposition shows that the dominant driver is calibration of the $b_1\sigma_8$ prior, tightened from a flat prior to $\sigma\approx 0.13$, which breaks the $b_1\sigma_8$--$f\sigma_8$ degeneracy of single-tracer analyses. The multi-tracer multi-survey approach targets the same $b_1$ calibration as SBPs, using observed cross-spectra rather than HOD mocks as a model-independent check on SBP-driven $b_1\sigma_8$ shifts. The framework extends to any number of overlapping spectroscopic surveys.
 Code is available at
 \href{https://github.com/MinhMPA/PFSxDESI-multi-fish}{\faGithub\ MinhMPA/PFSxDESI-multi-fish}.
 }
