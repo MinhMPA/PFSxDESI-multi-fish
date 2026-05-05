@@ -512,13 +512,15 @@ the additional information marginal (we verify this in
 \cref{sec:results_sensitivity}).
 We rebin the overlap into 5 matched redshift bins,
 \([0.6,0.8]\), \([0.8,1.0]\), \([1.0,1.2]\), \([1.2,1.4]\),
-and \([1.4,1.6]\). Throughout, \([z_{\min},z_{\max}]\) denotes
-the bin spanning the stated redshift range; the open/closed
-distinction at adjacent edges is immaterial here since
-number-density and bias integrals are continuous in \(z\).
-Number densities are volume-weighted averages from
-fine-binned \(n(z)\) tables (\(\Delta z=0.01\)); bias parameters are evaluated
-at the volume-weighted effective redshift.
+and \([1.4,1.6]\). Each label \([z_{\min},z_{\max}]\) is the
+union of the fine-binned \(n(z)\) entries (\(\Delta z=0.01\))
+whose own range lies entirely inside \([z_{\min},z_{\max}]\);
+adjacent bins share only the boundary point \(z_{\max}\), and no
+fine-bin entry contributes to two macro bins, so volume- and
+density-weighted averages carry no double-counting. Number
+densities are volume-weighted averages from the fine-bin
+\(n(z)\) tables; bias parameters are evaluated at the
+volume-weighted effective redshift.
 \Cref{tab:surveys} summarizes the survey properties per bin. In
 \([0.6,0.8]\), only PFS-ELG and DESI-LRG overlap
 (\(N_t=2\), \(N_{\rm spec}=3\)).
