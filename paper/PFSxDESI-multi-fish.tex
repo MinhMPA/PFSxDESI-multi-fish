@@ -751,7 +751,7 @@ on the overlap and non-overlap subsamples of each DESI tracer---providing an emp
 \label{sec:results_priors}
 
 To make the multi-tracer information explicit, we project the
-joint Fisher onto each (DESI tracer, redshift bin) and compare
+joint Fisher per DESI tracer per redshift bin and compare
 the resulting per-z-bin nuisance \(\sigma\) values with the
 conservative broad
 priors~\cite{Chudaykin:2025lww,DESI:2024jxi}.
@@ -791,7 +791,7 @@ marginally, from \(\sigma=30\) to \(\sigma\approx 22\text{--}30\).
 \begin{figure}[t]
 \centering
 \includegraphics[width=\textwidth]{\figurespath/calibrated_vs_broad.png}
-\caption{Per-(tracer, $z$-bin) nuisance constraints from the joint
+\caption{Per-tracer, per-$z$-bin nuisance constraints from the joint
 multi-tracer Fisher, projected onto the six DESI~DR2 samples and
 compared with the conservative broad priors. Markers show
 $\sigma_{\rm cal}$ averaged across the overlap $z$-bins covered
@@ -820,7 +820,7 @@ analysis. The volume splits into the
 tracers contribute, and the \(12{,}800\;\text{deg}^2\) DESI-only
 shell, where the three DESI tracers contribute. Cosmology
 \((f\se,\,\Mnu,\,\Om)\) is shared globally; nuisance parameters
-are unique per (tracer, redshift bin) and marginalized in one
+are unique per tracer, per redshift bin and marginalized in one
 pass. \Cref{tab:dr2_samples} lists the DR2 sample properties.
 \Cref{fig:full_area} and \cref{tab:headline} present the
 cosmology forecasts. The internal-DESI channel tightens the broad
@@ -1074,8 +1074,8 @@ ellipse to the blue contour in \cref{fig:fisher_contours}.
 Adding PFS-ELG in the \(1{,}200\;\text{deg}^2\) overlap
 contributes a fourth, low-bias ELG sample with distinct
 selection and shot noise; the resulting 4-tracer
-cross-correlations tighten \(b_1\se\) for each (DESI tracer,
-redshift bin) further to \(\sigma\approx 0.06\)--\(0.13\) at
+cross-correlations tighten \(b_1\se\) per DESI tracer per
+redshift bin further to \(\sigma\approx 0.06\)--\(0.13\) at
 \(z<1.6\), shrinking the contour to the green ellipse. The
 largest fractional gain is on \(\sigma(\Mnu)\) (24\%) precisely
 because the marginalized \(\Mnu\) constraint inherits the
@@ -1239,8 +1239,8 @@ channel. We summarize:
   combines the internal-DESI channel over the full footprint with
   the PFS\(\times\)DESI overlap channel in the
   \(1{,}200\;\text{deg}^2\) intersection, with cosmology shared
-  globally and nuisance parameters unique per (tracer, redshift
-  bin). The single-Fisher construction avoids the auto-spectra
+  globally and nuisance parameters unique per tracer, per
+  redshift bin. The single-Fisher construction avoids the auto-spectra
   double-counting that a two-stage prior-export pipeline incurs.
 
 \item The bulk of the multi-tracer information comes from
@@ -1276,7 +1276,7 @@ channel. We summarize:
   subset of surveys; each region carries a multi-tracer Fisher
   built from whichever tracers are active there, and all region
   Fishers add in a common parameter space (cosmology shared
-  globally, nuisance unique per (tracer, redshift bin)). This
+  globally, nuisance unique per tracer, per redshift bin). This
   accommodates upcoming multi-survey configurations
   such as PFS\(\times\)DESI\(\times\)Euclid\(\times\)Roman in
   partial overlaps, where every disjoint sub-region contributes
