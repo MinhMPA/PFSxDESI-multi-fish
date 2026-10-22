@@ -108,7 +108,7 @@
 
 \abstract{%
 \emergencystretch=1em
-\revchange{Marginalizing over 11} effective-field-theory (EFT) nuisance parameters per tracer per redshift bin \revchange{degrades cosmological precision in one-loop analyses of galaxy power-spectrum multipoles in redshift space.} Simulation-based priors (SBP) tighten these parameters but rely on N-body simulations and halo-occupation-distribution (HOD) models. \revchange{We consider a multi-tracer Fisher analysis as a complementary approach: auto- and cross-power spectra jointly constrain cosmology, galaxy bias and stochasticity} through two channels---within a survey and across overlapping surveys---combined in a volume-partitioned joint Fisher \revchange{analysis}. We forecast across the $14{,}000\;\mathrm{deg}^2$ Dark Energy Spectroscopic Instrument (DESI) footprint, including the $\sim\!1{,}200\;\mathrm{deg}^2$ Prime Focus Spectrograph (PFS) overlap at $z\in[0.6,1.6]$ with up to 4 tracers (PFS-ELG, DESI-ELG, DESI-LRG, DESI-QSO). \revchange{We vary a common $\ln(10^{10}A_s)$, $M_\nu$ and $\Omega_m$, holding $h$, $\omega_b$ and $n_s$ fixed.} \revchange{Adding internal-DESI cross-spectra to DESI auto-spectra reduces the errors on the derived $f\sigma_8(z=1.1)$, $M_\nu$ and $\Omega_m$ by 7.1\%, 3.5\% and 3.8\%, respectively,} at $k_{\mathrm{max}}=0.20\,h\,\mathrm{Mpc}^{-1}$. \revchange{Adding PFS auto- and cross-spectra to this complete DESI multi-tracer analysis} further tightens these \revchange{errors by 3.8\%, 2.6\% and 3.2\%,} respectively, after marginalizing over residual cross-population stochasticity. \revchange{The multi-tracer multi-survey approach constrains nuisance parameters through the clustering likelihood alone, and so provides a complementary test of inference using SBP.} The framework extends to any number of overlapping spectroscopic surveys.
+\revchange{Marginalizing over 11} effective-field-theory (EFT) nuisance parameters per tracer per redshift bin \revchange{degrades cosmological precision in one-loop analyses of galaxy power-spectrum multipoles in redshift space.} Simulation-based priors (SBP) tighten these parameters but rely on N-body simulations and halo-occupation-distribution (HOD) models. \revchange{We consider a multi-tracer Fisher analysis as a complementary approach: auto- and cross-power spectra jointly constrain cosmology, galaxy bias and stochasticity} through two channels---within a survey and across overlapping surveys---combined in a volume-partitioned joint Fisher \revchange{analysis}. We forecast across the $14{,}000\;\mathrm{deg}^2$ Dark Energy Spectroscopic Instrument (DESI) footprint, including the $\sim\!1{,}200\;\mathrm{deg}^2$ Prime Focus Spectrograph (PFS) overlap at $z\in[0.6,1.6]$ with up to 4 tracers (PFS-ELG, DESI-ELG, DESI-LRG, DESI-QSO). \revchange{We vary a common $\ln(10^{10}A_s)$, $M_\nu$ and $\Omega_m$, holding $h$, $\omega_b$ and $n_s$ fixed.} \revchange{Adding internal-DESI cross-spectra to DESI auto-spectra reduces the errors on the derived $f\sigma_8(z=1.1)$, $M_\nu$ and $\Omega_m$ by 7.1\%, 3.5\% and 3.8\%, respectively,} at $k_{\mathrm{max}}=0.20\,h\,\mathrm{Mpc}^{-1}$. \revchange{Adding PFS auto- and cross-spectra to this complete DESI multi-tracer analysis} further tightens these \revchange{errors by 3.8\%, 2.6\% and 3.2\%,} respectively, after marginalizing over residual cross-population stochasticity. \revchange{The clustering likelihood alone constrains the linear and quadratic biases and the shot noise. For these parameters it provides a complementary test of inference using SBP, while the counterterms remain weakly constrained.} The framework extends to any number of overlapping spectroscopic surveys.
 Code is available at \href{https://github.com/MinhMPA/PFSxDESI-multi-fish}{\faGithub\ MinhMPA/PFSxDESI-multi-fish}.
 }
 
@@ -201,10 +201,11 @@ its auto- and cross-spectra reduce the same uncertainties by
 $3.8\%$, $2.6\%$ and $3.2\%$, respectively, relative to the
 DESI multi-tracer analysis.}
 
-This paper is organized as follows. \Cref{sec:method} describes the joint multi-tracer, multi-survey Fisher framework\revchange{, as well as the different survey configurations and combinations being considered.
+This paper is organized as follows. \Cref{sec:method} describes the joint multi-tracer, multi-survey Fisher framework\revchange{, as well as the four cases being compared.
 \Cref{sec:fisher} specifies the survey inputs, the one-loop model, its priors and the numerical calculation.
 Some readers might want to skip \cref{sec:eft_model,sec:eft_params,sec:eft_fiducials} on a first reading and optionally return to them later for details about the EFT modeling, parametrization and parameter fiducial values.}
-\Cref{sec:results} presents the cosmological constraints, the per-$z$-bin diagnostic, and sensitivity tests.
+\Cref{sec:results} presents the \revchange{nuisance and cosmological constraints, the cost of
+nuisance marginalization and the robustness of the gains}.
 We discuss implications in \cref{sec:discussion} and conclude in
 \cref{sec:conclusions}.
 
@@ -461,9 +462,9 @@ by the fidelity of the galaxy--halo connection model.
 directly from the auto- and cross-spectra.
 We keep the input nuisance priors fixed and do not reuse these likelihood
 constraints as independent priors on the same data.
-The two approaches provide complementary constraints, which can serve
-as a consistency check when sample selection, parameter definitions
-and modeling assumptions are matched (\cref{sec:discussion}).}
+For the parameters that the likelihood constrains well, the two approaches
+can check each other when sample selection, parameter definitions and
+modeling assumptions are matched (\cref{sec:discussion}).}
 
 %-------------------------------------------------------------------
 \section{Fisher forecast setup}
@@ -658,7 +659,8 @@ and parallel to the line of sight. The unprimed $(k,\mu)$ are defined
 in the reference cosmology, while $(k',\mu')$ are their values in the
 trial cosmology.
 Observed wavenumbers, number densities and survey volumes
-are held in the reference cosmology, with fixed $h_{\mathrm{ref}}=0.6736$ units. In unweighted catalogs, objects shared by two samples, with number density
+are held in the reference cosmology, with fixed $h_{\mathrm{ref}}=0.6736$
+units, so $h$ in all wavenumber, length and density units denotes $h_{\mathrm{ref}}$. In unweighted catalogs, objects shared by two samples, with number density
 $\nbar_{X\cap Y}$, add $\nbar_{X\cap Y}/\sqrt{\nbar_X\nbar_Y}$ to the constant term of
 \cref{eqn:cross}, which we include only in the shared-ELG variant of
 \cref{sec:results_sensitivity}. At fixed observed counts this term has no AP
@@ -694,11 +696,11 @@ Each tracer has an independent nuisance set in every nominal
 redshift bin. Within one bin, the same population shares its
 parameters across overlap and non-overlap regions and any radial
 subdivision used to account for its redshift coverage. Each included cross-pair has its own two stochastic
-parameters per nominal bin. The main DESI multi-tracer forecast has
+parameters per nominal bin. The DESI multi-tracer forecast (B) has
 14 tracer--bin sets and 8 cross-pair--bin sets, giving
-$3+14\times11+8\times2=173$ parameters. Adding PFS over its populated support
-$0.6\leq z\leq1.6$ gives 19 tracer--bin sets and 19
-cross-pair--bin sets, or $3+19\times11+19\times2=250$
+$3+14\times11+8\times2=173$ parameters. The full DESI+PFS forecast (D), with
+PFS over its populated support $0.6\leq z\leq1.6$, has 19 tracer--bin sets
+and 19 cross-pair--bin sets, or $3+19\times11+19\times2=250$
 parameters. After combining the independent survey regions and radial
 cells, each distinct nuisance parameter receives its prior once.}
 
@@ -783,8 +785,8 @@ in every redshift bin,
 \label{eqn:kmax_asym}
 0.01\iMpch \leq k \leq \kmax=0.20\iMpch\,.
 \ee
-The upper cut is also used in the DESI DR1 full-shape
-analysis~\cite{DESI:2024jxi}. One-loop accuracy depends on
+The DESI DR1 full-shape analysis~\cite{DESI:2024jxi} uses the same upper cut
+for the monopole and quadrupole, whereas we also retain the hexadecapole. One-loop accuracy depends on
 redshift, tracer bias and velocity dispersion, so the smaller
 assumed PFS FoG coefficient alone does not justify extending
 its $k$-range. We assess scale sensitivity by repeating the DESI
@@ -1028,7 +1030,6 @@ Values and successive fractional changes are given in
 \label{fig:full_area}
 \end{figure}
 
-\clearpage
 \begin{table}[t]
 \centering\color{RevisionColor}
 \small
@@ -1117,11 +1118,12 @@ The cases are defined in \cref{sec:scenarios} and shown in
 
 
 \clearpage
-\subsection{\texorpdfstring{\revchange{Robustness of the PFS gain}}{Robustness of the PFS gain}}
+\subsection{\texorpdfstring{\revchange{Robustness of the gains}}{Robustness of the gains}}
 \label{sec:results_sensitivity}
 
-\revchange{We test whether the B-to-D gain from adding PFS depends on
-analysis choices made in both B and D, or on additional freedom in the spectrum model.}
+\revchange{We test whether the gains from adding DESI cross-spectra and PFS
+depend on the analysis choices shared by the compared cases, or on
+additional freedom in the spectrum model.}
 
 \revchange{\textbf{Scale cut, nuisance priors and sample selection.}
 \Cref{fig:sensitivity} shows these tests. We
@@ -1135,7 +1137,11 @@ the errors in D on $f\se(z=1.1)$, $\Mnu$ and $\Om$ increase by $9.3/10.1/18.7\%$
 The B-to-D reductions change from $3.8/2.6/3.2\%$ in the reference to
 $3.4/2.5/2.8\%$ and $3.4/2.3/2.8\%$ for three- and ten-times wider
 priors, to $5.2/3.3/4.1\%$ at $\kmax=0.15\iMpch$, and to $6.3/3.5/4.3\%$
-after removing DESI DR1 ELG1.}
+after removing DESI DR1 ELG1. The A-to-B reductions from DESI cross-spectra
+grow with the prior width, from $7.1/3.5/3.8\%$ to $11.5/5.0/4.0\%$ and
+$17.4/7.4/5.7\%$, since the cross-spectra matter more when the priors
+constrain the nuisance parameters less. At $\kmax=0.15\iMpch$ they become
+$3.9/4.3/4.9\%$.}
 
 \begin{figure}[t]
 \centering
@@ -1167,9 +1173,10 @@ $a_2^{XY}$ at zero roughly triples the growth gain, to $4.2\%$. The free stochas
 therefore absorb part of the cross-spectrum response, as discussed in
 \cref{sec:drivers}. Every variant that keeps
 these coefficients free leaves the C-to-D reduction in
-$\sigma[f\se(z=1.1)]$ between $0.9\%$ and $1.8\%$. The variants use flat priors on the coefficients, shared DESI/PFS ELGs with
-$\nbar_{X\cap Y}=u\min(\nbar_X,\nbar_Y)$, which relaxes the baseline
-assumption of disjoint catalogs, nonzero fiducials for each cross pair, and an added isotropic term
+$\sigma[f\se(z=1.1)]$ between $0.9\%$ and $1.8\%$. The variants are: flat priors on the coefficients, shared DESI/PFS ELGs with
+$\nbar_{X\cap Y}=u\min(\nbar_X,\nbar_Y)$ (which relaxes the baseline
+assumption of disjoint catalogs), nonzero fiducials for each cross pair, and
+an added isotropic term
 $a_{\mathrm{iso}}^{XY}(k/\knl)^2/\sqrt{\nbar_X\nbar_Y}$ in every included cross-spectrum, with an independent zero-fiducial coefficient for each pair
 and bin.}
 
@@ -1228,8 +1235,8 @@ multi-tracer constraints complement simulation-based priors.}
 \subsection{Which parameters drive the improvement?}
 \label{sec:drivers}
 
-\revchange{No single nuisance parameter, including the linear bias, accounts for
-the improvement from cross-spectra.
+\revchange{The linear bias alone does not account for the improvement from
+cross-spectra.
 Cross-spectra between two tracers in the same volume see the same
 density field. In the linear, deterministic-bias and low-noise limit,
 their relative biases can therefore be constrained beyond the usual sample-variance limit~\cite{Seljak:2008xr,McDonald:2008sh}. At one loop, the
@@ -1261,14 +1268,18 @@ The cosmological and linear-bias correlation submatrices for every
 redshift bin in A--D are provided as JCAP supplementary material, as
 arXiv ancillary files and in the code repository.}
 
-\revchange{Simultaneous shifts of bias, counterterm, FoG and stochastic
-coefficients can absorb much of the cosmological response of the added
-DESI\,$\times$\,PFS cross-spectra. The C-to-D gain is small even without
-this freedom: with all nuisance coordinates fixed, the reductions in
-$\sigma[f\se(z=1.1)]$, $\sigma(\Mnu)$ and $\sigma(\Om)$ are only
-0.3/0.5/0.4\%. Nuisance degeneracies still set much of the absolute
-error. Fixing only the FoG coefficients in D reduces $\sigma(\Mnu)$
-from $0.11426$ to $0.09130\,\mathrm{eV}$.}
+\revchange{With all nuisance coordinates fixed, the added DESI\,$\times$\,PFS
+cross-spectra contribute $18$, $26$ and $38$ times more Fisher information on
+$f\se(z=1.1)$, $\Mnu$ and $\Om$ than when the nuisance coordinates are
+marginalized. Simultaneous shifts of bias, counterterm, FoG and stochastic
+coefficients therefore absorb most of their cosmological response. The
+fractional gain that remains comes mainly from constraining degenerate
+nuisance coordinates. Fixing only the auto-spectrum stochastic coefficients
+in both A and B lowers the A-to-B growth reduction from $7.1\%$ to $2.4\%$,
+and fixing only $b_2\se^2$ and $b_{\G_2}\se^2$ lowers it to $3.0\%$.
+Nuisance degeneracies also set much of the absolute error. Fixing only the
+FoG coefficients in D reduces $\sigma(\Mnu)$ from $0.11426$ to
+$0.09130\,\mathrm{eV}$.}
 
 \begin{figure}[t]
 \centering
@@ -1308,14 +1319,13 @@ $1.6<z<2.1$ reduces the growth error by $1.7\%$. Including their
 cross-spectra with QSO-5 and QSO-6, respectively, gives another
 $0.5\%$, each relative to its preceding case. PFS-ELG-8, the PFS-only tail over
 $2.1<z<2.4$, adds $0.9\%$.
-The extension more than doubles the PFS gain in $\Mnu$ and $\Om$, which
-motivates extending galaxy redshift surveys to higher redshift.
+The extension more than doubles the PFS gain in $\Mnu$ and $\Om$.
 
 \textbf{Number density.} Starting from the forecast with PFS through
 $z=2.4$, we raise the PFS density in one interval at a time, keeping its
 clustering properties and stochastic-power priors fixed. Doubling the
 density reduces the errors on $\Mnu$ and $\Om$ by at most $1.0\%$, in
-PFS-ELG-6 and PFS-ELG-8 above $z=1.6$, and the growth error by at most
+PFS-ELG-8 ($0.9\%$ in PFS-ELG-6), and the growth error by at most
 $0.6\%$, in PFS-ELG-6. Below $z=1.6$, each doubling reduces these errors
 by less than $0.3\%$. However, the intervals contain very different
 numbers of galaxies: doubling PFS-ELG-6 at $1.6<z<2.0$ adds about
@@ -1333,7 +1343,9 @@ $b_{\G_2}$, $b_{\Gamma_3}$ and $c_2$ from the new $b_1$ with the relations of
 priors. The errors on
 $f\se(z=1.1)$, $\Mnu$ and $\Om$ change by at most $0.4\%$, $1.9\%$ and
 $2.4\%$, respectively. The largest reductions, in $\Mnu$ and $\Om$, come
-from doubling the bias of PFS-ELG-6 at $1.6<z<2.0$.}
+from doubling the bias of PFS-ELG-6 at $1.6<z<2.0$. Within this model,
+extending the PFS redshift coverage therefore reduces the errors more than
+doubling the density or changing the bias of any single PFS interval.}
 
 
 \Needspace{5\baselineskip}
@@ -1346,7 +1358,12 @@ smaller for DESI DR1 ELG2/QSO than their
 power-spectrum-plus-bispectrum analysis with conservative EFT priors.
 The multi-tracer constraints use only the clustering likelihood
 and the population-uniformity assumption in \cref{sec:hod_uniformity}.
-}
+In D, this likelihood constrains $b_1\se$ to $0.007$--$0.028$ and narrows
+$b_2\se^2$ and $b_{\G_2}\se^2$ to less than $0.2$ of their prior widths in at
+least 18 of the 19 tracer--bin sets, while $\mathcal A b_{\Gamma_3}$,
+$\mathcal A c_2$ and $a_2$ keep median posterior-to-prior ratios of $0.92$,
+$0.57$ and $0.70$ (\cref{fig:calibrated_vs_broad}). SBPs can therefore add the
+most information on $b_{\Gamma_3}$, the counterterms and the $k^2$ stochastic terms.}
 
 \revchange{This distinction motivates a cross-check of the
 prior dependence of amplitude constraints, including those
@@ -1389,11 +1406,13 @@ the EFT fiducials and \revchange{test the population-uniformity assumption}
 \label{sec:conclusions}
 %-------------------------------------------------------------------
 
-\revchange{Building on the one-loop multi-tracer analyses of
-Mergulh\~{a}o et al.~\cite{Mergulhao:2021kip,Mergulhao:2023zso}
-and Rubira and Conteddu~\cite{Rubira:2025scu}, we summarize what the
-DESI and DESI+PFS comparisons imply for the information added by an
-overlapping survey. The main comparison uses matched redshift bins
+\revchange{Mergulh\~{a}o et al.~\cite{Mergulhao:2021kip,Mergulhao:2023zso}
+established one-loop multi-tracer gains in real and redshift space, and
+Rubira and Conteddu~\cite{Rubira:2025scu} forecast DESI and PFS separately,
+each at one effective redshift. Here we combine both surveys over eight
+redshift bins and the partitioned footprint, and quantify what the
+overlapping PFS sample adds once the internal DESI multi-tracer information
+is included. The main comparison uses matched redshift bins
 and priors, PFS over $z\in[0.6,1.6]$, and a common fit of
 $\ln(10^{10}A_s),\Mnu,\Om$, with $h,\omega_b,n_s$ fixed and
 correlated $f\se(z)$ predictions:}
@@ -1429,13 +1448,16 @@ correlated $f\se(z)$ predictions:}
   uniquely identify linear bias as the cause of the cosmological
   gains. Extending PFS to $z=2.4$ increases the reductions in
   $\sigma[f\se(z=1.1)]$, $\sigma(\Mnu)$ and $\sigma(\Om)$ relative to B to
-  $6.7\%$, $6.7\%$ and $7.4\%$, respectively, which motivates extending
-  galaxy redshift surveys to higher redshift.}
+  $6.7\%$, $6.7\%$ and $7.4\%$, respectively. Within this model, this
+  extension reduces the errors more than doubling the density or changing
+  the bias of any single PFS interval.}
 
 \item \revchange{The joint analysis complements simulation-based priors.
-  Multi-tracer auto- and cross-spectra constrain nuisance
-  parameters jointly with cosmology, while SBPs supply external
-  information from simulated galaxy--halo connections. A future joint posterior analysis could test the prior sensitivity of
+  Multi-tracer auto- and cross-spectra constrain the linear and quadratic
+  biases and the shot noise jointly with cosmology, while $b_{\Gamma_3}$, the
+  counterterms and the $k^2$ stochastic terms stay closer to their priors.
+  For these, SBPs supply external information from simulated galaxy--halo
+  connections. A future joint posterior analysis could test the prior sensitivity of
   SBP-based amplitude constraints relevant to $S_8$.}
 
 \item \revchange{Under the same independent-volume approximation, the framework
@@ -1454,7 +1476,7 @@ correlated $f\se(z)$ predictions:}
 
 %-------------------------------------------------------------------
 \acknowledgments
-I thank Kazuyuki Akitsu for engaging discussions about simulation-based priors, Haruki Ebina for helpful comments about tracer cross-stochasticity, as well as David Piras and Hiddle Jense for useful correspondences about \texttt{cosmopower-jax} and the \texttt{CosmoPower} emulator.
+I thank Kazuyuki Akitsu for engaging discussions about simulation-based priors, Haruki Ebina for helpful comments about tracer cross-stochasticity, as well as David Piras and \revchange{Hidde} Jense for useful correspondences about \texttt{cosmopower-jax} and the \texttt{CosmoPower} emulator.
 
 I am grateful to Linda Blot and Jingjing Shi for heartening and uplifting conversations between the two VJA red-eye flights on which this work was begun and finished.
 
