@@ -49,6 +49,7 @@ from .eft_params import (
     tracer_fiducials,
 )
 from .fisher import FisherResult
+from .fisher_core import fisher_from_shells
 from .ps1loop_adapter import (
     fisher_to_ps1loop_auto,
     fisher_to_ps1loop_cross,
@@ -56,6 +57,7 @@ from .ps1loop_adapter import (
     make_ps1loop_pkmu_func,
 )
 from .surveys import Survey, SurveyGroup
+from .survey_geometry import cell_number_density, support_cells
 
 
 # ---------------------------------------------------------------------------
@@ -153,7 +155,7 @@ def embed_fisher(
 
 
 def _build_pkmu_funcs(active, fids, ps1l_params, nbars, ps, pk_data,
-                     s8, f_z, h, pairs):
+                     s8, f_z, h, pairs, k_nl=0.7):
     pkmu_funcs = {}
     for (a, b) in pairs:
         if a == b:
@@ -162,12 +164,34 @@ def _build_pkmu_funcs(active, fids, ps1l_params, nbars, ps, pk_data,
             )
         else:
             cross_params = fisher_to_ps1loop_cross(
-                fids[a], fids[b], s8, f_z, h, nbars[a], nbars[b]
+                fids[a], fids[b], s8, f_z, h, nbars[a], nbars[b], k_nl=k_nl,
             )
             pkmu_funcs[(a, b)] = make_ps1loop_pkmu_cross_func(
                 ps, pk_data, cross_params
             )
     return pkmu_funcs
+
+
+def _prepare_tracer_parameters(active, zbin, density_bin, reference, s8, f_z, h, cfg):
+    """Freeze nominal-bin fiducials before applying observation selection.
+
+    Only the number-density factors depend on the computational support cell.
+    The supplied reference populations determine PFS's counterterm scaling.
+    """
+    z = sum(zbin) / 2
+    reference = active if reference is None else reference
+    ref_names = sorted(n for n in reference if "ELG" in n and "PFS" not in n)
+    b1_ref = reference[ref_names[0]].b1_of_z(z) if ref_names else 1.3
+    fids, params, nbars = {}, {}, {}
+    for name, s in sorted(active.items()):
+        nb = cell_number_density(s, *density_bin)
+        if nb <= 0:
+            raise ValueError(f"{name}: no density in support cell {density_bin}")
+        fid = tracer_fiducials(name, s.b1_of_z(z), s8, b1_ref=b1_ref, r_sigma_v=cfg.r_sigma_v)
+        fids[name] = fid
+        params[name] = fisher_to_ps1loop_auto(fid, s8, f_z, h, nb, k_nl=cfg.k_nl)
+        nbars[name] = nb
+    return fids, params, nbars
 
 
 def build_zbin_fisher(
@@ -179,6 +203,9 @@ def build_zbin_fisher(
     cfg,
     cross_shot: dict | None = None,
     marginalize_cross_stoch: bool | None = None,
+    *,
+    density_bin: tuple[float, float] | None = None,
+    fiducial_tracers: dict[str, Survey] | None = None,
 ) -> tuple[np.ndarray, list[str]]:
     """Build the per-z-bin multi-tracer Fisher with cosmology in the matrix.
 
@@ -197,7 +224,9 @@ def build_zbin_fisher(
     ``zbin_param_names`` ordering: ``[fσ8, Mν, Ωm,
     nuis_tracer1_zbin..., ..., Pshot_cross_axb_zbin, a2_cross_axb_zbin, ...]``.
     """
+    # zbin is the nominal model/parameter bin; density_bin is support only.
     zlo, zhi = zbin
+    density_bin = zbin if density_bin is None else density_bin
     z_eff = 0.5 * (zlo + zhi)
     s8 = cosmo.sigma8(z_eff)
     f_z = float(cosmo.f(z_eff))
@@ -236,24 +265,9 @@ def build_zbin_fisher(
     kmax_global = max(kmax_desi, kmax_pfs, kmax_cross)
     k = np.arange(cfg.kmin, kmax_global + cfg.dk / 2, cfg.dk)
 
-    # Reference b1 for PFS counterterm scaling: prefer DESI-ELG if present.
-    b1_ref = 1.3
-    for tn in tracer_names:
-        if "ELG" in tn and "PFS" not in tn:
-            b1_ref = active_tracers[tn].b1_of_z(z_eff)
-            break
-
-    fids, ps1l_params, nbars = {}, {}, {}
-    for tn in tracer_names:
-        s = active_tracers[tn]
-        b1 = s.b1_of_z(z_eff)
-        nb = s.nbar_eff(zlo, zhi)
-        nbars[tn] = nb
-        fid = tracer_fiducials(tn, b1, s8, b1_ref=b1_ref,
-                               r_sigma_v=cfg.r_sigma_v)
-        par = fisher_to_ps1loop_auto(fid, s8, f_z, h, nb)
-        fids[tn] = fid
-        ps1l_params[tn] = par
+    fids, ps1l_params, nbars = _prepare_tracer_parameters(
+        active_tracers, zbin, density_bin, fiducial_tracers, s8, f_z, h, cfg,
+    )
 
     # Pairs ordering must match the covariance and the D matrix indexing
     pairs = [(a, a) for a in tracer_names]
@@ -264,7 +278,7 @@ def build_zbin_fisher(
 
     pkmu_funcs = _build_pkmu_funcs(
         active_tracers, fids, ps1l_params, nbars, ps, pk_data,
-        s8, f_z, h, pairs,
+        s8, f_z, h, pairs, k_nl=cfg.k_nl,
     )
 
     # When the conservative cross-stochasticity prescription is enabled,
@@ -297,7 +311,7 @@ def build_zbin_fisher(
         if a == b:
             continue
         cross_params = fisher_to_ps1loop_cross(
-            fids[a], fids[b], s8, f_z, h, nbars[a], nbars[b]
+            fids[a], fids[b], s8, f_z, h, nbars[a], nbars[b], k_nl=cfg.k_nl,
         )
         derivs_cross[(a, b)] = dPcross_dtheta_autodiff_all_jit(
             ps, jnp.array(k), pk_data, cross_params, s8, ells=ells,
@@ -461,26 +475,7 @@ def _assemble_fisher_with_cosmo(
         # +1e-12 tolerance so a k-bin exactly at kmax stays active.
         obs_active_per_k = k[:, None] <= (obs_kmax[None, :] + 1e-12)
 
-    F = np.zeros((Np, Np))
-    for ik in range(Nk):
-        active = obs_active_per_k[ik]
-        if not np.any(active):
-            continue
-        cov_active = cov_mt[ik][np.ix_(active, active)]
-        try:
-            eigvals = np.linalg.eigvalsh(cov_active)
-        except np.linalg.LinAlgError:
-            continue   # singular cov (e.g. degenerate k-bin); skip
-        if np.any(eigvals <= 0):
-            continue
-        try:
-            cov_inv = np.linalg.inv(cov_active)
-        except np.linalg.LinAlgError:
-            continue
-        D_active = D[ik][active, :]
-        F += D_active.T @ cov_inv @ D_active * dk
-
-    return F
+    return fisher_from_shells(D, cov_mt, k, active=obs_active_per_k)
 
 
 # ---------------------------------------------------------------------------
@@ -496,61 +491,47 @@ def volume_partitioned_zbin_fisher(
     cfg,
     include_pfs: bool = True,
 ) -> tuple[np.ndarray, list[str]]:
-    """Per-z-bin Fisher = F_overlap + F_nonoverlap, in a common param space.
+    """Sum radial/sky cells while sharing each nominal-bin nuisance vector."""
+    cells = support_cells(sg, zbin, include_pfs=include_pfs,
+                          exclude_elg1=cfg.exclude_elg1)
+    baseline_populations = sg.active_with_pfs_truncation(*zbin)
+    contributions = []
+    for cell in cells:
+        for tracers, volume in [(cell.overlap_tracers, cell.overlap_volume),
+                                (cell.nonoverlap_tracers, cell.nonoverlap_volume)]:
+            if not tracers or volume == 0:
+                continue
+            active = {n: sg.all_surveys[n] for n in tracers}
+            cs = None
+            if cfg.f_shared_elg > 0 and "PFS-ELG" in active and "DESI-ELG" in active:
+                cs = {("DESI-ELG", "PFS-ELG"): cfg.f_shared_elg / cell.nbar["DESI-ELG"]}
+            contributions.append(build_zbin_fisher(
+                zbin, active, volume, cosmo, ps, cfg, cross_shot=cs,
+                density_bin=cell.radial_bin, fiducial_tracers=baseline_populations,
+            ))
+    combined = combine_zbins_heterogeneous(contributions)
+    return combined.F, combined.param_names
 
-    F_overlap uses all active tracers (PFS plus DESI tracers, subject to
-    ``sg.pfs_zmax`` and ``include_pfs``) at ``sg.V_overlap``.
-    F_nonoverlap uses the DESI-only active tracers at ``sg.V_nonoverlap``.
 
-    The two Fishers live in different per-z-bin subspaces (PFS nuisance
-    is only in F_overlap), so we lift both to the union before summing.
-    """
-    zlo, _ = zbin
-    if include_pfs and zlo < sg.pfs_zmax:
-        active_overlap = sg.active_with_pfs_truncation(zbin[0], zbin[1])
-    else:
-        active_overlap = sg.active_desi(zbin[0], zbin[1])
-    active_nonoverlap = sg.active_desi(zbin[0], zbin[1])
+def independent_autos_zbin_fisher(zbin, sg, cosmo, ps, cfg):
+    """Independent DESI autos on identical support cells, with no priors."""
+    contributions = []
+    baseline_populations = sg.active_with_pfs_truncation(*zbin)
+    for cell in support_cells(sg, zbin, include_pfs=False, exclude_elg1=cfg.exclude_elg1):
+        for name in cell.nonoverlap_tracers:
+            contributions.append(build_zbin_fisher(
+                zbin, {name: sg.desi_tracers[name]}, cell.overlap_volume + cell.nonoverlap_volume,
+                cosmo, ps, cfg, density_bin=cell.radial_bin, fiducial_tracers=baseline_populations,
+            ))
+    combined = combine_zbins_heterogeneous(contributions)
+    return combined.F, combined.param_names
 
-    V_overlap = sg.V_overlap(zbin[0], zbin[1])
-    V_nonoverlap = sg.V_nonoverlap(zbin[0], zbin[1])
 
-    fishers, names_list = [], []
-
-    if len(active_overlap) >= 1 and V_overlap > 0:
-        cs = None
-        if (cfg.f_shared_elg > 0
-                and "PFS-ELG" in active_overlap
-                and "DESI-ELG" in active_overlap):
-            nbar_de = active_overlap["DESI-ELG"].nbar_eff(zbin[0], zbin[1])
-            cs = {("DESI-ELG", "PFS-ELG"): cfg.f_shared_elg / nbar_de}
-        F_o, names_o = build_zbin_fisher(
-            zbin, active_overlap, V_overlap, cosmo, ps, cfg, cross_shot=cs,
-        )
-        fishers.append(F_o)
-        names_list.append(names_o)
-
-    if len(active_nonoverlap) >= 1 and V_nonoverlap > 0:
-        F_n, names_n = build_zbin_fisher(
-            zbin, active_nonoverlap, V_nonoverlap, cosmo, ps, cfg,
-        )
-        fishers.append(F_n)
-        names_list.append(names_n)
-
-    if not fishers:
-        return np.zeros((len(COSMO_NAMES), len(COSMO_NAMES))), list(COSMO_NAMES)
-
-    union: list[str] = list(COSMO_NAMES)
-    for nl in names_list:
-        for n in nl:
-            if n not in union:
-                union.append(n)
-
-    F_total = np.zeros((len(union), len(union)))
-    for F, nl in zip(fishers, names_list):
-        F_total += embed_fisher(F, nl, union)
-
-    return F_total, union
+def active_cell_tracers(sg, zbin, cfg, include_pfs):
+    """Union of measured populations, respecting partial support/selection."""
+    return sorted({name for cell in support_cells(
+        sg, zbin, include_pfs=include_pfs, exclude_elg1=cfg.exclude_elg1,
+    ) for name in cell.overlap_tracers + cell.nonoverlap_tracers})
 
 
 # ---------------------------------------------------------------------------
@@ -687,12 +668,7 @@ def run_joint_fisher(
             )
             per_zbin.append((F, names))
 
-            # Track active tracers for reporting
-            if include_pfs and zb[0] < sg.pfs_zmax:
-                active = sorted(sg.active_with_pfs_truncation(zb[0], zb[1]).keys())
-            else:
-                active = sorted(sg.active_desi(zb[0], zb[1]).keys())
-            per_zbin_active.append(active)
+            per_zbin_active.append(active_cell_tracers(sg, zb, cfg, include_pfs))
 
     fr = combine_zbins_heterogeneous(
         per_zbin,
@@ -753,31 +729,11 @@ def run_broad_baseline(
         per_zbin = []
         per_zbin_active = []
         for zb in zbins:
-            active_desi = sg.active_desi(zb[0], zb[1])
+            active_desi = active_cell_tracers(sg, zb, cfg, False)
             if not active_desi:
                 continue
-            V_full = sg.V_desi_full(zb[0], zb[1])
-
-            zbin_fishers = []
-            zbin_names_list = []
-            for tn, surv in active_desi.items():
-                F, names = build_zbin_fisher(
-                    zb, {tn: surv}, V_full, cosmo, ps, cfg,
-                )
-                zbin_fishers.append(F)
-                zbin_names_list.append(names)
-
-            union: list[str] = list(COSMO_NAMES)
-            for nl in zbin_names_list:
-                for n in nl:
-                    if n not in union:
-                        union.append(n)
-            F_total = np.zeros((len(union), len(union)))
-            for F, nl in zip(zbin_fishers, zbin_names_list):
-                F_total += embed_fisher(F, nl, union)
-
-            per_zbin.append((F_total, union))
-            per_zbin_active.append(sorted(active_desi.keys()))
+            per_zbin.append(independent_autos_zbin_fisher(zb, sg, cosmo, ps, cfg))
+            per_zbin_active.append(active_desi)
 
     fr = combine_zbins_heterogeneous(
         per_zbin, survey_name="DESI single-tracer broad",

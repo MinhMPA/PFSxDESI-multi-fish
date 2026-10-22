@@ -33,7 +33,7 @@ from pfsfog.ps1loop_adapter import (
     fisher_to_ps1loop_auto, fisher_to_ps1loop_cross,
     make_ps1loop_pkmu_func, make_ps1loop_pkmu_cross_func,
 )
-from ps_1loop_jax import PowerSpectrum1Loop
+from pfsfog.one_loop import make_one_loop_engine
 
 
 plt.rcParams.update({
@@ -107,7 +107,7 @@ def cov_gl_array(Ptot_XW, Ptot_YZ, Ptot_XZ, Ptot_YW,
 def build_data():
     cfg = ForecastConfig.from_yaml("configs/default.yaml")
     cosmo = FiducialCosmology(backend=cfg.cosmo_backend)
-    ps = PowerSpectrum1Loop(do_irres=False)
+    ps = make_one_loop_engine()
 
     z_eff = 0.9
     s8 = cosmo.sigma8(z_eff)

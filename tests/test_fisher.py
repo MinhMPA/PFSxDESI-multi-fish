@@ -35,7 +35,7 @@ class TestAnalyticFisher:
     """Analytic test: monopole-only Fisher for P_0(k) = A × P_shape(k).
 
     Model: P_0(k) = A × k^n  (two parameters: A, n)
-    Cov_00(k) = [P_0(k) + 1/nbar]² / N_modes(k)
+    Cov_00(k) = 2 [P_0(k) + 1/nbar]² / N_modes(k)
 
     The Fisher matrix for {A, n} from the monopole alone is:
 
@@ -68,10 +68,10 @@ class TestAnalyticFisher:
 
         # Analytic Fisher
         F_analytic = np.zeros((2, 2))
-        F_analytic[0, 0] = np.sum(dP_dA**2 / Var_P0 * dk)
-        F_analytic[0, 1] = np.sum(dP_dA * dP_dn / Var_P0 * dk)
+        F_analytic[0, 0] = np.sum(dP_dA**2 / Var_P0)
+        F_analytic[0, 1] = np.sum(dP_dA * dP_dn / Var_P0)
         F_analytic[1, 0] = F_analytic[0, 1]
-        F_analytic[1, 1] = np.sum(dP_dn**2 / Var_P0 * dk)
+        F_analytic[1, 1] = np.sum(dP_dn**2 / Var_P0)
 
         # Now compute via our machinery
         # Derivatives dict
@@ -99,8 +99,8 @@ class TestAnalyticFisher:
             param_names=["A", "n"], ells=(0,),
         )
 
-        # They should agree to ~1% (trapezoidal vs sum difference)
-        np.testing.assert_allclose(F_numerical, F_analytic, rtol=0.01)
+        # Both evaluate the same discrete shell sum.
+        np.testing.assert_allclose(F_numerical, F_analytic, rtol=1e-10)
 
     def test_prior_tightens(self):
         """Adding a prior should decrease marginalized σ."""

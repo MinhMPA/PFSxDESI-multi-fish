@@ -6,6 +6,8 @@ from dataclasses import dataclass
 
 import numpy as np
 
+from .fisher_core import fisher_from_shells
+
 
 @dataclass
 class FisherResult:
@@ -54,6 +56,15 @@ class FisherResult:
 # ---------------------------------------------------------------------------
 
 
+def _derivative_matrix(derivs, k, param_names, ells):
+    D = np.zeros((len(k), len(ells), len(param_names)))
+    for ip, pn in enumerate(param_names):
+        for il, ell in enumerate(ells):
+            if pn in derivs and ell in derivs[pn]:
+                D[:, il, ip] = np.asarray(derivs[pn][ell])
+    return D
+
+
 def fisher_matrix(
     derivs: dict[str, dict[int, np.ndarray]],
     cov_inv: np.ndarray,
@@ -72,8 +83,9 @@ def fisher_matrix(
     cov_inv : array, shape (Nk, Nell, Nell)
         Inverse of the multipole covariance at each k.
     k : array, shape (Nk,)
-    volume : survey volume (Mpc/h)³  [used only if not folded into cov_inv]
-    dk : k-bin width
+    volume : survey volume (Mpc/h)³, retained for API compatibility
+    dk : k-bin width, retained for API compatibility
+        Both volume and shell width must already be folded into cov_inv.
     param_names : ordered list of parameter names
     ells : multipole orders matching the covariance ordering
 
@@ -82,22 +94,16 @@ def fisher_matrix(
     F : array, shape (Nparam, Nparam)
     """
     Nk = len(k)
-    Nell = len(ells)
     Np = len(param_names)
 
     # Build derivative matrix: (Nk, Nell, Nparam)
-    D = np.zeros((Nk, Nell, Np))
-    for ip, pn in enumerate(param_names):
-        for il, ell in enumerate(ells):
-            if pn in derivs and ell in derivs[pn]:
-                D[:, il, ip] = np.asarray(derivs[pn][ell])
+    D = _derivative_matrix(derivs, k, param_names, ells)
 
-    # F_ab = Σ_k  Dᵀ(k) C⁻¹(k) D(k)  × dk
-    # (trapezoidal weights are approximately dk for uniform grid)
+    # Finite-shell covariance already contains the shell width and volume.
     F = np.zeros((Np, Np))
     for ik in range(Nk):
         DtCinv = D[ik].T @ cov_inv[ik]  # (Np, Nell)
-        F += DtCinv @ D[ik] * dk
+        F += DtCinv @ D[ik]
 
     return F
 
@@ -143,15 +149,10 @@ def single_tracer_fisher(
     -------
     FisherResult
     """
-    # Invert covariance at each k
-    Nk = len(k)
-    Nell = len(ells)
-    cov_inv = np.zeros_like(cov)
-    for ik in range(Nk):
-        cov_inv[ik] = np.linalg.inv(cov[ik])
-
-    F = fisher_matrix(derivs, cov_inv, k, volume=1.0, dk=dk,
-                      param_names=param_names, ells=ells)
+    # Validate and whiten covariance just as in the multi-tracer paths.
+    # Shell width is already included in cov; no extra dk factor belongs here.
+    D = _derivative_matrix(derivs, k, param_names, ells)
+    F = fisher_from_shells(D, cov, k)
 
     if prior_diag is not None:
         F = add_gaussian_prior(F, prior_diag)

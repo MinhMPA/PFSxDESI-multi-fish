@@ -43,8 +43,8 @@ def main():
     # f_shared has a measurable effect on the cov.
     cfg.marginalize_cross_stoch = False
     cosmo = FiducialCosmology(backend=cfg.cosmo_backend)
-    from ps_1loop_jax import PowerSpectrum1Loop
-    ps = PowerSpectrum1Loop(do_irres=False)
+    from pfsfog.one_loop import make_one_loop_engine
+    ps = make_one_loop_engine()
 
     print("=" * 80)
     print("f_shared sensitivity sweep — DESI+PFS joint Fisher")

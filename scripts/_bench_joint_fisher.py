@@ -48,11 +48,11 @@ def _inner(threads: int, parallel: bool = False,
         SurveyGroup, desi_elg, desi_lrg, desi_qso, pfs_elg,
     )
     from scripts.run_joint_fisher import ZBINS
-    from ps_1loop_jax import PowerSpectrum1Loop
+    from pfsfog.one_loop import make_one_loop_engine
 
     cfg = ForecastConfig.from_yaml("configs/default.yaml")
     cosmo = FiducialCosmology(backend=cfg.cosmo_backend)
-    ps = PowerSpectrum1Loop(do_irres=False)
+    ps = make_one_loop_engine()
     sg = SurveyGroup(
         pfs=pfs_elg(),
         desi_tracers={

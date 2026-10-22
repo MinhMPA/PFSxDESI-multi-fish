@@ -194,7 +194,7 @@ def _build_nuis_params(vec: jnp.ndarray, fid_params: dict) -> dict:
     return p
 
 
-@partial(jax.jit, static_argnums=(0,), static_argnames=("ells",))
+@partial(jax.jit, static_argnames=("ps_model", "ells"))
 def _dPell_d_nuisance_jit(
     ps_model: PowerSpectrum1Loop,
     k: jnp.ndarray,
@@ -384,7 +384,7 @@ def _build_cross_nuis_params_B(vec: jnp.ndarray, fid_params: dict) -> dict:
     return p
 
 
-@partial(jax.jit, static_argnums=(0,), static_argnames=("ells",))
+@partial(jax.jit, static_argnames=("ps_model", "ells"))
 def _dPcross_d_nuisance_A_jit(
     ps_model: PowerSpectrum1Loop,
     k: jnp.ndarray,
@@ -413,7 +413,7 @@ def _dPcross_d_nuisance_A_jit(
     return out / s8_scale[:, None, None]
 
 
-@partial(jax.jit, static_argnums=(0,), static_argnames=("ells",))
+@partial(jax.jit, static_argnames=("ps_model", "ells"))
 def _dPcross_d_nuisance_B_jit(
     ps_model: PowerSpectrum1Loop,
     k: jnp.ndarray,
@@ -670,7 +670,7 @@ def _cached_f_fn():
     return make_growth_rate_func()
 
 
-@partial(jax.jit, static_argnums=(0,), static_argnames=("ells",))
+@partial(jax.jit, static_argnames=("ps_model", "ells"))
 def _dPell_d_fsigma8_jit(
     ps_model: PowerSpectrum1Loop,
     k: jnp.ndarray,
@@ -699,7 +699,7 @@ def _dPell_d_fsigma8_jit(
     return jnp.stack(grads, axis=0)        # (N_ell, Nk)
 
 
-@partial(jax.jit, static_argnums=(0, 1, 2), static_argnames=("ells",))
+@partial(jax.jit, static_argnames=("ps_model", "pkdata_fn", "f_fn", "ells"))
 def _dPell_d_OmMnu_jit(
     ps_model: PowerSpectrum1Loop,
     pkdata_fn,                 # closure from make_plin_func (static identity)

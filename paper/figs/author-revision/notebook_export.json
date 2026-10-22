@@ -1,0 +1,218 @@
+{
+  "notebook": "notebooks/figures_author_revision.ipynb",
+  "python": "3.10.18 | packaged by conda-forge | (main, Jun  4 2025, 14:46:00) [Clang 18.1.8 ]",
+  "platform": "macOS-27.0.1-arm64-arm-64bit",
+  "numpy": "2.2.6",
+  "matplotlib": "3.10.8",
+  "input_manifest_sha256": "0a79188e1c9d35b962c3d6f43e0fde5e2ef31f8898b030a7260a45a4d5540ebb",
+  "figures": [
+    {
+      "figure": 1,
+      "size_inches": [
+        14.0,
+        10.0
+      ],
+      "files": {
+        "pdf": {
+          "path": "paper/figs/author-revision/figure1_nuisance_constraints.pdf",
+          "sha256": "fd8b104a651fa81cab016cd0582686a6584247d1fc0d6e122e3cc442c892974a"
+        },
+        "png": {
+          "path": "paper/figs/author-revision/figure1_nuisance_constraints.png",
+          "sha256": "1a666b799500a4ca1da7c0abf50aa634e2a551bdbff840434cfacfde279af4c7"
+        },
+        "svg": {
+          "path": "paper/figs/author-revision/figure1_nuisance_constraints.svg",
+          "sha256": "f5aac914a461c96af1e0f86a747b2a5c5f32e67cf94704f8dcef35e519cc5efb"
+        }
+      }
+    },
+    {
+      "figure": 2,
+      "size_inches": [
+        14.0,
+        4.8
+      ],
+      "files": {
+        "pdf": {
+          "path": "paper/figs/author-revision/figure2_cosmological_constraints.pdf",
+          "sha256": "ab6fa8653a57fcca772d43c1adcdfb9138b517c770f806c4f58918682e0d79e9"
+        },
+        "png": {
+          "path": "paper/figs/author-revision/figure2_cosmological_constraints.png",
+          "sha256": "07ae6b5ace599a30c226dfc4961fb9ec02f8e28b87900a616641db22c269061e"
+        },
+        "svg": {
+          "path": "paper/figs/author-revision/figure2_cosmological_constraints.svg",
+          "sha256": "73c5bacef9cf6d3aa4b6bb3819a1bb878b0c23a084afd888a4e227bcc0cc2c62"
+        }
+      }
+    },
+    {
+      "figure": 3,
+      "size_inches": [
+        9.0,
+        4.6
+      ],
+      "files": {
+        "pdf": {
+          "path": "paper/figs/author-revision/figure3_nuisance_marginalization.pdf",
+          "sha256": "6f1cf7f2b831edf3fdfc0d9489f01eadc9b4c909807b68b20e8f9a98c6b24852"
+        },
+        "png": {
+          "path": "paper/figs/author-revision/figure3_nuisance_marginalization.png",
+          "sha256": "b7d64b601fa5edaf339ca219297072b2feb058f9782b0a0855219d66045fd4c1"
+        },
+        "svg": {
+          "path": "paper/figs/author-revision/figure3_nuisance_marginalization.svg",
+          "sha256": "efb4f293ad56de78a6ddf139f15e338e7847d403c2bb6da227aa5cb596249784"
+        }
+      }
+    },
+    {
+      "figure": 4,
+      "size_inches": [
+        14.0,
+        8.2
+      ],
+      "files": {
+        "pdf": {
+          "path": "paper/figs/author-revision/figure4_robustness.pdf",
+          "sha256": "eb3d01eddf7308af38554694673c55d5e6e3e0ec06075b78c138b73b25918cd8"
+        },
+        "png": {
+          "path": "paper/figs/author-revision/figure4_robustness.png",
+          "sha256": "743a0a9dd8d0888b5680b6647aceb1f62cedf988ecb0c9d618bbdcb5568b1abe"
+        },
+        "svg": {
+          "path": "paper/figs/author-revision/figure4_robustness.svg",
+          "sha256": "725c687aacc6ccac3e3d73371f4464fa6f0e847b5b3d62116b7784cef60b4af8"
+        }
+      }
+    },
+    {
+      "figure": 5,
+      "size_inches": [
+        14.0,
+        4.8
+      ],
+      "files": {
+        "pdf": {
+          "path": "paper/figs/author-revision/figure5_correlations.pdf",
+          "sha256": "df4278a6601faeb15ec4a7f099e87cb0a5cddfdf9ca985cfd3338f54da85d6bc"
+        },
+        "png": {
+          "path": "paper/figs/author-revision/figure5_correlations.png",
+          "sha256": "f5952786d27fb5f256c60fd42ec86605c3b30067de5d476780ee94f755244d12"
+        },
+        "svg": {
+          "path": "paper/figs/author-revision/figure5_correlations.svg",
+          "sha256": "4d3785458d43ac5872e5ead0bb5f1281f9a94f4ed7dde81e8ab91214bd6594bf"
+        }
+      }
+    },
+    {
+      "figure": 6,
+      "size_inches": [
+        14.0,
+        6.4
+      ],
+      "files": {
+        "pdf": {
+          "path": "paper/figs/author-revision/figure6_derivatives_elf.pdf",
+          "sha256": "1bac94f8d5be658b5ec7d0a855966dd6500bf353d62b613b2584965c9cae961e"
+        },
+        "png": {
+          "path": "paper/figs/author-revision/figure6_derivatives_elf.png",
+          "sha256": "e15372c292c9e271180580f710c049fcd3a9ca2c062385d195520079bdee8b80"
+        },
+        "svg": {
+          "path": "paper/figs/author-revision/figure6_derivatives_elf.svg",
+          "sha256": "b9d652dc8804931175fe55eb09c23fbeca1a0b6729c673e2194bbf7cff06ad5d"
+        }
+      }
+    },
+    {
+      "figure": 7,
+      "size_inches": [
+        14.0,
+        5.4
+      ],
+      "files": {
+        "pdf": {
+          "path": "paper/figs/author-revision/figure7_covariance_elf.pdf",
+          "sha256": "afa601209ce96277582cdddfc0921c7062962436ede87e3e14856c6ae0d46945"
+        },
+        "png": {
+          "path": "paper/figs/author-revision/figure7_covariance_elf.png",
+          "sha256": "7e6818d4edb7aaf692da990dee0f771416a5e4ea67354f44cad24397327bcff6"
+        },
+        "svg": {
+          "path": "paper/figs/author-revision/figure7_covariance_elf.svg",
+          "sha256": "182604b7f9f0a74fbd11e0e9e6827c5aed1db14fbda3cdcd6d3d910baa19723e"
+        }
+      }
+    },
+    {
+      "figure": 8,
+      "size_inches": [
+        7.0,
+        4.6
+      ],
+      "files": {
+        "pdf": {
+          "path": "paper/figs/author-revision/figure8_kaiser_limit.pdf",
+          "sha256": "c0766fcc4ca0a36f9db569c223489ab1c38c8bd351edb45de4720cfcb14868ee"
+        },
+        "png": {
+          "path": "paper/figs/author-revision/figure8_kaiser_limit.png",
+          "sha256": "2e159c8365aa54897c4e753d9b5547771167a4cdd8586674e34728a392be64da"
+        },
+        "svg": {
+          "path": "paper/figs/author-revision/figure8_kaiser_limit.svg",
+          "sha256": "5b3d7ac1b84416a1a42c7ce282e7273e0f0fd3231208817f3bf96de1fd55eb2d"
+        }
+      }
+    },
+    {
+      "figure": 9,
+      "size_inches": [
+        14.0,
+        5.3
+      ],
+      "files": {
+        "pdf": {
+          "path": "paper/figs/author-revision/figure9_accumulated_information.pdf",
+          "sha256": "edce8bdfdc4425f88c7214898d67e5b8cc73235ca53ef57b912859de50367b03"
+        },
+        "png": {
+          "path": "paper/figs/author-revision/figure9_accumulated_information.png",
+          "sha256": "7831191f813fec0bade928a93699b9aa426380819029cfba9fb29222619c1bea"
+        },
+        "svg": {
+          "path": "paper/figs/author-revision/figure9_accumulated_information.svg",
+          "sha256": "4f8ae1e85bd8f32cdd4957a323c9030bcfcf1e8cce27c0774511b4a3ca6cb89b"
+        }
+      }
+    }
+  ],
+  "checks": {
+    "case_D_nuisance_values": 209,
+    "figure5_contours": 18,
+    "joint_contour_delta_chi2": [
+      2.27886856637673,
+      5.99146454710798
+    ],
+    "figure6_max_discrepancy": 0.00026633780609482615,
+    "figure7_L8_max_discrepancy": 2.845871885677065e-14,
+    "figure8_two_tracer_variance_over_floor": 1.000268382988833,
+    "figure9_variance_ratios": [
+      78.53455201027758,
+      35.587091942221996,
+      147.2113388180342
+    ]
+  },
+  "new_forecasts_computed": false,
+  "forecast_density_source": "Takada et al. (2014), Table 2",
+  "numerical_report_sha256": "e2e6e3aec13d10bf194af93fd824429f9f5460c942eb1140b0fbb6b36efe066b"
+}

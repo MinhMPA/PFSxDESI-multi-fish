@@ -156,7 +156,7 @@ def desi_elg_fiducials(b1: float, sigma8_z: float) -> EFTFiducials:
         c0=0.0,
         c2=30.0,
         c4=0.0,
-        c_tilde=400.0,
+        c_tilde=get_ctilde("DESI-ELG"),
         c1=0.0,
         Pshot=0.0,
         a0=0.0,
@@ -173,12 +173,18 @@ def desi_elg_fiducials(b1: float, sigma8_z: float) -> EFTFiducials:
 # c̃ fiducial templates
 # ---------------------------------------------------------------------------
 #
-# Two templates based on different σ_v measurements:
+# DESI benchmark plus historical diagnostic templates:
+#
+# "desi_classpt": Chudaykin+ arXiv:2507.13433v2 Table 3 / Sec. VII.2.
+#   Common 400 benchmark at the reference amplitude, not a measured
+#   coefficient for every tracer. Each coefficient is still marginalized.
 #
 # "zhang": Zhang et al. (2025, arXiv:2504.10407, Table 1).
 #   σ_v from HOD pairwise velocity dispersions.
 #   σ_v^ELG = 3.11, σ_v^LRG = 6.20, σ_v^QSO = 5.68 h⁻¹Mpc.
-#   c̃ ∝ σ_v⁴ with c̃_ELG = 400 (Chudaykin+ 2025 prior mean).
+#   Historical heuristic c̃ ∝ σ_v⁴, normalized to c̃_ELG = 400.
+#   The cited velocities normalize stochastic parameters in that paper;
+#   they do NOT calibrate this deterministic c̃ conversion.
 #
 # "ivanov": Ivanov (2021, arXiv:2106.12580, Eqs. 19, 22).
 #   c̃ and σ_v measured from EFT fits to Outer Rim mocks.
@@ -186,22 +192,28 @@ def desi_elg_fiducials(b1: float, sigma8_z: float) -> EFTFiducials:
 #   QSO: scaled from σ_v ratio (5.68/5.0)⁴ × 300.
 
 CTILDE_TEMPLATES = {
+    "desi_classpt": {
+        "DESI-ELG": 400.0,
+        "DESI-LRG": 400.0,
+        "DESI-QSO": 400.0,
+        "source": "Chudaykin+ arXiv:2507.13433v2, Table 3 / Sec. VII.2 benchmark",
+    },
     "zhang": {
         "DESI-ELG": 400.0,
         "DESI-LRG": 400.0 * (6.20 / 3.11) ** 4,   # ≈ 6320
         "DESI-QSO": 400.0 * (5.68 / 3.11) ** 4,   # ≈ 4450
-        "source": "Zhang+ 2025 (arXiv:2504.10407, Table 1)",
+        "source": "Heuristic deterministic scaling using Zhang+ 2025 Table 1 velocities",
     },
     "ivanov": {
         "DESI-ELG": 300.0,
         "DESI-LRG": 734.0,
-        "DESI-QSO": 300.0 * (5.68 / 5.0) ** 4,    # ≈ 506
+        "DESI-QSO": 300.0 * (5.68 / 5.0) ** 4,    # ≈ 499.614 (heuristic)
         "source": "Ivanov 2021 (arXiv:2106.12580, Eq. 19)",
     },
 }
 
 # Default template
-_CTILDE_TEMPLATE = "zhang"
+_CTILDE_TEMPLATE = "desi_classpt"
 
 def get_ctilde(tracer: str, template: str | None = None) -> float:
     """Get the c̃ fiducial for a DESI tracer."""
@@ -217,9 +229,8 @@ _CTILDE_QSO = CTILDE_TEMPLATES[_CTILDE_TEMPLATE]["DESI-QSO"]
 def desi_lrg_fiducials(b1: float, sigma8_z: float) -> EFTFiducials:
     """DESI-LRG EFT fiducials.
 
-    LRGs live in massive halos with σ_v = 6.20 h⁻¹Mpc (Zhang+ 2025,
-    Table 1), giving c̃_LRG ≈ 6300 via c̃ ∝ σ_v⁴.
-    Counterterms scale with bias ratio.
+    Uses the common DESI c_tilde benchmark. The k² fiducial counterterms
+    retain the forecast's bias-ratio scaling.
     """
     b2 = lazeyras_b2(b1)
     bG2 = lazeyras_bG2(b1)
@@ -244,8 +255,7 @@ def desi_lrg_fiducials(b1: float, sigma8_z: float) -> EFTFiducials:
 def desi_qso_fiducials(b1: float, sigma8_z: float) -> EFTFiducials:
     """DESI-QSO EFT fiducials.
 
-    QSOs have σ_v = 5.68 h⁻¹Mpc (Zhang+ 2025, Table 1),
-    giving c̃_QSO ≈ 4400 via c̃ ∝ σ_v⁴.
+    Uses the common DESI c_tilde benchmark; this is not a QSO measurement.
     """
     b2 = lazeyras_b2(b1)
     bG2 = lazeyras_bG2(b1)
@@ -317,7 +327,8 @@ def pfs_elg_fiducials(
     # Scale counterterms by bias ratio
     bias_ratio = b1_pfs / b1_desi if b1_desi != 0 else 1.0
 
-    # FoG counterterm scales with σ_v²
+    # Forecast assumption: c_tilde scales with the fourth power of a
+    # relative velocity factor. This is not a PFS calibration.
     c_tilde_desi = 400.0
     c_tilde_pfs = c_tilde_desi * r_sigma_v**4
 

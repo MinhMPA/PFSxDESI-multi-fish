@@ -20,7 +20,7 @@ matplotlib.rcParams.update({"text.usetex": True})
 import matplotlib.pyplot as plt
 import numpy as np
 
-from ps_1loop_jax import PowerSpectrum1Loop
+from pfsfog.one_loop import make_one_loop_engine
 from pfsfog.cosmo import FiducialCosmology
 from pfsfog.eft_params import NUISANCE_NAMES, COSMO_NAMES, desi_elg_fiducials
 from pfsfog.ps1loop_adapter import fisher_to_ps1loop_auto, make_ps1loop_pkmu_func
@@ -32,7 +32,7 @@ from pfsfog.derivatives import (
 OUT = Path(__file__).resolve().parent.parent / "paper" / "figs"
 
 # --- setup ---
-ps = PowerSpectrum1Loop(do_irres=False)
+ps = make_one_loop_engine()
 cosmo = FiducialCosmology(backend="cosmopower")
 z_eff = 0.9
 s8 = cosmo.sigma8(z_eff)

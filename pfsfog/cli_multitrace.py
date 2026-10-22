@@ -77,8 +77,8 @@ def run_multitrace_pipeline(cfg: ForecastConfig, verbose: bool = True) -> MultiT
     sg = default_survey_group()
     sg.overlap_area_deg2 = cfg.overlap_area_deg2
 
-    from ps_1loop_jax import PowerSpectrum1Loop
-    ps = PowerSpectrum1Loop(do_irres=False)
+    from pfsfog.one_loop import make_one_loop_engine
+    ps = make_one_loop_engine()
 
     ells = (0, 2, 4)
     k = np.arange(cfg.kmin, cfg.kmax_desi_overlap + cfg.dk / 2, cfg.dk)

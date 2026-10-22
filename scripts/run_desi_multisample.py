@@ -254,8 +254,8 @@ def average_calibrated_prior_diag(cal_per_z, overlap_zbins):
 def main():
     cfg = ForecastConfig.from_yaml("configs/default.yaml")
     cosmo = FiducialCosmology(backend=cfg.cosmo_backend)
-    from ps_1loop_jax import PowerSpectrum1Loop
-    ps = PowerSpectrum1Loop(do_irres=False)
+    from pfsfog.one_loop import make_one_loop_engine
+    ps = make_one_loop_engine()
 
     # --- Step 1: Overlap calibration with extended z-bins ---
     cfg.z_bins = [(0.6, 0.8), (0.8, 1.0), (1.0, 1.2), (1.2, 1.4), (1.4, 1.6)]

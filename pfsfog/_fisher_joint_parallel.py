@@ -74,9 +74,9 @@ def _get_worker_state(cfg):
     global _WORKER_COSMO, _WORKER_PS
     if _WORKER_COSMO is None:
         from .cosmo import FiducialCosmology
-        from ps_1loop_jax import PowerSpectrum1Loop
+        from pfsfog.one_loop import make_one_loop_engine
         _WORKER_COSMO = FiducialCosmology(backend=cfg.cosmo_backend)
-        _WORKER_PS = PowerSpectrum1Loop(do_irres=False)
+        _WORKER_PS = make_one_loop_engine()
     return _WORKER_COSMO, _WORKER_PS
 
 
@@ -111,35 +111,16 @@ def _worker_zbin_broad(payload: tuple) -> tuple[np.ndarray, list[str], list[str]
     """
     zbin, sg, cfg = payload
 
-    from .fisher_joint import build_zbin_fisher, embed_fisher
+    from .fisher_joint import independent_autos_zbin_fisher, active_cell_tracers
 
-    active_desi = sg.active_desi(zbin[0], zbin[1])
+    active_desi = active_cell_tracers(sg, zbin, cfg, False)
     if not active_desi:
         return None
 
     cosmo, ps = _get_worker_state(cfg)
 
-    V_full = sg.V_desi_full(zbin[0], zbin[1])
-
-    zbin_fishers = []
-    zbin_names_list = []
-    for tn, surv in active_desi.items():
-        F, names = build_zbin_fisher(
-            zbin, {tn: surv}, V_full, cosmo, ps, cfg,
-        )
-        zbin_fishers.append(F)
-        zbin_names_list.append(names)
-
-    union: list[str] = list(COSMO_NAMES)
-    for nl in zbin_names_list:
-        for n in nl:
-            if n not in union:
-                union.append(n)
-    F_total = np.zeros((len(union), len(union)))
-    for F, nl in zip(zbin_fishers, zbin_names_list):
-        F_total += embed_fisher(F, nl, union)
-
-    return (F_total, union, sorted(active_desi.keys()))
+    F_total, union = independent_autos_zbin_fisher(zbin, sg, cosmo, ps, cfg)
+    return (F_total, union, active_desi)
 
 
 # ---------------------------------------------------------------------------
@@ -241,13 +222,8 @@ def _run_joint_parallel(
     )
 
     # active-tracer list (cheap, do in parent for accuracy)
-    per_zbin_active = []
-    for zb in zbins:
-        if include_pfs and zb[0] < sg.pfs_zmax:
-            active = sorted(sg.active_with_pfs_truncation(zb[0], zb[1]).keys())
-        else:
-            active = sorted(sg.active_desi(zb[0], zb[1]).keys())
-        per_zbin_active.append(active)
+    from .fisher_joint import active_cell_tracers
+    per_zbin_active = [active_cell_tracers(sg, zb, cfg, include_pfs) for zb in zbins]
 
     return per_zbin, per_zbin_active
 

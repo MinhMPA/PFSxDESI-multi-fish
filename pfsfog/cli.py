@@ -144,8 +144,8 @@ def run_pipeline(cfg: ForecastConfig, verbose: bool = True) -> PipelineResults:
     sp = default_survey_pair()
     sp.overlap_area_deg2 = cfg.overlap_area_deg2
 
-    from ps_1loop_jax import PowerSpectrum1Loop
-    ps = PowerSpectrum1Loop(do_irres=False)
+    from pfsfog.one_loop import make_one_loop_engine
+    ps = make_one_loop_engine()
 
     z_bins = cfg.z_bins
     ells = (0, 2, 4)

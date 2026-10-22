@@ -5,7 +5,7 @@ import jax.numpy as jnp
 import numpy as np
 import pytest
 
-from ps_1loop_jax import PowerSpectrum1Loop
+from pfsfog.one_loop import make_one_loop_engine
 
 from pfsfog.eft_params import (
     desi_elg_fiducials, pfs_elg_fiducials, NUISANCE_NAMES, COSMO_NAMES,
@@ -26,9 +26,11 @@ from pfsfog.derivatives import (
 @pytest.fixture(scope="module")
 def setup():
     """Shared setup: ps model, pk_data, fiducial params."""
-    ps = PowerSpectrum1Loop(do_irres=False)
-    k_lin = jnp.geomspace(1e-4, 10.0, 256)
-    pk_lin = 1e4 * (k_lin / 0.05) ** (-2.5)
+    ps = make_one_loop_engine()
+    k_lin = jnp.geomspace(1e-5, 100., 512)
+    # Finite IR/UV power with a CDM-like turnover. The former k^-2.5
+    # extrapolation generated enormous loop terms and subtraction noise.
+    pk_lin = 1e4 * (k_lin/.05)**.96 / (1+(k_lin/.05)**2)**2
     pk_data = {"k": k_lin, "pk": pk_lin}
     k = jnp.geomspace(0.01, 0.25, 20)
 
@@ -88,9 +90,9 @@ def test_stochastic_derivative_nonzero(setup):
 @pytest.fixture(scope="module")
 def setup_cross():
     """Cross-spectrum setup: PFS-ELG × DESI-ELG params."""
-    ps = PowerSpectrum1Loop(do_irres=False)
-    k_lin = jnp.geomspace(1e-4, 10.0, 256)
-    pk_lin = 1e4 * (k_lin / 0.05) ** (-2.5)
+    ps = make_one_loop_engine()
+    k_lin = jnp.geomspace(1e-5, 100., 512)
+    pk_lin = 1e4 * (k_lin/.05)**.96 / (1+(k_lin/.05)**2)**2
     pk_data = {"k": k_lin, "pk": pk_lin}
     k = jnp.geomspace(0.01, 0.25, 20)
 
@@ -129,11 +131,16 @@ def test_dPell_jit_equiv_unjitted(setup):
     assert arr_out.shape == (len(NUISANCE_NAMES), len(ells), len(k))
 
     for ip, name in enumerate(NUISANCE_NAMES):
+        # Some higher multipoles vanish analytically (e.g. bGamma3, ell=4).
+        # Bound 32-node cancellation roundoff in units of this physical
+        # parameter's whole multipole response; keep the relative criterion.
+        scale = max(np.max(np.abs(np.asarray(dict_out[name][l]))) for l in ells)
+        roundoff = max(1e-15, 32*np.finfo(float).eps*scale)
         for il, ell in enumerate(ells):
             expected = np.asarray(dict_out[name][ell])
             actual = np.asarray(arr_out[ip, il])
             np.testing.assert_allclose(
-                actual, expected, rtol=1e-7, atol=1e-15,
+                actual, expected, rtol=1e-7, atol=roundoff,
                 err_msg=f"mismatch for {name} ell={ell}",
             )
 
@@ -157,13 +164,15 @@ def test_dPcross_jit_equiv_unjitted(setup_cross):
 
     for is_, side in enumerate(sides):
         for ip, name in enumerate(NUISANCE_NAMES):
+            expected_all = [np.asarray(dPcross_dtheta_autodiff(
+                ps, k, pk_data, params, name, s8, side, ell)) for ell in ells]
+            scale = max(np.max(np.abs(value)) for value in expected_all)
+            roundoff = max(1e-15, 32*np.finfo(float).eps*scale)
             for il, ell in enumerate(ells):
-                expected = np.asarray(dPcross_dtheta_autodiff(
-                    ps, k, pk_data, params, name, s8, side, ell,
-                ))
+                expected = expected_all[il]
                 actual = np.asarray(arr_out[is_, ip, il])
                 np.testing.assert_allclose(
-                    actual, expected, rtol=1e-7, atol=1e-15,
+                    actual, expected, rtol=1e-7, atol=roundoff,
                     err_msg=f"mismatch side={side} {name} ell={ell}",
                 )
 

@@ -1,0 +1,13 @@
+# Takada et al., PASJ 66 R1 (2014), arXiv:1206.0737v3, Table 2, PDF page 8.
+# https://arxiv.org/pdf/1206.0737#page=8
+# Published mean comoving densities. Piecewise constant within each interval.
+# The published density column is in units of 1e-4 (h/Mpc)^3.
+# Values below are in (h/Mpc)^3. No angular-area rescaling applies to density.
+# z_min z_max nbar[(h/Mpc)^3]
+0.6 0.8 1.9e-4
+0.8 1.0 6.0e-4
+1.0 1.2 5.8e-4
+1.2 1.4 7.8e-4
+1.4 1.6 5.5e-4
+1.6 2.0 3.1e-4
+2.0 2.4 2.7e-4

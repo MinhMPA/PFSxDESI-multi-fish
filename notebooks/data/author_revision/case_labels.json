@@ -1,0 +1,51 @@
+{
+  "date": "2026-10-19",
+  "previous_to_current": {
+    "A": null,
+    "B": "A",
+    "C": "B",
+    "D": "C",
+    "E": "D"
+  },
+  "legacy_to_previous": {
+    "I": "A",
+    "A": "B",
+    "B": "C",
+    "D": "D",
+    "C": "E"
+  },
+  "legacy_to_current": {
+    "I": null,
+    "A": "A",
+    "B": "B",
+    "D": "C",
+    "C": "D"
+  },
+  "current_order": [
+    "A",
+    "B",
+    "C",
+    "D"
+  ],
+  "physical_cases": {
+    "A": "Separate DESI auto-spectra with full mutual Gaussian covariance; reference.",
+    "B": "A plus measured internal-DESI cross-spectra with full covariance.",
+    "C": "B plus PFS auto-spectra and their covariance with retained DESI spectra.",
+    "D": "C plus measured DESI x PFS cross-spectra with full covariance."
+  },
+  "previous_comparison_map": {
+    "A_to_B": null,
+    "B_to_C": "A_to_B",
+    "C_to_D": "B_to_C",
+    "D_to_E": "C_to_D",
+    "C_to_E": "B_to_D"
+  },
+  "legacy_comparison_map": {
+    "I_to_A": null,
+    "A_to_B": "A_to_B",
+    "B_to_D": "B_to_C",
+    "D_to_C": "C_to_D",
+    "B_to_C": "B_to_D"
+  },
+  "numerical_identifiers": "Frozen calculations, original paths and appendix_verification.json retain historical I/A/B/D/C identifiers. Null means omitted from current comparisons, not deleted from historical evidence. Profile suffixes and H21 are unchanged."
+}

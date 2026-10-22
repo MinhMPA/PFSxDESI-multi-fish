@@ -1,6 +1,80 @@
 # PFSFOG — Pooled Full-shape Surveys: Forecasts Of Galaxies
 
-> **Dependency**: requires [`ps_1loop_jax`](https://github.com/archaeo-pteryx/ps_1loop_jax) (Kobayashi & Akitsu, in prep.) for one-loop power spectrum evaluation.
+**Current revision, October 8, 2026:** new one-loop spectra use the local ELF
+Eulerian `EPT` calculation. Cosmopower supplies the same total-matter linear
+power; `ps_1loop_jax.background` still supplies the retained background and
+growth functions. The accepted cosmology, nuisance coordinates, priors and
+survey geometry are unchanged. The current continuation record is
+[ELF_CHECKPOINT.md](../docs/revision/ELF_CHECKPOINT.md).
+
+ELF is pinned to `/Users/nguyenmn/elf` at
+`17d131deff9d03064722b3f57f960aa0a1c1cdba`; the factory verifies both Python
+source and coefficient-table bytes. The physical choices are EPT, IR off,
+linear counterterms and zero-lag constant subtraction. The initial loop grid
+is 512 points from 1e-5 to 100 in h_ref/Mpc. ELF applies AP to the complete
+angular mean, including the tied mu^4, mu^6 and mu^8 FoG terms. The former
+two-dimensional AP-table sizes are inactive and cannot qualify this engine.
+
+In the `revision/counterterms-leading` comparison, CT-A replaces the leading
+power-coefficient average with common tracer fields. The current raw dictionary
+still carries `(c0,c2,c4,cfog)`; `leading_field_coefficients(ctr,b1,f)` returns
+`(d0,d2/f,d4/f²)` through the regular N system, including at zero growth, and
+`pair_counterterms(ctr_a,ctr_b,b_a,b_b,f)` returns ELF's seven coefficients.
+The Q and T coordinates and their priors are unchanged. Intrinsic auto
+multipoles 0,2,4 match the previous prescription; the induced multipole 6
+changes the full angular auto spectrum, AP response and covariance. Cross
+spectra contract the two tracer fields, with the existing single-coefficient
+FoG contribution retained. Only intrinsic auto spectra retain the declared
+Q-multipole zeros. Survey forecasts for this prescription require separate
+physical and numerical qualification.
+
+Use the existing isolated `.venv` in `.worktrees/elf-engine`. For a fresh
+environment only, from that worktree:
+
+```sh
+uv venv --python 3.11 .venv
+uv pip install --python .venv/bin/python -r requirements-elf.lock
+.venv/bin/python - <<'PY'
+from pathlib import Path
+import sysconfig
+root = Path.cwd().resolve()
+sources = ['/Users/nguyenmn/elf/src', '/Users/nguyenmn/cosmopower-jax', str(root/'ps_1loop_jax')]
+pth = Path(sysconfig.get_paths()['purelib'])/'pfs_elf_sources.pth'
+pth.write_text('import sys; sys.path[:0] = '+repr(sources)+'\n')
+PY
+```
+
+The lock records the tested Python package versions (JAX0.9.2, SciPy1.17.1).
+The local Cosmopower model files remain at
+`/Users/nguyenmn/cosmopower-jax/cosmology/jense2024`. Keep the original
+Python3.10 recovery environment for authenticating historical results.
+
+```sh
+# New spectrum and source checks
+.venv/bin/python -m pytest tests/test_elf_adapter.py tests/test_elf_integration.py tests/test_elf_validation.py -q
+# Real-emulator derivatives, full cell covariance, loop/angular refinement
+# Use a new output directory on every invocation.
+.venv/bin/python scripts/validate_elf_engine.py --output results/elf-physical-new
+# Inventory only: does not qualify or publish any forecast
+.venv/bin/python scripts/run_revision.py --grid --identities
+```
+
+The physical command checks two representative overlap cells, including a
+separately labelled high-z PFS diagnostic (not the complete high-z study).
+It saves signed finite
+differences, assembled derivatives, spectra and covariances. A failed check
+returns a nonzero exit. Full survey/Fisher convergence and the thirteen
+configuration results remain a separate qualification task. Historical
+`validate_revision.py` and extended-cosmology qualification commands reject
+ELF measurements explicitly; their read-only inventory remains available.
+
+## Historical routines and original architecture
+
+The descriptions and parameterization below concern the older forecast
+routines. Their newly constructed spectra also select ELF, but their timing
+and old numerical certificates do not apply to the revision. The revision
+uses global ln(10^10 A_s), reports derived correlated f sigma8 constraints,
+and uses the common accepted kmax rather than the legacy asymmetric cut.
 
 Joint multi-tracer, multi-survey Fisher analysis. The framework pools
 Fisher information across the disjoint regions of N overlapping

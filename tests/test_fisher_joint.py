@@ -275,15 +275,11 @@ def test_pfs_kmax_zero_recovers_desi_only(cosmo, ps, cfg, sg):
         cfg, kmax_pfs_overlap=0.001, kmax_cross_overlap=0.001,
     )
 
-    # The driver's marginalized_sigma uses np.linalg.inv, which fails
-    # because PFS-ELG b1·σ8 has only the (flat) prior in this scenario.
-    # Bypass and use pinv to extract σ on the cosmology directions.
+    # The full matrix has unconstrained PFS nuisance directions. Compare
+    # the active DESI block after checking those directions carry no data.
     from pfsfog.fisher_joint import (
         volume_partitioned_zbin_fisher, combine_zbins_heterogeneous,
-    )
-    from pfsfog.fisher import FisherResult
-    from pfsfog.eft_params import (
-        COSMO_PRIOR_SIGMA, NUISANCE_NAMES, broad_priors,
+        _broad_prior_diag,
     )
     per_zbin = []
     for zb in zbins:
@@ -292,28 +288,41 @@ def test_pfs_kmax_zero_recovers_desi_only(cosmo, ps, cfg, sg):
         )
         per_zbin.append((F, names))
     fr_raw = combine_zbins_heterogeneous(per_zbin, "DESI+PFS, PFS masked")
-    prior_diag = np.zeros(len(fr_raw.param_names))
-    for i, pn in enumerate(fr_raw.param_names):
-        if pn in COSMO_PRIOR_SIGMA:
-            prior_diag[i] = 1.0 / COSMO_PRIOR_SIGMA[pn] ** 2
-        else:
-            for nuis in NUISANCE_NAMES:
-                if pn.startswith(nuis + "_"):
-                    s = broad_priors().sigma_dict()[nuis]
-                    if s is not None:
-                        prior_diag[i] = 1.0 / s ** 2
-                    break
-    fr_masked = FisherResult(
-        F=fr_raw.F + np.diag(prior_diag),
-        param_names=fr_raw.param_names,
-        z_bin=fr_raw.z_bin,
-        survey_name=fr_raw.survey_name,
-        kmax=fr_raw.kmax,
+    desi_names = res_desi.fisher.param_names
+    retained = [fr_raw.param_names.index(name) for name in desi_names]
+    inactive = [i for i, name in enumerate(fr_raw.param_names)
+                if name not in desi_names]
+    assert inactive
+    assert all("PFS-ELG" in fr_raw.param_names[i] for i in inactive)
+    np.testing.assert_array_equal(
+        fr_raw.F[inactive, :], np.zeros((len(inactive), len(fr_raw.param_names)))
     )
-    Finv = np.linalg.pinv(fr_masked.F, rcond=1e-12)
-    names = fr_masked.param_names
-    sig_masked = {cp: float(np.sqrt(Finv[names.index(cp), names.index(cp)]))
-                  for cp in COSMO_NAMES}
+    np.testing.assert_array_equal(
+        fr_raw.F[:, inactive], np.zeros((len(fr_raw.param_names), len(inactive)))
+    )
+    np.testing.assert_allclose(
+        fr_raw.F[np.ix_(retained, retained)],
+        res_desi.fisher.F - np.diag(_broad_prior_diag(desi_names)),
+        rtol=1e-10, atol=0,
+    )
+    # Apply the same prior diagonal as the driver, including cross-stochastic
+    # priors, exactly once. The retained block is positive definite.
+    F_masked = fr_raw.F + np.diag(_broad_prior_diag(fr_raw.param_names))
+    F_active = F_masked[np.ix_(retained, retained)]
+    np.testing.assert_allclose(F_active, res_desi.fisher.F, rtol=1e-10, atol=0)
+
+    # Rescale before solving: raw Fisher entries span many orders of
+    # magnitude, making an unscaled pseudoinverse sensitive to its cutoff.
+    scale = np.sqrt(np.diag(F_active))
+    F_scaled = F_active / np.outer(scale, scale)
+    np.linalg.cholesky(F_scaled)
+    cosmo_idx = [desi_names.index(cp) for cp in COSMO_NAMES]
+    rhs = np.eye(len(desi_names))[:, cosmo_idx]
+    inverse_columns = np.linalg.solve(F_scaled, rhs)
+    sig_masked = {
+        cp: float(np.sqrt(inverse_columns[i, j]) / scale[i])
+        for j, (cp, i) in enumerate(zip(COSMO_NAMES, cosmo_idx))
+    }
 
     for cp in COSMO_NAMES:
         np.testing.assert_allclose(

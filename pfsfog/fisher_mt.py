@@ -18,6 +18,7 @@ import numpy as np
 from .covariance import multi_tracer_cov
 from .eft_params import NUISANCE_NAMES, COSMO_NAMES
 from .fisher import FisherResult
+from .fisher_core import fisher_from_shells
 
 
 # ---------------------------------------------------------------------------
@@ -114,16 +115,7 @@ def multi_tracer_fisher(
     # the overlap Fisher is used for nuisance calibration, not cosmo
     # constraints. The cosmo params are regularized by broad priors.
 
-    # Invert covariance at each k
-    cov_inv = np.zeros_like(cov_mt)
-    for ik in range(Nk):
-        cov_inv[ik] = np.linalg.inv(cov_mt[ik])
-
-    # F_ab = Σ_k D^T(k) C^{-1}(k) D(k) × dk
-    F = np.zeros((Np, Np))
-    for ik in range(Nk):
-        DtCinv = D[ik].T @ cov_inv[ik]  # (Np, Nobs)
-        F += DtCinv @ D[ik] * dk
+    F = fisher_from_shells(D, cov_mt, k)
 
     return FisherResult(
         F=F,
@@ -197,13 +189,7 @@ def multi_tracer_fisher_asymmetric(
             if nn in derivs_AB_B and ell in derivs_AB_B[nn]:
                 D_low[:, 2 * Nell + il, idx_desi] += np.asarray(derivs_AB_B[nn][ell])[:Nk_low]
 
-    cov_inv_low = np.zeros_like(cov_mt_low)
-    for ik in range(Nk_low):
-        cov_inv_low[ik] = np.linalg.inv(cov_mt_low[ik])
-
-    for ik in range(Nk_low):
-        DtCinv = D_low[ik].T @ cov_inv_low[ik]
-        F += DtCinv @ D_low[ik] * dk
+    F = fisher_from_shells(D_low, cov_mt_low, k_low)
 
     # --- High range: 6 observables (AA + AB only) ---
     if Nk_high > 0 and k_high is not None and cov_mt_high is not None:
@@ -224,13 +210,7 @@ def multi_tracer_fisher_asymmetric(
                     arr = np.asarray(derivs_AB_B[nn][ell])
                     D_high[:, Nell + il, idx_desi] += arr[Nk_low:Nk_low + Nk_high]
 
-        cov_inv_high = np.zeros_like(cov_mt_high)
-        for ik in range(Nk_high):
-            cov_inv_high[ik] = np.linalg.inv(cov_mt_high[ik])
-
-        for ik in range(Nk_high):
-            DtCinv = D_high[ik].T @ cov_inv_high[ik]
-            F += DtCinv @ D_high[ik] * dk
+        F += fisher_from_shells(D_high, cov_mt_high, k_high)
 
     kmax = float(k_low[-1])
     if k_high is not None and len(k_high) > 0:

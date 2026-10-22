@@ -1,10 +1,27 @@
 """Tests for pfsfog.cosmo — FiducialCosmology."""
 
+import jax
 import jax.numpy as jnp
 import numpy as np
 import pytest
+from scipy.integrate import simpson
 
-from pfsfog.cosmo import FiducialCosmology, FIDUCIAL
+from pfsfog.cosmo import FiducialCosmology, FIDUCIAL, make_plin_func
+
+
+def sigma8_from_power(k_h, pk_h):
+    """Integrate P in (Mpc/h)^3 at k in h/Mpc with a radius of 8 Mpc/h."""
+    k_h = np.asarray(k_h, dtype=np.float64)
+    pk_h = np.asarray(pk_h, dtype=np.float64)
+    x = 8.0 * k_h
+    window = np.empty_like(x)
+    small = x < 1.0e-3
+    y = x[small]
+    window[small] = 1.0 - y**2 / 10.0 + y**4 / 280.0
+    y = x[~small]
+    window[~small] = 3.0 * (np.sin(y) - y * np.cos(y)) / y**3
+    integrand = k_h**3 * pk_h * window**2 / (2.0 * np.pi**2)
+    return float(np.sqrt(simpson(integrand, x=np.log(k_h))))
 
 
 @pytest.fixture(scope="module")
@@ -72,6 +89,32 @@ class TestPlin:
         pd = cosmo.pk_data(1.0)
         assert "k" in pd and "pk" in pd
         assert len(pd["k"]) == len(pd["pk"])
+
+    @pytest.mark.parametrize("h", [0.55, 0.6736, 0.8])
+    @pytest.mark.parametrize("z", [0.0, 0.9, 2.05])
+    def test_native_power_integrates_to_independent_sigma8(self, h, z):
+        cosmo = FiducialCosmology(params=dict(FIDUCIAL, h=h))
+        power = cosmo.pk_data(z)
+        assert sigma8_from_power(power["k"], power["pk"]) == pytest.approx(
+            cosmo.sigma8(z), rel=0.002,
+        )
+
+    @pytest.mark.parametrize("h,z", [(0.55, 0.9), (0.8, 2.05)])
+    def test_interpolated_power_keeps_native_power_units(self, h, z):
+        cosmo = FiducialCosmology(params=dict(FIDUCIAL, h=h))
+        native_k = np.asarray(cosmo.pk_data(z)["k"])
+        assert sigma8_from_power(native_k, cosmo.Plin(native_k, z)) == pytest.approx(
+            cosmo.sigma8(z), rel=0.002,
+        )
+
+    @pytest.mark.parametrize("h,z", [(0.55, 0.9), (0.8, 2.05)])
+    def test_jitted_power_factory_keeps_native_power_units(self, h, z):
+        params = dict(FIDUCIAL, h=h)
+        cosmo = FiducialCosmology(params=params)
+        power = jax.jit(make_plin_func())(z, params)
+        assert sigma8_from_power(power["k"], power["pk"]) == pytest.approx(
+            cosmo.sigma8(z), rel=0.002,
+        )
 
 
 class TestVolumeElement:

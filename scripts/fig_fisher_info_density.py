@@ -18,7 +18,7 @@ import matplotlib; matplotlib.use("Agg")
 matplotlib.rcParams.update({"text.usetex": True})
 import matplotlib.pyplot as plt
 
-from ps_1loop_jax import PowerSpectrum1Loop
+from pfsfog.one_loop import make_one_loop_engine
 from pfsfog.cosmo import FiducialCosmology
 from pfsfog.eft_params import NUISANCE_NAMES, COSMO_NAMES, desi_elg_fiducials, broad_priors
 from pfsfog.ps1loop_adapter import fisher_to_ps1loop_auto, make_ps1loop_pkmu_func
@@ -30,7 +30,7 @@ OUT = Path(__file__).resolve().parent.parent / "paper" / "figs"
 
 # --- setup ---
 cfg = ForecastConfig.from_yaml("configs/default.yaml")
-ps = PowerSpectrum1Loop(do_irres=False)
+ps = make_one_loop_engine()
 cosmo = FiducialCosmology(backend=cfg.cosmo_backend)
 from pfsfog.surveys import desi_elg
 desi = desi_elg()

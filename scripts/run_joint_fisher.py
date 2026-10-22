@@ -62,8 +62,8 @@ def main():
 
     cfg = ForecastConfig.from_yaml("configs/default.yaml")
     cosmo = FiducialCosmology(backend=cfg.cosmo_backend)
-    from ps_1loop_jax import PowerSpectrum1Loop
-    ps = PowerSpectrum1Loop(do_irres=False)
+    from pfsfog.one_loop import make_one_loop_engine
+    ps = make_one_loop_engine()
 
     sg = SurveyGroup(
         pfs=pfs_elg(),

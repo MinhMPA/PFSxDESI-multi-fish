@@ -73,8 +73,8 @@ def main():
 
     # Setup
     cosmo = FiducialCosmology(backend=cfg.cosmo_backend)
-    from ps_1loop_jax import PowerSpectrum1Loop
-    ps = PowerSpectrum1Loop(do_irres=False)
+    from pfsfog.one_loop import make_one_loop_engine
+    ps = make_one_loop_engine()
     ells = (0, 2, 4)
     z_bins = cfg.z_bins
     kmax = 0.20

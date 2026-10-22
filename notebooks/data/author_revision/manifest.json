@@ -1,0 +1,99 @@
+{
+ "date": "2026-10-22",
+ "scope": "CT-A shared-field leading counterterms adopted. Four forecasts A-D starting from correlated DESI autos; Figures 1-7 and 9 use CT-A results, Figure 8 is analytic and unchanged.",
+ "forecast_group": "shell304",
+ "files": {
+  "nuisance_constraints.csv": {
+   "source": "docs/revision/evidence/ct-a-adoption-2026-10-21/figure-data/nuisance_constraints.csv",
+   "sha256": "23ddf249886c3722d678fed0d4ee1b8b9e3402f2bbfe5960fe4d7b75ee9f6e73",
+   "bytes": 78712,
+   "previous_source": "docs/revision/evidence/correlated-auto-baseline-2026-10-19/exports/nuisance_constraints.csv",
+   "previous_source_sha256": "321eb8dad43c816f2ac56e0c71880c985f02d93cf27168327ade5c4006509b27"
+  },
+  "cosmological_constraints.csv": {
+   "source": "docs/revision/evidence/ct-a-adoption-2026-10-21/figure-data/cosmological_constraints.csv",
+   "sha256": "2520e96da7a29ae9764d3d5bbbfb7b4fae60d0613a2e9ce9faaba150132f955d",
+   "bytes": 811,
+   "previous_source": "docs/revision/evidence/correlated-auto-baseline-2026-10-19/exports/cosmological_constraints.csv",
+   "previous_source_sha256": "c814b3c01ffe287fc4df1ee22523e232797f295cd01e601cf2536a09b471ff33"
+  },
+  "nuisance_marginalization.csv": {
+   "source": "docs/revision/evidence/ct-a-adoption-2026-10-21/figure-data/nuisance_marginalization.csv",
+   "sha256": "bd3e080ec6e603df85833776c8b822c024a4a10ead429f783a609e2c2d6d17b9",
+   "bytes": 2687,
+   "previous_source": "docs/revision/evidence/correlated-auto-baseline-2026-10-19/exports/nuisance_marginalization.csv",
+   "previous_source_sha256": "41db81bb60cc5bb5265f5b83b921cb0a8e5a49ae89b5b55bbf50f4f13d0060e7"
+  },
+  "pfs_gains.csv": {
+   "source": "docs/revision/evidence/ct-a-adoption-2026-10-21/figure-data/pfs_gains.csv",
+   "sha256": "bd7796bf9b63de19eef87b64a37b31eaff67b5a14684c65165de7a9cbb71872c",
+   "bytes": 5079,
+   "previous_source": "docs/revision/evidence/correlated-auto-baseline-2026-10-19/exports/pfs_gains.csv",
+   "previous_source_sha256": "2527a226342422eaadb7559df7983e8ddd8326905b6a9313c549a4627dd4bfc0"
+  },
+  "selected_covariances.json": {
+   "source": "docs/revision/evidence/ct-a-adoption-2026-10-21/figure-data/selected_covariances.json",
+   "sha256": "b42265e95aaa6dc7ddc6d894fe2bd101f7fe1f04933d342e8d5fd039cc9836ff",
+   "bytes": 10087,
+   "previous_source": "docs/revision/evidence/correlated-auto-baseline-2026-10-19/exports/selected_covariances.json",
+   "previous_source_sha256": "b22994cf7d3d4c2b8fcf49283865e3895b752dbf41e90a438f2e49fc534fda83"
+  },
+  "fig6_data.npz": {
+   "source": "docs/revision/evidence/ct-a-adoption-2026-10-21/figure-data/fig6_data.npz",
+   "sha256": "6ebb11a5925dc7e93040a8b65a4013b6950ed0b00c0b513b09ceb834d6600197",
+   "bytes": 39900,
+   "previous_source": "docs/revision/evidence/correlated-auto-baseline-2026-10-19/exports/fig6_data.npz",
+   "previous_source_sha256": "5c708e7a6cbcea428403dd1515f2ebcbb118d5ce628ae562cc497f8e3e55ec84"
+  },
+  "fig7_data.npz": {
+   "source": "docs/revision/evidence/ct-a-adoption-2026-10-21/figure-data/fig7_data.npz",
+   "sha256": "dd693393de36957fbc4d5a4478e5ecfaff3ab90458aa3adbe30607ddb4d165d0",
+   "bytes": 207484,
+   "previous_source": "docs/revision/evidence/correlated-auto-baseline-2026-10-19/exports/fig7_data.npz",
+   "previous_source_sha256": "5d60ee2d3df9fa34fca27cbd942f12baaed79d9388bc83a577fb0bcef57e4f04"
+  },
+  "fig8_data.npz": {
+   "source": "docs/revision/evidence/correlated-auto-baseline-2026-10-19/exports/fig8_data.npz",
+   "sha256": "8907546984b348bfaa0b76220767f782dd79afa70ceb8ed6dca826b8351468bd",
+   "bytes": 6538,
+   "previous_source": "docs/revision/evidence/case-labels-2026-10-15/exports/fig8_data.npz",
+   "previous_source_sha256": "8907546984b348bfaa0b76220767f782dd79afa70ceb8ed6dca826b8351468bd",
+   "legacy_source": "docs/revision/evidence/takada-density-2026-10-14/exports-02/fig8_data.npz",
+   "legacy_source_sha256": "8907546984b348bfaa0b76220767f782dd79afa70ceb8ed6dca826b8351468bd"
+  },
+  "fig9_data.npz": {
+   "source": "docs/revision/evidence/ct-a-adoption-2026-10-21/figure-data/fig9_data.npz",
+   "sha256": "2339dd5d5450d50361cdaebbb96fd0371dc7d052b8b9636185788298c4bf745a",
+   "bytes": 496554,
+   "previous_source": "docs/revision/evidence/correlated-auto-baseline-2026-10-19/exports/fig9_data.npz",
+   "previous_source_sha256": "ab336a085f98c850077a2bb9f049f52a8134eeee275b88ae73d4d9d882dc5048"
+  },
+  "appendix_verification.json": {
+   "source": "docs/revision/evidence/ct-a-adoption-2026-10-21/figure-data/appendix_verification.json",
+   "sha256": "bd3b3ce08d852a8f58df9ec0e48726b2f39da1c8dc906201ba43cf092d684da4",
+   "bytes": 31197,
+   "previous_source": "docs/revision/evidence/correlated-auto-baseline-2026-10-19/exports/appendix_verification.json",
+   "previous_source_sha256": "4211f827112b35ee6b367eb83777eafd0f3c8ffba6583947ea38e0198156a93b"
+  },
+  "case_labels.json": {
+   "source": "docs/revision/evidence/correlated-auto-baseline-2026-10-19/exports/case_labels.json",
+   "sha256": "7b5fc65e77a49a482fe0b7f842eee04ebb8fd03a6b5a8edf47a9fc9a1406aff3",
+   "bytes": 1303,
+   "previous_source": "docs/revision/evidence/case-labels-2026-10-15/exports/case_labels.json",
+   "previous_source_sha256": "0d5039ad16084c38ded8d501d253fe42f035c875f7c91b465a6d129e9ef81061"
+  }
+ },
+ "style_sources": {
+  "notebooks/figures.ipynb": "2aedbef8ea49e17f8c178e6978114921cc171c8d0894da584c4db4f38348d80e",
+  "pfsfog/plots.py": "12a0958e20892ecce3c28284adb97355b95d033c130a4f9f0b104a37ecdfdaa0"
+ },
+ "numerical_report": ".worktrees/counterterms-leading/results/counterterm-leading-20261020-04/comparison.json",
+ "numerical_report_sha256": "e2e6e3aec13d10bf194af93fd824429f9f5460c942eb1140b0fbb6b36efe066b",
+ "supplement_report": ".worktrees/counterterms-leading/results/ct-a-adoption-supplement-20261022-02/comparison.json",
+ "supplement_report_sha256": "6a7e117b28fcb794bf11c24127e6f8e0e888abe01f4bc8e7adbba02fd3b0a88a",
+ "previous_numerical_report": ".worktrees/elf-engine/results/takada-density-full-20261014-02/report-01/summary.json",
+ "previous_numerical_report_sha256": "26f27271c126a73d8c8b441b173ff906949e9d6c35fe586f1007395d52c78434",
+ "case_label_map": "case_labels.json",
+ "historical_evidence_convention": "appendix_verification.json and frozen source paths retain legacy numerical identifiers. See case_labels.json.",
+ "ct_b_comparison": ".worktrees/counterterms-leading/results/counterterm-cross-track-20261021-01/comparison.json"
+}

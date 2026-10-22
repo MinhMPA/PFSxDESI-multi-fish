@@ -58,6 +58,9 @@ class ForecastConfig:
     # Nonlinear scale for stochasticity
     k_nl: float = 0.7           # h/Mpc
 
+    # Selection sensitivity: omit DESI-ELG only over 0.8 <= z < 1.1.
+    exclude_elg1: bool = False
+
     # Output
     output_dir: str = "results"
 

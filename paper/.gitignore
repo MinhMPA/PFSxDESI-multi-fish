@@ -8,3 +8,6 @@
 *.pdf
 # MacOS specific files
 **.DS_Store
+# Figure and supplementary PDFs are source files
+!figs/**/*.pdf
+!anc/*.pdf

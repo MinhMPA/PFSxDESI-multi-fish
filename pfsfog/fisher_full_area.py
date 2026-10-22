@@ -20,6 +20,7 @@ import numpy as np
 
 from .eft_params import NUISANCE_NAMES, COSMO_NAMES, COSMO_PRIOR_SIGMA
 from .fisher import FisherResult, add_gaussian_prior
+from .fisher_core import fisher_from_shells
 
 
 # Combined param names: cosmo + (nuisance × Nz)
@@ -96,16 +97,7 @@ def full_area_fisher_per_zbin(
             if nuis_name in derivs and ell in derivs[nuis_name]:
                 D[:, il, idx] = np.asarray(derivs[nuis_name][ell])
 
-    # Invert covariance
-    cov_inv = np.zeros_like(cov)
-    for ik in range(Nk):
-        cov_inv[ik] = np.linalg.inv(cov[ik])
-
-    # Fisher from data
-    F = np.zeros((Np, Np))
-    for ik in range(Nk):
-        DtCinv = D[ik].T @ cov_inv[ik]
-        F += DtCinv @ D[ik] * dk
+    F = fisher_from_shells(D, cov, k)
 
     # Add nuisance prior
     prior_full = np.zeros(Np)

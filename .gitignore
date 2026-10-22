@@ -213,5 +213,21 @@ ps_1loop_jax/
 # Pipeline output
 results/
 
+# Large local physical-evidence packets; track their checksum receipts.
+/docs/revision/handoff/elf-survey-physical-*.tar.gz
+/docs/revision/handoff/elf-global-inference-*.tar.gz
+
 # Claude Code local agent state (session locks, scheduled-task metadata, etc.)
 .claude/
+
+# Isolated revision workspaces
+.worktrees/
+
+/docs/revision/handoff/elf-grid-loop-*.tar.gz
+
+# Raw common-k query arrays are retained in verified local handoff packets.
+/docs/revision/evidence/elf-grid-convergence-2026-10-09/shell-common-k-*/query_arrays.npz
+/docs/revision/handoff/elf-grid-shell-*.tar.gz
+
+/docs/revision/handoff/elf-grid-convergence-*.tar.gz
+/docs/revision/handoff/elf-survey-studies-*.tar.gz

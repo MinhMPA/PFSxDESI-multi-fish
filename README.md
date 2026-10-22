@@ -7,14 +7,33 @@ from all auto- and cross-spectra into a single joint Fisher with
 shared cosmology and per-tracer, per-redshift-bin nuisance parameters,
 marginalized in one pass.
 
+This branch (`v3`) holds the revised version of the paper and the code
+that produced it.
+
 **Paper**: [Nhat-Minh Nguyen (2026), arXiv:2604.25171, *"Multi-tracers, multi-surveys: a joint Fisher analysis of DESI+PFS"*](https://arxiv.org/abs/2604.25171).
 
-## Key results
+## Paper versions
 
-- Compared to the **single-tracer analysis with broad priors** (the legacy DESI-DR1 baseline), the DESI+PFS joint Fisher tightens σ(fσ₈) by ~39%, σ(Mν) by ~84%, σ(Ωm) by ~53% at kmax = 0.20 h/Mpc.
-- The bulk of this improvement comes from **DESI's own internal multi-tracer self-calibration** (LRG × ELG × QSO across the full footprint). Adding the PFS overlap on top contributes a unique 8.9% on σ(fσ₈), 23.6% on σ(Mν), and 9.4% on σ(Ωm).
-- The dominant mechanism is b₁σ₈ tightening via cosmic-variance cancellation in cross-spectrum bias ratios, which breaks the b₁σ₈–fσ₈ degeneracy intrinsic to single-tracer redshift-space analyses; the σ(Mν) gain follows downstream because Mν is highly correlated with b₁σ₈ in the single-tracer Fisher.
-- The joint Fisher is not a replacement for simulation-based priors but a model-independent companion — particularly relevant as an independent cross-check on the S8 tension.
+| Branch | Version | Date |
+|---|---|---|
+| `v1` | arXiv:2604.25171v1 | 28 April 2026 |
+| `v2` | arXiv:2604.25171v2, submitted to JCAP | 5 May 2026 |
+| `v3` | Revised version | October 2026 |
+
+The results of v3 supersede those of v1 and v2.
+
+## Key results (v3)
+
+At kmax = 0.20 h/Mpc, varying ln(10¹⁰A_s), Mν and Ωm with h, ω_b and n_s
+fixed, and marginalizing over all EFT nuisance parameters:
+
+- Adding DESI cross-spectra to the correlated DESI auto-spectra reduces the
+  errors on the derived fσ₈(z=1.1), Mν and Ωm by 7.1%, 3.5% and 3.8%.
+- Adding PFS auto- and cross-spectra over 1,200 deg² at 0.6 < z < 1.6
+  reduces them by a further 3.8%, 2.6% and 3.2%.
+- Extending PFS to z = 2.4 raises these PFS reductions to 6.7%, 6.7% and 7.4%.
+- The multi-tracer constraints come from the clustering likelihood alone and
+  complement simulation-based priors.
 
 ## Structure
 
@@ -24,8 +43,10 @@ survey_specs/        PFS and DESI n(z) tables
 configs/             YAML configuration files
 scripts/             Analysis and figure-generation scripts (legacy in scripts/_obsolete/)
 tests/               137 unit tests + 2 slow-marked parallel-equivalence tests
-notebooks/           Jupyter notebook for interactive figure reproduction
-paper/               LaTeX draft, bibliography, and figures
+notebooks/           Figure notebooks; v3 figures: figures_author_revision.ipynb
+paper/               LaTeX source, bibliography and figures (v3: figs/author-revision/)
+paper/anc/           Supplementary per-bin correlation matrices (PDF, CSV, JSON)
+scripts/provenance/  Drivers used for the v3 supplementary forecasts (see below)
 ```
 
 ## Installation
@@ -38,7 +59,22 @@ conda activate pfsfog
 pip install jax[cpu]>=0.4.26    # or jax[cuda12] for GPU
 ```
 
-### 2. One-loop power spectrum (`ps_1loop_jax`)
+### 2. One-loop power spectrum
+
+v3 computes the one-loop spectra with [ELF](https://github.com/archaeo-pteryx/elf)
+(Kobayashi and Akitsu). `pfsfog/elf_source.json` records the SHA-256 of every
+ELF source file used for the paper, and `requirements-elf.lock` pins the
+Python environment (Python ≥ 3.11):
+
+```bash
+git clone https://github.com/archaeo-pteryx/elf.git
+pip install -e elf
+pip install -r requirements-elf.lock
+```
+
+The code also imports `ps_1loop_jax` for background quantities (growth and
+distances) and the v1/v2 spectra. Some v3 scripts expect a clone at
+`./ps_1loop_jax`:
 
 `ps_1loop_jax` (Kobayashi & Akitsu, in prep.) is required but not included in this repo.
 It is not yet publicly available; once released, install it from
@@ -78,9 +114,12 @@ pip install -e .     # installs pfsfog + remaining deps (numpy, scipy, matplotli
 ### 5. Verify
 
 ```bash
-pytest tests/ -q                          # 137 tests, ~12 min (sequential default)
-pytest tests/ -q -m slow -v               # 2 parallel-vs-sequential equivalence tests, ~12 min
+pytest tests/ -q
 ```
+
+Many validation tests compare against the author's saved forecast outputs and
+intermediate results, which are not distributed. In a fresh clone these tests
+fail with missing-file errors; the remaining unit tests run without them.
 
 ## Usage
 
@@ -139,7 +178,18 @@ cfg = ForecastConfig(r_sigma_v=0.5, kmax=0.25)
 
 ### Reproduce paper figures
 
-The notebook `notebooks/figures.ipynb` is the canonical figure source —
+For v3, `notebooks/figures_author_revision.ipynb` regenerates Figures 1–9
+from the exported forecast results in `notebooks/data/author_revision/`
+(see its `README.md` and `manifest.json`), without rerunning the forecasts.
+
+The v3 forecasts were computed with the ELF-based drivers in `scripts/`
+(`run_counterterm_comparison.py` for the main comparison) and the drivers in
+`scripts/provenance/` for the supplementary profiles and the density and bias
+scans. The provenance drivers read the author's saved intermediate results,
+which are not distributed, and are kept to document the calculation.
+Some validation tests read the same local outputs and fail without them.
+
+For v1/v2, the notebook `notebooks/figures.ipynb` is the canonical figure source —
 each figure has a separate **compute** cell and **plot** cell, so plot
 tweaks don't trigger expensive recomputation. The compute cells default
 to `PARALLEL = True` for joint-Fisher figures (Fig. 1, 2, 5).

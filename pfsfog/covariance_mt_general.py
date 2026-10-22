@@ -33,6 +33,7 @@ def multi_tracer_cov_general(
     dk: float,
     ells: tuple[int, ...] = (0, 2, 4),
     cross_shot: dict[tuple[str, str], float] | None = None,
+    n_mu: int = _NLEG,
 ) -> np.ndarray:
     """N-tracer Gaussian covariance.
 
@@ -45,7 +46,8 @@ def multi_tracer_cov_general(
     nbar : {tracer_name: number density}
     k : array (Nk,)
     volume : overlap volume (Mpc/h)³
-    dk : bin width
+    dk : scalar bin width or one width per k shell
+    n_mu : Gauss-Legendre angular order (legacy default 20)
     ells : multipole orders
 
     Returns
@@ -55,8 +57,14 @@ def multi_tracer_cov_general(
     Nt = len(tracer_names)
     Nell = len(ells)
     Nk = len(k)
-    mu = _MU_GL
-    w = _W_GL
+    if not isinstance(n_mu, int) or n_mu < 3:
+        raise ValueError("n_mu must be an integer >= 3")
+    mu, w = (_MU_GL, _W_GL) if n_mu == _NLEG else leggauss(n_mu)
+    widths = np.asarray(dk, dtype=float)
+    if widths.ndim == 0:
+        widths = np.full(Nk, widths)
+    if widths.shape != (Nk,) or not np.all(np.isfinite(widths)) or np.any(widths <= 0):
+        raise ValueError("dk must contain one positive finite width per shell")
 
     # Build ordered pairs: auto first, then cross
     pairs = []
@@ -99,7 +107,7 @@ def multi_tracer_cov_general(
         return p + cs
 
     # Number of modes
-    Nmodes = k**2 * dk * volume / (2.0 * np.pi**2)
+    Nmodes = k**2 * widths * volume / (2.0 * np.pi**2)
 
     # Precompute Legendre values
     L = {ell: _legendre(ell, mu) for ell in ells}

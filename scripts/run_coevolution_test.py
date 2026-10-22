@@ -28,11 +28,11 @@ from pfsfog.covariance import single_tracer_cov
 from pfsfog.fisher_full_area import full_area_fisher_per_zbin, combine_zbins
 from pfsfog.scenarios import SCENARIOS, nuisance_prior_diag
 
-from ps_1loop_jax import PowerSpectrum1Loop
+from pfsfog.one_loop import make_one_loop_engine
 
 cfg = ForecastConfig.from_yaml("configs/default.yaml")
 cosmo = FiducialCosmology(backend=cfg.cosmo_backend)
-ps = PowerSpectrum1Loop(do_irres=False)
+ps = make_one_loop_engine()
 desi = desi_elg()
 ells = (0, 2, 4)
 

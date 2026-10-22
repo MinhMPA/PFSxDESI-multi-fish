@@ -16,6 +16,7 @@ import jax.numpy as jnp
 import numpy as np
 
 from ps_1loop_jax import background as bg
+from .emulator_paths import MODEL_ROOT, MODEL, active_emulator_inputs, active_emulator_provenance
 
 # ---------------------------------------------------------------------------
 # Fiducial cosmology — Planck 2018 TT,TE,EE+lowE best-fit
@@ -41,8 +42,8 @@ FIDUCIAL["Omega_m"] = (
 _CP_BARYON_DEFAULTS = {"A_b": 3.13, "eta_b": 0.603, "logT_AGN": 7.8}
 
 # Path to Jense 2024 ΛCDM+Mν networks
-_JENSE_DIR = Path("/Users/nguyenmn/cosmopower-jax-for-pfs/cosmology/jense2024")
-_JENSE_MODEL = "jense_2023_camb_mnu"
+_JENSE_DIR = MODEL_ROOT
+_JENSE_MODEL = MODEL
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -61,6 +62,7 @@ def _omega_m(omega_b: float, omega_cdm: float, mnu: float) -> float:
 
 @lru_cache(maxsize=1)
 def _load_pklin_emulator():
+    active_emulator_inputs(); active_emulator_provenance()
     from cosmopower_jax.cosmopower_jax import CosmoPowerJAX as CPJ
     net = _JENSE_DIR / _JENSE_MODEL / "networks" / f"{_JENSE_MODEL}_Pk_lin.npz"
     return CPJ(probe="custom_log", filepath=str(net))
@@ -68,6 +70,7 @@ def _load_pklin_emulator():
 
 @lru_cache(maxsize=1)
 def _load_sigma8_emulator():
+    active_emulator_inputs(); active_emulator_provenance()
     from cosmopower_jax.cosmopower_jax import CosmoPowerJAX as CPJ
     net = _JENSE_DIR / _JENSE_MODEL / "networks" / f"{_JENSE_MODEL}_sigma8.npz"
     return CPJ(probe="custom_log", filepath=str(net))
@@ -108,11 +111,10 @@ def make_plin_func(backend: str = "cosmopower"):
             Ab, eta, logT,
             cosmo_dict["mnu"],
         ]])
-        pk_mpc3 = emu.predict(param_vec)
+        pk_h = emu.predict(param_vec)  # training target already in (Mpc/h)^3
         h = cosmo_dict["h"]
         k_h = k_modes / h
-        pk_h = jnp.atleast_1d(pk_mpc3.squeeze()) * h**3
-        return {"k": k_h, "pk": pk_h}
+        return {"k": k_h, "pk": jnp.atleast_1d(pk_h.squeeze())}
 
     return pkdata_fn
 
@@ -120,8 +122,9 @@ def make_plin_func(backend: str = "cosmopower"):
 def make_growth_rate_func():
     """Return a pure JAX function: f_fn(z, cosmo_dict) → f(z).
 
-    Uses the exact Heath-integral growth rate from ps_1loop_jax.background,
-    consistent with FiducialCosmology.f(). Fully JAX-differentiable.
+    Uses the scale-independent Heath-integral background approximation from
+    ps_1loop_jax.background, consistent with FiducialCosmology.f(). Fully
+    JAX-differentiable; it is not exact massive-neutrino growth.
     """
     from ps_1loop_jax import background as bg
 
@@ -275,13 +278,12 @@ class FiducialCosmology:
     def _plin_cosmopower(self, k: np.ndarray, z: float) -> jnp.ndarray:
         """P_lin(k, z) via cosmopower-jax, returned in (Mpc/h)³ at k h/Mpc."""
         emu = _load_pklin_emulator()
-        # Emulator outputs P(k) in Mpc³ on its own k grid (Mpc⁻¹).
-        pk_mpc3 = emu.predict(self._cp_params_pklin(z))  # (1, 1000)
+        # Training target is already P(k) in (Mpc/h)³; modes are in Mpc⁻¹.
+        pk_h = emu.predict(self._cp_params_pklin(z))  # (1, 1000)
         k_mpc = jnp.array(emu.modes)  # Mpc⁻¹
 
-        # Convert to h-units: k_h = k_mpc / h,  P_h = P_mpc * h³
+        # Only the k grid needs conversion to h/Mpc.
         k_h = k_mpc / self._h
-        pk_h = pk_mpc3 * self._h**3  # (1, 1000) or (1000,)
         pk_h = jnp.atleast_1d(pk_h.squeeze())
 
         # Interpolate onto requested k grid
@@ -291,11 +293,10 @@ class FiducialCosmology:
     def _pk_data_cosmopower(self, z: float) -> dict[str, jnp.ndarray]:
         """Return pk_data dict on the emulator's native k grid."""
         emu = _load_pklin_emulator()
-        pk_mpc3 = emu.predict(self._cp_params_pklin(z))
+        pk_h = emu.predict(self._cp_params_pklin(z))
         k_mpc = jnp.array(emu.modes)
         k_h = k_mpc / self._h
-        pk_h = jnp.atleast_1d(pk_mpc3.squeeze()) * self._h**3
-        return {"k": k_h, "pk": pk_h}
+        return {"k": k_h, "pk": jnp.atleast_1d(pk_h.squeeze())}
 
     def _sigma8_cosmopower(self, z: float) -> float:
         """σ8(z) from the cosmopower-jax emulator."""

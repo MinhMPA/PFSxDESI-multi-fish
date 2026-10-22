@@ -237,8 +237,9 @@ class TestMcDonaldSeljakMultipole:
         d_AB = self._multipole_derivs(self.bA, self.bB)
         derivs = np.concatenate([d_AA, d_BB, d_AB])
 
-        cov_inv = np.linalg.inv(cov[0])
-        return float(derivs @ cov_inv @ derivs) * self.dk
+        # Near the noiseless limit, forming C^-1 loses the common-amplitude
+        # information through cancellation. Solve for its action on dP/dPm.
+        return float(derivs @ np.linalg.solve(cov[0], derivs)) * self.dk
 
     def _st_fisher_pm(self, nbar):
         """ST Fisher for P_m (known bias) using multipole covariance."""
@@ -249,7 +250,7 @@ class TestMcDonaldSeljakMultipole:
         return float(d_AA @ cov_inv @ d_AA) * self.dk
 
     def test_mt_beats_st_moderate_nbar(self):
-        """MT Fisher ≥ ST Fisher at moderate nbar (well-conditioned regime)."""
+        """Adding the second tracer preserves the single-tracer information."""
         for nbar in [1e-1, 1e0, 1e2, 1e4]:
             F_MT = self._mt_fisher_pm(nbar)
             F_ST = self._st_fisher_pm(nbar)
